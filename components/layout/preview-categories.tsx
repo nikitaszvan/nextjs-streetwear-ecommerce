@@ -3,46 +3,52 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-
-type PreviewCategoriesProps = {
-  category: string;
-  searchString: string;
+const categoriesRef: Record<string, string> = {
+  "shirts-top-men" : "Tops",
+  "outerwear-top-men" : "Outerwear",
+  "pants-bottom-men" : "Bottoms",
+  "shoes-men" : "Shoes"
 }
 
-const PreviewCategories = ({ category, searchString }: PreviewCategoriesProps) => {
-  const [images, setImages] = useState<string[]>([]);
+interface Product {
+  'category_pk': string;
+  'clothing-name': string;
+  'clothing-price': number;
+  'image-type': string;
+  'image-url': string;
+  'sort_key': string;
+  'upload-date': string;
+};
+
+
+const PreviewCategories = ({category}: { category: string }) => {
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchImages = async () => {
+    async function fetchProducts() {
       try {
-        setLoading(true);
-
-        const response = await fetch(`/api/fetch-preview-images?${searchString}`);
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch images');
-        }
-
-        const data = await response.json();
-
-        console.log(data.images);
-        setImages(data.images);
+        const response = await fetch(`/api/products?category=${category}`);
+        if (!response.ok) throw new Error('Failed to fetch');
+        
+        const products = await response.json();
+        console.log(products);
+        setProducts(products);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch images');
+        setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setLoading(false);
       }
     }
 
-    fetchImages();
-  }, [searchString]);
+    fetchProducts();
+  }, [category]);
 
   if (loading) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {images?.map((_, index) => (
+        {products?.map((_, index) => (
           <div 
             key={index} 
             className="aspect-[3/4] bg-gray-200 rounded-lg animate-pulse"
@@ -61,13 +67,13 @@ const PreviewCategories = ({ category, searchString }: PreviewCategoriesProps) =
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="justify-end gap-2 px-4 py-2 text-neutral-600"><h3 className="text-lg font-bold tracking-tight">{category}</h3></div>
+    <div className="flex flex-col my-5">
+      <div className="justify-end gap-2 px-4 py-2"><h3 className="text-lg font-bold tracking-tight">{categoriesRef[category]}</h3></div>
         <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-          {images.slice(0, 4).map((imageUrl, index) => (
+          {products.slice(0, 4).map((product, index) => (
             <div key={index} className="relative aspect-[3/4]">
                 <Image
-                src={imageUrl}
+                src={product['image-url']}
                 alt={`Streetwear product ${index + 1}`}
                 fill
                 className="!relative object-cover rounded-lg hover:scale-105 transition-transform"
@@ -75,8 +81,8 @@ const PreviewCategories = ({ category, searchString }: PreviewCategoriesProps) =
                 priority={index < 4}
                 />
                 <div className="p-2">
-                    <h2 className="text-md font-medium text-neutral-700">Horizon Gaze Sunglasses</h2>
-                    <footer className="text-sm font-normal text-neutral-900"><p>$20.00</p></footer>
+                    <h2 className="text-md font-medium text-neutral-700">{product['clothing-name']}</h2>
+                    <footer className="text-sm font-normal text-neutral-900"><p>$ {product['clothing-price']}</p></footer>
                 </div>
             </div>
           ))}

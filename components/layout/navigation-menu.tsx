@@ -50,12 +50,6 @@ const components: { title: string; href: string; description: string }[] = [
     description:
       "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
   },
-  {
-    title: "Sets",
-    href: "/docs/primitives/tooltip",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-  },
 ]
 
 export default function MainNavigation({className}: MainNavigationProps) {
@@ -87,22 +81,6 @@ export default function MainNavigation({className}: MainNavigationProps) {
             </NavigationMenuItem>
             <NavigationMenuItem>
                 <NavigationMenuTrigger>Men's</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                    {components.map((component) => (
-                        <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                        >
-                        {component.description}
-                        </ListItem>
-                    ))}
-                    </ul>
-                </NavigationMenuContent>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-                <NavigationMenuTrigger>Women's</NavigationMenuTrigger>
                 <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                     {components.map((component) => (
