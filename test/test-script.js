@@ -71,7 +71,7 @@ const coatPrices = [
 
 
 // const fetch = await import('node-fetch').then(mod => mod.default);
-import addCategoryImages from "../hooks/add-cat-images.js";
+import addCategoryImages from "../hooks/get-products.js";
 
 const uploadImages = async () => {
   try {

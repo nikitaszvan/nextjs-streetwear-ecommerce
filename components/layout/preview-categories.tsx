@@ -68,7 +68,10 @@ const PreviewCategories = ({category}: { category: string }) => {
 
   return (
     <div className="flex flex-col my-5">
-      <div className="justify-end gap-2 px-4 py-2"><h3 className="text-lg font-bold tracking-tight">{categoriesRef[category]}</h3></div>
+      <div className="justify-end gap-4 px-4 py-2 w-fit flex">
+        <h3 className="text-xl font-bold tracking-tight">{categoriesRef[category]}</h3>
+        <h3 className="text-md font-medium text-neutral-600 self-end hover:underline">view all</h3>
+        </div>
         <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
           {products.slice(0, 4).map((product, index) => (
             <div key={index} className="relative aspect-[3/4]">
@@ -76,7 +79,7 @@ const PreviewCategories = ({category}: { category: string }) => {
                 src={product['image-url']}
                 alt={`Streetwear product ${index + 1}`}
                 fill
-                className="!relative object-cover rounded-lg hover:scale-105 transition-transform"
+                className="!relative object-cover rounded-lg transition-transform"
                 sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 priority={index < 4}
                 />

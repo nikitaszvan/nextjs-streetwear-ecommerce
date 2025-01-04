@@ -52,35 +52,39 @@ const components: { title: string; href: string; description: string }[] = [
   },
 ]
 
+const StyledMenuLink = ({label, className}: {label: string; className?: string}) => {
+  return (
+    <NavigationMenuLink 
+      className={cn(
+        "!bg-transparent",
+        navigationMenuTriggerStyle())}>
+      {label}
+    </NavigationMenuLink>
+  )
+}
+
 export default function MainNavigation({className}: MainNavigationProps) {
   return (
     <NavigationMenu className={cn(
-        "max-w-none gap-6 mx-auto flex max-w-6xl",
+        "max-w-none gap-6 mx-auto flex w-full !px-[10%]",
         className
       )}>
         <img src="assets/svgs/streetwear-logo.svg" alt=""
             className="h-10"
         />
-        <NavigationMenuList className={cn(
-            "mr-auto",
-            className
-        )}>
+        <NavigationMenuList className="mr-auto !bg-transparent !backdrop-blur-none">
             <NavigationMenuItem>
             <Link href="/docs" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    New Arrivals
-                </NavigationMenuLink>
+                <StyledMenuLink label="New Arrivals"/>
             </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
             <Link href="/docs" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Best Sellers
-                </NavigationMenuLink>
+            <StyledMenuLink label="Best Sellers"/>
             </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-                <NavigationMenuTrigger>Men's</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="!bg-transparent">Men's</NavigationMenuTrigger>
                 <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                     {components.map((component) => (
@@ -97,9 +101,7 @@ export default function MainNavigation({className}: MainNavigationProps) {
             </NavigationMenuItem>
             <NavigationMenuItem>
                 <Link href="/docs" legacyBehavior passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                        SALE
-                    </NavigationMenuLink>
+                <StyledMenuLink label="SALE"/>
                 </Link>
             </NavigationMenuItem>
       </NavigationMenuList>
@@ -107,7 +109,7 @@ export default function MainNavigation({className}: MainNavigationProps) {
             <div className="mr-5 ml-auto sm:ml-0">
                 <label className="flex items-center">
                     <span className="sr-only">Search</span>
-                    <Input placeholder="Search for products…" className="px-4 pr-8" />
+                    <Input placeholder="Search for products…" className="px-4 pr-8 bg-white" />
                     <MagnifyingGlassIcon className="-ml-6 w-4 h-4"/>
                 </label>
             </div>
