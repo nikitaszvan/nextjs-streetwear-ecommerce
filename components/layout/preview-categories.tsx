@@ -1,6 +1,11 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useAppSelector, useAppDispatch } from '@/lib/hooks';
+import { 
+  fetchProductsByCategory,
+  makeSelectCategoryProducts
+} from '@/lib/features/productsSlice';
 import Image from 'next/image';
 
 const categoriesRef: Record<string, string> = {
@@ -10,45 +15,26 @@ const categoriesRef: Record<string, string> = {
   "shoes-men" : "Shoes"
 }
 
-interface Product {
-  'category_pk': string;
-  'clothing-name': string;
-  'clothing-price': number;
-  'image-type': string;
-  'image-url': string;
-  'sort_key': string;
-  'upload-date': string;
-};
-
-
 const PreviewCategories = ({category}: { category: string }) => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
+  const dispatch = useAppDispatch();
+  
+  const { loading, error, products } = useAppSelector(
+    useMemo(
+      () => makeSelectCategoryProducts(categoriesRef[category]),
+      [category]
+    )
+  );
 
   useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const response = await fetch(`/api/products?category=${category}`);
-        if (!response.ok) throw new Error('Failed to fetch');
-        
-        const products = await response.json();
-        console.log(products);
-        setProducts(products);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setLoading(false);
-      }
-    }
+    dispatch(fetchProductsByCategory(category));
+  }, [category, dispatch]);
 
-    fetchProducts();
-  }, [category]);
 
   if (loading) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {products?.map((_, index) => (
+        {Array.from({ length: 4 }).map((_, index) => (
           <div 
             key={index} 
             className="aspect-[3/4] bg-gray-200 rounded-lg animate-pulse"

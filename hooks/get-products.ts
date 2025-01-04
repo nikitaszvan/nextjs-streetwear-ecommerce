@@ -15,7 +15,6 @@ export async function fetchCategoryProducts(pk: string) {
     });
 
     const response = await docClient.send(command);
-    console.log('Query response:', response);
     return response.Items;
   } catch (error) {
     console.error("Error fetching data:", error);

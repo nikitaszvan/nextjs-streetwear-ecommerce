@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import StoreProvider from "./store-provider";
+
 import MainNavigation from "@/components/layout/navigation-menu";
 import PreviewCategories from "@/components/layout/preview-categories";
 import FeaturedProduct from "@/components/layout/featured-product";
@@ -28,14 +30,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <MainNavigation className="z-50 p-4 sticky top-0 bg-white/90 backdrop-blur-sm nav-border-reveal"/>
-        <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pb-6 pt-2 sm:px-6 lg:px-8">
-          <FeaturedProduct />
-          <PreviewCategories category="shirts-top-men"/>
-          <PreviewCategories category="outerwear-top-men"/>
-          <PreviewCategories category="pants-bottom-men"/>
-          <PreviewCategories category="shoes-men"/>
-        </main>
+        <StoreProvider>
+          <MainNavigation className="z-50 p-4 sticky top-0 bg-white/90 backdrop-blur-sm nav-border-reveal"/>
+          <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pb-6 pt-2 sm:px-6 lg:px-8">
+            <FeaturedProduct />
+            <PreviewCategories category="shirts-top-men"/>
+            <PreviewCategories category="outerwear-top-men"/>
+            <PreviewCategories category="pants-bottom-men"/>
+            <PreviewCategories category="shoes-men"/>
+          </main>
+        </StoreProvider>
       </body>
     </html>
   );
