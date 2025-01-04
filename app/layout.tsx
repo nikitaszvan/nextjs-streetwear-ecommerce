@@ -32,13 +32,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <StoreProvider>
           <MainNavigation className="z-50 p-4 sticky top-0 bg-white/90 backdrop-blur-sm nav-border-reveal"/>
-          <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pb-6 pt-2 sm:px-6 lg:px-8">
-            <FeaturedProduct />
-            <PreviewCategories category="shirts-top-men"/>
-            <PreviewCategories category="outerwear-top-men"/>
-            <PreviewCategories category="pants-bottom-men"/>
-            <PreviewCategories category="shoes-men"/>
-          </main>
+          {children}
         </StoreProvider>
       </body>
     </html>
