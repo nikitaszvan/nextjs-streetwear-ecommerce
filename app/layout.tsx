@@ -4,8 +4,6 @@ import "./globals.css";
 import StoreProvider from "./store-provider";
 
 import MainNavigation from "@/components/layout/navigation-menu";
-import PreviewCategories from "@/components/layout/preview-categories";
-import FeaturedProduct from "@/components/layout/featured-product";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,8 +29,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <StoreProvider>
-          <MainNavigation className="z-50 p-4 sticky top-0 bg-white/90 backdrop-blur-sm nav-border-reveal"/>
-          {children}
+          <main className="px-4 pb-6 pt-2 sm:px-6 lg:px-8">
+            <MainNavigation className="z-50 p-4 sticky top-0 bg-white/90 backdrop-blur-sm nav-border-reveal"/>
+            {children}
+          </main>
         </StoreProvider>
       </body>
     </html>

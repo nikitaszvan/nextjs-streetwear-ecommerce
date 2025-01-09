@@ -1,13 +1,37 @@
 import { configureStore } from '@reduxjs/toolkit';
-import productReducer from "./features/productsSlice";
+import { setupListeners } from '@reduxjs/toolkit/query';
+import { productsApi } from './api/products-api';
+// import { persistStore, persistReducer } from 'redux-persist';
+// import storage from 'redux-persist/lib/storage';
+
+// const persistConfig = {
+//   key: 'root',
+//   storage,
+//   whitelist: ['products'], // Only persist products reducer
+// };
+
+// const persistedReducer = persistReducer(persistConfig, productsReducer);
+
+// export const store = configureStore({
+//   reducer: {
+//     products: persistedReducer,
+//   },
+// });
+
+// export const persistor = persistStore(store);
 
 export const store = () => {
-  return configureStore({
+  const storeConfig =  configureStore({
     reducer: {
-        products: productReducer,
+        [productsApi.reducerPath]: productsApi.reducer
         // cart: cartReducer
-    }
-  })
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(productsApi.middleware),
+  });
+
+  setupListeners(storeConfig.dispatch);
+
+  return storeConfig;
 };
 
 // Infer the type of makeStore

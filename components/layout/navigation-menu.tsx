@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import StreetwearLogo from "@/public/assets/svgs/streetwear-logo.svg";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -15,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ShoppingBag } from 'lucide-react';
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import Image from "next/image";
 
 interface MainNavigationProps {
     className?: string;
@@ -23,36 +25,36 @@ interface MainNavigationProps {
 const components: { title: string; href: string; description: string }[] = [
   {
     title: "Tops",
-    href: "/docs/primitives/alert-dialog",
+    href: "/shirts-top-men",
     description:
       "A modal dialog that interrupts the user with important content and expects a response.",
   },
   {
     title: "Outerwear",
-    href: "/docs/primitives/hover-card",
+    href: "/outerwear-top-men",
     description:
       "For sighted users to preview content available behind a link.",
   },
   {
     title: "Bottoms",
-    href: "/docs/primitives/progress",
+    href: "/pants-bottom-men",
     description:
       "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
   },
   {
     title: "Footwear",
-    href: "/docs/primitives/scroll-area",
+    href: "/shoes-men",
     description: "Visually or semantically separates content.",
   },
   {
-    title: "Acessories",
-    href: "/docs/primitives/tabs",
+    title: "All",
+    href: "/all-products",
     description:
       "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
   },
 ]
 
-const StyledMenuLink = ({label, className}: {label: string; className?: string}) => {
+const StyledMenuLink = ({label}: {label: string }) => {
   return (
     <NavigationMenuLink 
       className={cn(
@@ -69,9 +71,7 @@ export default function MainNavigation({className}: MainNavigationProps) {
         "max-w-none gap-6 mx-auto flex w-full !px-[10%]",
         className
       )}>
-        <img src="assets/svgs/streetwear-logo.svg" alt=""
-            className="h-10"
-        />
+        <a href="/"><Image width="60" height="60" src={StreetwearLogo} alt="streetwear logo" /></a>
         <NavigationMenuList className="mr-auto !bg-transparent !backdrop-blur-none">
             <NavigationMenuItem>
             <Link href="/docs" legacyBehavior passHref>
@@ -84,7 +84,7 @@ export default function MainNavigation({className}: MainNavigationProps) {
             </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-                <NavigationMenuTrigger className="!bg-transparent">Men's</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="!bg-transparent">Men&apos;s</NavigationMenuTrigger>
                 <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                     {components.map((component) => (

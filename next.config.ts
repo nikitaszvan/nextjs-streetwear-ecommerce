@@ -1,23 +1,28 @@
+// next.config.ts
 import type { NextConfig } from "next";
+import withSvgr from "next-svgr";
 
 const nextConfig: NextConfig = {
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: [{
-        loader: '@svgr/webpack',
-        options: {
-          icon: true, // Make SVG more icon-friendly
-          svgo: true, // Optimize SVG
-        }
-      }]
-    });
-    return config;
+  experimental: {
+    turbo: {
+      rules: {
+        '.svg': ['@svgr/webpack']
+      },
+
+    },
   },
   images: {
-    disableStaticImages: false, // Enable static image imports
-    domains: ['assets.lummi.ai'], 
-  }
+    disableStaticImages: false,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'assets.lummi.ai',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
 };
 
-export default nextConfig;
+// Wrap config with SVGR
+export default withSvgr(nextConfig);

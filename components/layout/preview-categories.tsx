@@ -1,35 +1,60 @@
 "use client"
 
-import { useEffect, useMemo } from 'react';
-import { useAppSelector, useAppDispatch } from '@/lib/hooks';
-import { 
-  fetchProductsByCategory,
-  makeSelectCategoryProducts
-} from '@/lib/features/productsSlice';
+import { useState, useEffect } from 'react';
+import { useProducts } from '@/hooks/use-products';
 import Image from 'next/image';
 
+interface Product {
+  'category_pk': string;
+  'clothing-name': string;
+  'clothing-price': number;
+  'image-type': string;
+  'image-url': string;
+  'sort_key': string;
+  'upload-date': string;
+};
+
 const categoriesRef: Record<string, string> = {
-  "shirts-top-men" : "Tops",
-  "outerwear-top-men" : "Outerwear",
-  "pants-bottom-men" : "Bottoms",
-  "shoes-men" : "Shoes"
-}
+  "shirts-top-men": "Tops",
+  "outerwear-top-men": "Outerwear",
+  "pants-bottom-men": "Bottoms",
+  "shoes-men": "Shoes"
+} as const;
 
-const PreviewCategories = ({category}: { category: string }) => {
+const categories = [
+  "shirts-top-men",
+  "outerwear-top-men",
+  "pants-bottom-men",
+  "shoes-men"
+] as const;
 
-  const dispatch = useAppDispatch();
-  
-  const { loading, error, products } = useAppSelector(
-    useMemo(
-      () => makeSelectCategoryProducts(categoriesRef[category]),
-      [category]
-    )
-  );
+export default function ProductsContainer() {
+  const [shouldFetch, setShouldFetch] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchProductsByCategory(category));
-  }, [category, dispatch]);
+    setShouldFetch(true);
+  }, []);
 
+  return (
+    <>
+      {categories.map(category => (
+        <PreviewCategories 
+          key={category} 
+          category={category} 
+          shouldFetch={shouldFetch}
+        />
+      ))}
+    </>
+  );
+}
+
+interface PreviewCategoriesProps {
+  category: string;
+  shouldFetch: boolean;
+}
+
+const PreviewCategories = ({ category, shouldFetch }: PreviewCategoriesProps) => {
+  const { products, isLoading: loading, isError: error } = useProducts(category, shouldFetch);
 
   if (loading) {
     return (
@@ -51,7 +76,6 @@ const PreviewCategories = ({category}: { category: string }) => {
       </div>
     );
   }
-
   return (
     <div className="flex flex-col my-5">
       <div className="justify-end gap-4 px-4 py-2 w-fit flex">
@@ -59,7 +83,7 @@ const PreviewCategories = ({category}: { category: string }) => {
         <h3 className="text-md font-medium text-neutral-600 self-end hover:underline">view all</h3>
         </div>
         <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-          {products.slice(0, 4).map((product, index) => (
+          {products?.slice(0, 4).map((product: Product, index: number) => (
             <div key={index} className="relative aspect-[3/4]">
                 <Image
                 src={product['image-url']}
@@ -79,5 +103,3 @@ const PreviewCategories = ({category}: { category: string }) => {
     </div>
   );
 }
-
-export default PreviewCategories;

@@ -1,6 +1,6 @@
 // app/api/products/route.ts
 import { NextResponse } from 'next/server';
-import { fetchCategoryProducts } from '@/hooks/get-products';
+import { fetchCategoryProducts } from '@/hooks/fetch-products';
 
 export async function GET(request: Request) {
   try {
@@ -12,10 +12,10 @@ export async function GET(request: Request) {
     }
 
     const pk = encodeURIComponent(`CATEGORY#${category}`);
-    console.log(pk);
     const data = await fetchCategoryProducts(pk);
     return NextResponse.json(data);
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: 'Failed to fetch data' },
       { status: 500 }
