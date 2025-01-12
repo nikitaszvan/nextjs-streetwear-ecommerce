@@ -1,6 +1,6 @@
 import { useGetProductsByCategoryQuery } from '@/lib/api/products-api';
 
-export function useProducts(category: string, shouldFetch: boolean) {
+export function useProducts(category: string, shouldFetch: boolean, random?: boolean) {
   const {
     data: products,
     isLoading,
@@ -13,7 +13,15 @@ export function useProducts(category: string, shouldFetch: boolean) {
     refetchOnReconnect: true,
   });
 
+  let randomProduct = null;
+  
+  if (random && products && products.length > 0) {
+    randomProduct = products[Math.floor(Math.random() * products.length)];
+  }
+
+
   return {
+    randomProduct,
     products,
     isLoading,
     isError,

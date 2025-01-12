@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import StreetwearLogo from "@/public/assets/svgs/streetwear-logo.svg";
 import {
@@ -17,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { ShoppingBag } from 'lucide-react';
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
+import Link from "next/link";
 
 interface MainNavigationProps {
     className?: string;
@@ -71,7 +71,7 @@ export default function MainNavigation({className}: MainNavigationProps) {
         "max-w-none gap-6 mx-auto flex w-full !px-[10%]",
         className
       )}>
-        <a href="/"><Image width="60" height="60" src={StreetwearLogo} alt="streetwear logo" /></a>
+        <Link href="/"><Image width="60" height="60" src={StreetwearLogo} alt="streetwear logo" /></Link>
         <NavigationMenuList className="mr-auto !bg-transparent !backdrop-blur-none">
             <NavigationMenuItem>
             <Link href="/docs" legacyBehavior passHref>
@@ -80,7 +80,7 @@ export default function MainNavigation({className}: MainNavigationProps) {
             </NavigationMenuItem>
             <NavigationMenuItem>
             <Link href="/docs" legacyBehavior passHref>
-            <StyledMenuLink label="Best Sellers"/>
+              <StyledMenuLink label="Best Sellers"/>
             </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>

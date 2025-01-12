@@ -2,7 +2,9 @@
 
 import { useProducts } from "@/hooks/use-products";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Product {
     'category_pk': string;
@@ -24,6 +26,38 @@ export default function CategoryGrid({
 
     const [shouldFetch, setShouldFetch] = useState(false);
     const [catProduct, setCatProducts] = useState([]);
+    const router = useRouter();
+    const observerRef = useRef<IntersectionObserver | null>(null);
+
+    useEffect(() => {
+        // Create intersection observer
+        observerRef.current = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Get the href from the data attribute
+                        const href = entry.target.getAttribute('data-href');
+                        if (href) {
+                            // Prefetch the route
+                            router.prefetch(href);
+                        }
+                    }
+                });
+            },
+            {
+                root: null,
+                rootMargin: '50px', // Start prefetching slightly before entering viewport
+                threshold: 0
+            }
+        );
+
+        // Observe all links
+        document.querySelectorAll('[data-href]').forEach(link => {
+            observerRef.current?.observe(link);
+        });
+
+        return () => observerRef.current?.disconnect();
+    }, [router]);
 
     const makeSlug = (str: string) => {
         return str.split(" ").map((str) => str.toLowerCase()).join('-');
@@ -48,7 +82,7 @@ export default function CategoryGrid({
             <ul className='mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
                 {products?.map((product: Product, index: number) => 
                     <li key={index} className="group">
-                        <a href={`${categorySlug}/${makeSlug(product['clothing-name'])}`}>
+                        <Link href={`${categorySlug}/${makeSlug(product['clothing-name'])}`} data-href={`${categorySlug}/${makeSlug(product['clothing-name'])}`}>
                             <article className="overflow-hidden bg-white">
                                 <div className="rounded-lg aspect-square w-full overflow-hidden bg-neutral-100">
                                     <Image src={product['image-url']} alt="" loading="eager" width="768" height="768" decoding="async" data-nimg="1" className="group-hover:rotate hover-perspective w-full bg-neutral-100 object-cover object-center transition-opacity group-hover:opacity-75" sizes="(max-width: 1024x) 100vw, (max-width: 1280px) 50vw, 700px"/>
@@ -60,7 +94,7 @@ export default function CategoryGrid({
                                     </footer>
                                 </div>
                             </article>
-                        </a>
+                        </Link>
                     </li>   
                 )}
             </ul>

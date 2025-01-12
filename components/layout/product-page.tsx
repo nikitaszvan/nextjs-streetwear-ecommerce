@@ -13,6 +13,8 @@ import Image from "next/image";
 
 import { useProducts } from "@/hooks/use-products";
 
+import RecommendedProducts from "./recommended-products";
+
 const categoriesRef: Record<string, string> = {
     "shirts-top-men": "Tops",
     "outerwear-top-men": "Outerwear",
@@ -34,6 +36,12 @@ const categoriesRef: Record<string, string> = {
     return str.split("-").map(word => word[0].toUpperCase() + word.slice(1)).join(" ");
   }
 
+  const getRemainingCategories = (currentCategory: string) => {
+    return Object.keys(categoriesRef)
+      .filter(key => key !== currentCategory)
+      .map(key => key);
+  };
+
 export default function ProductPageComponent({
     product,
     category
@@ -43,14 +51,17 @@ export default function ProductPageComponent({
     }>) {
 
     const { products } = useProducts(category, true);
-
-    console.log(product);
     
     const prod = products?.find(
         (p: Product) => (p['clothing-name']) === makeTitleCase(product)
     );
 
-    console.log(prod);
+    const recommendedprods = getRemainingCategories(category).map((cat)=> {
+        const { randomProduct } = useProducts(cat, true, true);
+        return randomProduct;
+    });
+
+    console.log(makeTitleCase(product));
 
     if (!prod) return <div>Product not found</div>;
 
@@ -102,6 +113,7 @@ export default function ProductPageComponent({
                     </div>
                 </div>
             </div>
+            <RecommendedProducts randomProducts={recommendedprods}/>
         </div>
     );
 }
