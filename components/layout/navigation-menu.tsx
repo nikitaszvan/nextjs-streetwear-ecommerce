@@ -27,30 +27,30 @@ const components: { title: string; href: string; description: string }[] = [
     title: "Tops",
     href: "/shirts-top-men",
     description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
+      "Oversized tees and hoodies with bold graphics and boxy fits.",
   },
   {
     title: "Outerwear",
     href: "/outerwear-top-men",
     description:
-      "For sighted users to preview content available behind a link.",
+      "Bombers and puffers in bold colors and collabs.",
   },
   {
     title: "Bottoms",
     href: "/pants-bottom-men",
     description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
+      "Cargo pants and baggy jeans with utility features.",
   },
   {
     title: "Footwear",
     href: "/shoes-men",
-    description: "Visually or semantically separates content.",
+    description: "Limited sneakers and chunky trainers in rare colorways.",
   },
   {
     title: "All",
     href: "/all-products",
     description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
+      "Urban comfort with bold graphics and loose fits.",
   },
 ]
 
@@ -74,17 +74,17 @@ export default function MainNavigation({className}: MainNavigationProps) {
         <Link href="/"><Image width="60" height="60" src={StreetwearLogo} alt="streetwear logo" /></Link>
         <NavigationMenuList className="mr-auto !bg-transparent !backdrop-blur-none">
             <NavigationMenuItem>
-            <Link href="/docs" legacyBehavior passHref>
+            <Link href="/" legacyBehavior passHref>
                 <StyledMenuLink label="New Arrivals"/>
             </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-            <Link href="/docs" legacyBehavior passHref>
+            <Link href="/" legacyBehavior passHref>
               <StyledMenuLink label="Best Sellers"/>
             </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-                <NavigationMenuTrigger className="!bg-transparent">Men&apos;s</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="!bg-transparent">Categories</NavigationMenuTrigger>
                 <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                     {components.map((component) => (

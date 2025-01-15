@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./store-provider";
+import Footer from "@/components/layout/footer";
 
 import MainNavigation from "@/components/layout/navigation-menu";
 
@@ -29,9 +30,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <StoreProvider>
-          <main className="px-4 pb-6 pt-2 sm:px-6 lg:px-8">
+          <main className="">
             <MainNavigation className="z-50 p-4 sticky top-0 bg-white/90 backdrop-blur-sm nav-border-reveal"/>
             {children}
+            <Footer />
           </main>
         </StoreProvider>
       </body>

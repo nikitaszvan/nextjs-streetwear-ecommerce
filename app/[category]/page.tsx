@@ -30,17 +30,19 @@ export default async function CategoryPage({
     <>
       <ProductsFilter />
       <div className='mx-auto flex flex-col w-full max-w-7xl flex-1 px-4 pb-6 pt-2 sm:px-6 lg:px-8 gap-5'>
-            <Breadcrumb className="!pl-1">
-                <BreadcrumbList>
-                    <BreadcrumbItem>
-                        <BreadcrumbLink href="/all-products">All products</BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbPage>
-                        <BreadcrumbLink>{categoriesRef[category]}</BreadcrumbLink>
-                    </BreadcrumbPage>
-                </BreadcrumbList>
-            </Breadcrumb>
+            {category !== 'all-products' &&
+              <Breadcrumb className="!pl-1">
+                  <BreadcrumbList>
+                      <BreadcrumbItem>
+                          <BreadcrumbLink href="/all-products">All products</BreadcrumbLink>
+                      </BreadcrumbItem>
+                      <BreadcrumbSeparator />
+                      <BreadcrumbPage>
+                          <BreadcrumbLink>{categoriesRef[category]}</BreadcrumbLink>
+                      </BreadcrumbPage>
+                  </BreadcrumbList>
+              </Breadcrumb>
+            }
         <CategoryGrid category={categoriesRef[category]} categorySlug={category} />
       </div>
     </>

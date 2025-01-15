@@ -16,6 +16,7 @@ interface Product {
     'upload-date': string;
   };
 
+
 export default function CategoryGrid({
     category,
     categorySlug,
@@ -25,20 +26,33 @@ export default function CategoryGrid({
   }>) {
 
     const [shouldFetch, setShouldFetch] = useState(false);
-    const [catProduct, setCatProducts] = useState([]);
     const router = useRouter();
     const observerRef = useRef<IntersectionObserver | null>(null);
+    const {
+        products,
+        isLoading: loading,
+        isError: error,
+    } = useProducts(categorySlug, shouldFetch);
+
+
+    function shuffleArray(array: Array<Product>) {
+
+        const newArray = [...array];
+
+        for (let i = newArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+        }
+        return newArray;
+    }
 
     useEffect(() => {
-        // Create intersection observer
         observerRef.current = new IntersectionObserver(
             (entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Get the href from the data attribute
                         const href = entry.target.getAttribute('data-href');
                         if (href) {
-                            // Prefetch the route
                             router.prefetch(href);
                         }
                     }
@@ -46,12 +60,11 @@ export default function CategoryGrid({
             },
             {
                 root: null,
-                rootMargin: '50px', // Start prefetching slightly before entering viewport
+                rootMargin: '50px',
                 threshold: 0
             }
         );
 
-        // Observe all links
         document.querySelectorAll('[data-href]').forEach(link => {
             observerRef.current?.observe(link);
         });
@@ -67,22 +80,21 @@ export default function CategoryGrid({
       setShouldFetch(true);
     }, []);
 
-    const {
-    products,
-    isLoading: loading,
-    isError: error,
-    } = useProducts(categorySlug, shouldFetch);
-
     return (
         <>
+            {categorySlug !== 'all-products' ? 
             <h1 className="text-3xl font-bold leading-none tracking-tight text-foreground">
                 {category}
                 <div className="text-lg font-semibold text-muted-foreground">Category</div>
+            </h1> :
+            <h1 className="text-3xl font-bold leading-none tracking-tight text-foreground">
+                All Products
             </h1>
+            }
             <ul className='mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-                {products?.map((product: Product, index: number) => 
+                {shuffleArray(products)?.map((product: Product, index: number) => 
                     <li key={index} className="group">
-                        <Link href={`${categorySlug}/${makeSlug(product['clothing-name'])}`} data-href={`${categorySlug}/${makeSlug(product['clothing-name'])}`}>
+                        <Link href={`/${product['category_pk'].slice(9)}/${makeSlug(product['clothing-name'])}`} data-href={`${product['category_pk'].slice(9)}/${makeSlug(product['clothing-name'])}`}>
                             <article className="overflow-hidden bg-white">
                                 <div className="rounded-lg aspect-square w-full overflow-hidden bg-neutral-100">
                                     <Image src={product['image-url']} alt="" loading="eager" width="768" height="768" decoding="async" data-nimg="1" className="group-hover:rotate hover-perspective w-full bg-neutral-100 object-cover object-center transition-opacity group-hover:opacity-75" sizes="(max-width: 1024x) 100vw, (max-width: 1280px) 50vw, 700px"/>
