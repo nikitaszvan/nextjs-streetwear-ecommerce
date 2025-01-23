@@ -1,5 +1,4 @@
-import CategoryGrid from "@/components/layout/category-grid";
-import ProductsFilter from '@/components/layout/products-filter';
+
 import {
     Breadcrumb,
     BreadcrumbList,
@@ -8,6 +7,7 @@ import {
     BreadcrumbSeparator,
     BreadcrumbPage
 } from "@/components/ui/breadcrumb";
+import CategoryWrapper from "@/components/layout/category-wrapper";
 
 
 const categoriesRef: Record<string, string> = {
@@ -16,7 +16,6 @@ const categoriesRef: Record<string, string> = {
   "pants-bottom-men": "Bottoms",
   "shoes-men": "Shoes"
 } as const;
-
 
 export default async function CategoryPage({
   params,
@@ -27,24 +26,21 @@ export default async function CategoryPage({
   const { category } = await params;
 
   return (
-    <>
-      <ProductsFilter />
-      <div className='mx-auto flex flex-col w-full max-w-7xl flex-1 px-4 pb-6 pt-2 sm:px-6 lg:px-8 gap-5'>
-            {category !== 'all-products' &&
-              <Breadcrumb className="!pl-1">
-                  <BreadcrumbList>
-                      <BreadcrumbItem>
-                          <BreadcrumbLink href="/all-products">All products</BreadcrumbLink>
-                      </BreadcrumbItem>
-                      <BreadcrumbSeparator />
-                      <BreadcrumbPage>
-                          <BreadcrumbLink>{categoriesRef[category]}</BreadcrumbLink>
-                      </BreadcrumbPage>
-                  </BreadcrumbList>
-              </Breadcrumb>
-            }
-        <CategoryGrid category={categoriesRef[category]} categorySlug={category} />
-      </div>
-    </>
+    <CategoryWrapper children=
+          {category !== 'all-products' &&
+            <Breadcrumb className="!pl-1">
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink href="/all-products">All products</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbPage>
+                        <BreadcrumbLink>{categoriesRef[category]}</BreadcrumbLink>
+                    </BreadcrumbPage>
+                </BreadcrumbList>
+            </Breadcrumb>
+          }
+      category={categoriesRef[category]} categorySlug={category}
+    />
   );
 }

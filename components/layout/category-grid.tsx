@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import stringSimilarity from 'string-similarity';
 
 interface Product {
     'category_pk': string;
@@ -14,15 +15,19 @@ interface Product {
     'image-url': string;
     'sort_key': string;
     'upload-date': string;
-  };
+};
 
 
 export default function CategoryGrid({
     category,
     categorySlug,
+    sort,
+    search
   }: Readonly<{
     category: string;
     categorySlug: string;
+    sort: string;
+    search?: string;
   }>) {
 
     const [shouldFetch, setShouldFetch] = useState(false);
@@ -44,6 +49,10 @@ export default function CategoryGrid({
             [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
         }
         return newArray;
+    }
+
+    function sortProductsByPrice(array: Array<Product>, lowToHigh = true) {
+        return [...array].sort((a, b) => lowToHigh ? a['clothing-price'] - b['clothing-price'] : b['clothing-price'] - a['clothing-price']);
     }
 
     useEffect(() => {
@@ -80,19 +89,73 @@ export default function CategoryGrid({
       setShouldFetch(true);
     }, []);
 
+    // const sortedProducts = (products: Product[]) => {
+    //     if (!products) return [];
+        
+    //     switch(sort) {
+    //         case 'latest':
+    //             return shuffleArray([...products]);
+    //         case 'price-asc':
+    //             return sortProductsByPrice([...products]);
+    //         case 'price-desc':
+    //             return sortProductsByPrice([...products], false);
+    //         default:
+    //             return products;
+    //     }
+    // }
+
+    const sortedProducts = (products: Product[]) => {
+        if (!products) return [];
+        
+        switch(sort) {
+            case 'latest':
+                return search ? searchProductsWithTypos(products, search) : shuffleArray([...products]);
+            case 'price-asc':
+                return search ? sortProductsByPrice(searchProductsWithTypos(products, search)) : sortProductsByPrice([...products]);
+            case 'price-desc':
+                return search ? sortProductsByPrice(searchProductsWithTypos(products, search), false) : sortProductsByPrice([...products], false);
+            default:
+                return products;
+        }
+    }
+    
+    const searchProductsWithTypos = (products: Product[], searchTerm: string) => {
+        const searchWords = searchTerm.toLowerCase().split(' ');
+      
+        return products.filter(product => {
+          const productWords = product['clothing-name'].toLowerCase().split(' ');
+          
+          const matchedWords = searchWords.filter(searchWord => 
+            productWords.some(productWord => 
+              stringSimilarity.compareTwoStrings(searchWord, productWord) >= 0.7
+            )
+          );
+          return matchedWords.length >= Math.min(2, searchWords.length);
+        });
+      };
+
     return (
         <>
-            {categorySlug !== 'all-products' ? 
-            <h1 className="text-3xl font-bold leading-none tracking-tight text-foreground">
-                {category}
-                <div className="text-lg font-semibold text-muted-foreground">Category</div>
-            </h1> :
-            <h1 className="text-3xl font-bold leading-none tracking-tight text-foreground">
-                All Products
-            </h1>
-            }
+            {categorySlug !== 'all-products' ? (
+                <h1 className="text-3xl font-bold leading-none tracking-tight text-foreground">
+                    {category}
+                    <div className="text-lg font-semibold text-muted-foreground">Category</div>
+                </h1>
+            ) : (
+                <>
+                    {!search && (<h1 className="text-3xl font-bold leading-none tracking-tight text-foreground">
+                    All Products
+                    </h1>
+                    )}
+                    {search && (
+                    <h1 className="text-3xl font-bold leading-none tracking-tight text-foreground">
+                        Searching for "{search}"
+                    </h1>
+                    )}
+                </>
+            )}
             <ul className='mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-                {shuffleArray(products)?.map((product: Product, index: number) => 
+                {sortedProducts(products)?.map((product: Product, index: number) => 
                     <li key={index} className="group">
                         <Link href={`/${product['category_pk'].slice(9)}/${makeSlug(product['clothing-name'])}`} data-href={`${product['category_pk'].slice(9)}/${makeSlug(product['clothing-name'])}`}>
                             <article className="overflow-hidden bg-white">

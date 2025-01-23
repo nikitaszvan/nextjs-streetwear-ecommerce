@@ -42,6 +42,8 @@ const categoriesRef: Record<string, string> = {
       .map(key => key);
   };
 
+  
+
 export default function ProductPageComponent({
     product,
     category
@@ -61,7 +63,6 @@ export default function ProductPageComponent({
         return randomProduct;
     });
 
-    console.log(makeTitleCase(product));
 
     if (!prod) return <div>Product not found</div>;
 

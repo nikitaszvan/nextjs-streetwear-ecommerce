@@ -3,6 +3,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import StreetwearLogo from "@/public/assets/svgs/streetwear-logo.svg";
+import { useRouter } from 'next/navigation';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -63,9 +64,24 @@ const StyledMenuLink = ({label}: {label: string }) => {
       {label}
     </NavigationMenuLink>
   )
-}
+};
+
 
 export default function MainNavigation({className}: MainNavigationProps) {
+
+
+  const router = useRouter();
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const searchQuery = event.target.value;
+    console.log(searchQuery);
+    if (searchQuery.length > 0) {
+      router.push(`/all-products?search=${searchQuery}`);
+    } else {
+      router.push('/all-products');
+    }
+  };
+
   return (
     <NavigationMenu className={cn(
         "max-w-none gap-6 mx-auto flex w-full !px-[10%]",
@@ -109,7 +125,7 @@ export default function MainNavigation({className}: MainNavigationProps) {
             <div className="mr-5 ml-auto sm:ml-0">
                 <label className="flex items-center">
                     <span className="sr-only">Search</span>
-                    <Input placeholder="Search for products…" className="px-4 pr-8 bg-white" />
+                    <Input onChange={handleSearch} placeholder="Search for products…" className="px-4 pr-8 bg-white" />
                     <MagnifyingGlassIcon className="-ml-6 w-4 h-4"/>
                 </label>
             </div>

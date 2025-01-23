@@ -37,12 +37,11 @@ export function useProducts(category: string, shouldFetch: boolean, random?: boo
       }
     });
 
-    // Create combined refetch function
     refetch = () => {
       queries.forEach(query => query.refetch());
     };
   } else {
-    // Handle single category fetch
+
     const query = useGetProductsByCategoryQuery(category, {
       skip: !shouldFetch,
       pollingInterval: 5 * 60 * 1000,
@@ -54,8 +53,6 @@ export function useProducts(category: string, shouldFetch: boolean, random?: boo
     error = query.error;
     refetch = query.refetch;
     products = query.data || [];
-
-    console.log(products);
 
     if (random && products.length > 0) {
       randomProduct = products[Math.floor(Math.random() * products.length)];

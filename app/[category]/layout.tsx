@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation';
-import CategoryGrid from '@/components/layout/category-grid';
 
 const categoriesRef: Record<string, string> = {
     "shirts-top-men": "Tops",
