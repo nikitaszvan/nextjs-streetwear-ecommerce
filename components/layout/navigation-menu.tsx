@@ -1,9 +1,9 @@
 "use client"
 
-import * as React from "react";
+import { useState, forwardRef, useEffect, ChangeEvent } from "react";
 import { cn } from "@/lib/utils";
 import StreetwearLogo from "@/public/assets/svgs/streetwear-logo.svg";
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -69,19 +69,21 @@ const StyledMenuLink = ({label}: {label: string }) => {
 
 export default function MainNavigation({className}: MainNavigationProps) {
 
-
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const searchQuery = event.target.value;
-    console.log(searchQuery);
-    if (searchQuery.length > 0) {
-      router.push(`/all-products?search=${searchQuery}`);
-    } else {
-      router.push('/all-products');
-    }
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+
+  useEffect(() => {
+    setSearchQuery(searchParams.get("search") || "");
+  }, [searchParams]);
+
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    const newQuery = event.target.value;
+    setSearchQuery(newQuery);
+
+    router.push(newQuery.length > 0 ? `/all-products?search=${encodeURIComponent(newQuery)}` : "/all-products");
   };
-
   return (
     <NavigationMenu className={cn(
         "max-w-none gap-6 mx-auto flex w-full !px-[10%]",
@@ -125,7 +127,13 @@ export default function MainNavigation({className}: MainNavigationProps) {
             <div className="mr-5 ml-auto sm:ml-0">
                 <label className="flex items-center">
                     <span className="sr-only">Search</span>
-                    <Input onChange={handleSearch} placeholder="Search for products…" className="px-4 pr-8 bg-white" />
+                    <Input 
+                      maxLength={36} 
+                      value={searchQuery}
+                      onChange={handleSearch} 
+                      placeholder="Search for products…" 
+                      className="px-4 pr-8 bg-white" 
+                    />
                     <MagnifyingGlassIcon className="-ml-6 w-4 h-4"/>
                 </label>
             </div>
@@ -137,7 +145,7 @@ export default function MainNavigation({className}: MainNavigationProps) {
   )
 }
 
-const ListItem = React.forwardRef<
+const ListItem = forwardRef<
   React.ElementRef<"a">,
   React.ComponentPropsWithoutRef<"a">
 >(({ className, title, children, ...props }, ref) => {

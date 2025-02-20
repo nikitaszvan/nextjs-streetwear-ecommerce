@@ -16,21 +16,17 @@ export function useProducts(category: string, shouldFetch: boolean, random?: boo
   let randomProduct = null;
 
   if (category === "all-products") {
-    // Handle fetching all categories
     const queries = categories.map(cat => 
       useGetProductsByCategoryQuery(cat, {
         skip: !shouldFetch,
-        pollingInterval: 5 * 60 * 1000,
         refetchOnReconnect: true,
       })
     );
 
-    // Combine results
     isLoading = queries.some(query => query.isLoading);
     isError = queries.some(query => query.isError);
     error = queries.find(query => query.error)?.error || null;
     
-    // Combine all products
     queries.forEach(query => {
       if (query.data) {
         products.push(...query.data);
@@ -44,7 +40,6 @@ export function useProducts(category: string, shouldFetch: boolean, random?: boo
 
     const query = useGetProductsByCategoryQuery(category, {
       skip: !shouldFetch,
-      pollingInterval: 5 * 60 * 1000,
       refetchOnReconnect: true,
     });
 
@@ -58,6 +53,7 @@ export function useProducts(category: string, shouldFetch: boolean, random?: boo
       randomProduct = products[Math.floor(Math.random() * products.length)];
     }
   }
+
 
   return {
     randomProduct,
