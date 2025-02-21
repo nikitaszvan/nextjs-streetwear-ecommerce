@@ -18,6 +18,7 @@ import { ShoppingBag } from 'lucide-react';
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
+import { useCart } from "@/context/cart-context";
 
 interface MainNavigationProps {
     className?: string;
@@ -71,6 +72,7 @@ export default function MainNavigation({className}: MainNavigationProps) {
 
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { cart: { items } } = useCart();
 
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
 
@@ -84,6 +86,7 @@ export default function MainNavigation({className}: MainNavigationProps) {
 
     router.push(newQuery.length > 0 ? `/all-products?search=${encodeURIComponent(newQuery)}` : "/all-products");
   };
+
   return (
     <NavigationMenu className={cn(
         "max-w-none gap-6 mx-auto flex w-full !px-[10%]",
@@ -137,8 +140,11 @@ export default function MainNavigation({className}: MainNavigationProps) {
                     <MagnifyingGlassIcon className="-ml-6 w-4 h-4"/>
                 </label>
             </div>
-            <div className="h-6 w-6">
+            <div className="h-6 w-6 relative">
                 <ShoppingBag />
+                <span className="absolute bottom-0 right-0 inline-flex h-5 w-5 translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full border-2 bg-white text-center text-xs">
+                  {items.length}
+                </span>
             </div>
         </div>
     </NavigationMenu>

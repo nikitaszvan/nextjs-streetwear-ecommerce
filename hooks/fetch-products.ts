@@ -8,7 +8,7 @@ export async function fetchCategoryProducts(pk: string) {
   try {
     const command = new QueryCommand({
       TableName: "streetwear-ecommerce-imageurls",
-      KeyConditionExpression: "category_pk = :pk",  // Match your table's attribute name
+      KeyConditionExpression: "category_pk = :pk",
       ExpressionAttributeValues: {
         ":pk": decodeURIComponent(pk)
       }

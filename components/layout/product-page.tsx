@@ -14,6 +14,8 @@ import Image from "next/image";
 import { useProducts } from "@/hooks/use-products";
 
 import RecommendedProducts from "./recommended-products";
+import AddToCartButton from "./add-to-cart-button";
+import { ProductType } from "@/types/product-types";
 
 const categoriesRef: Record<string, string> = {
     "shirts-top-men": "Tops",
@@ -22,15 +24,6 @@ const categoriesRef: Record<string, string> = {
     "shoes-men": "Shoes"
   } as const;
 
-  interface Product {
-    'category_pk': string;
-    'clothing-name': string;
-    'clothing-price': number;
-    'image-type': string;
-    'image-url': string;
-    'sort_key': string;
-    'upload-date': string;
-  };
 
   const makeTitleCase = (str: string) => {
     return str.split("-").map(word => word[0].toUpperCase() + word.slice(1)).join(" ");
@@ -43,19 +36,18 @@ const categoriesRef: Record<string, string> = {
   };
 
   
-
-export default function ProductPageComponent({
+const ProductPageComponent = ({
     product,
     category
 }:  Readonly<{
     product: string;
     category: string;
-    }>) {
+    }>) => {
 
     const { products } = useProducts(category, true);
     
     const prod = products?.find(
-        (p: Product) => (p['clothing-name']) === makeTitleCase(product)
+        (p: ProductType) => (p['clothing-name']) === makeTitleCase(product)
     );
 
     const recommendedprods = getRemainingCategories(category).map((cat)=> {
@@ -103,14 +95,7 @@ export default function ProductPageComponent({
                                 <p>These classic black shoes are a wardrobe essential. Designed for both comfort and versatility, they pair well with any attire. The cushioned sole ensures all-day comfort.</p>
                             </div>
                         </section>
-                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-8 rounded-full text-lg relative" id="button-add-to-cart" type="submit" aria-disabled="false">
-                            <span className="transition-opacity ease-in opacity-100">Add to cart</span>
-                            <span className="ease-out transition-opacity pointer-events-none absolute z-10 opacity-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-loader-circle h-4 w-4 animate-spin">
-                                    <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-                                </svg>
-                            </span>
-                        </button>
+                        <AddToCartButton product={prod}/>
                     </div>
                 </div>
             </div>
@@ -118,3 +103,5 @@ export default function ProductPageComponent({
         </div>
     );
 }
+
+export default ProductPageComponent;

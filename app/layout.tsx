@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./store-provider";
 import Footer from "@/components/layout/footer";
+import { CartProvider } from '@/context/cart-context';
+import CartPreview from "@/components/layout/cart-preview";
 
 import MainNavigation from "@/components/layout/navigation-menu";
 
@@ -30,11 +32,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <StoreProvider>
-          <main className="">
-            <MainNavigation className="z-50 p-4 sticky top-0 bg-white/90 backdrop-blur-sm nav-border-reveal"/>
-            {children}
-            <Footer />
-          </main>
+          <CartProvider>
+            <main className="">
+              <MainNavigation className="z-50 p-4 sticky top-0 bg-white/90 backdrop-blur-sm nav-border-reveal"/>
+              {children}
+              <Footer />
+              <CartPreview />
+            </main>
+          </CartProvider>
         </StoreProvider>
       </body>
     </html>

@@ -4,35 +4,23 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useEffect } from "react";
 import Image from "next/image";
-
-interface Product {
-    'category_pk': string;
-    'clothing-name': string;
-    'clothing-price': number;
-    'image-type': string;
-    'image-url': string;
-    'sort_key': string;
-    'upload-date': string;
-  };
+import { ProductType } from "@/types/product-types";
 
   const makeSlug = (str: string) => {
     return str.split(" ").map((str) => str.toLowerCase()).join('-');
 }
 
-const RecommendedProducts = ({randomProducts} : {randomProducts: Array<Product>}) => {
+const RecommendedProducts = ({randomProducts} : {randomProducts: Array<ProductType>}) => {
      const router = useRouter();
         const observerRef = useRef<IntersectionObserver | null>(null);
     
         useEffect(() => {
-            // Create intersection observer
             observerRef.current = new IntersectionObserver(
                 (entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            // Get the href from the data attribute
                             const href = entry.target.getAttribute('data-href');
                             if (href) {
-                                // Prefetch the route
                                 router.prefetch(href);
                             }
                         }
@@ -40,12 +28,11 @@ const RecommendedProducts = ({randomProducts} : {randomProducts: Array<Product>}
                 },
                 {
                     root: null,
-                    rootMargin: '50px', // Start prefetching slightly before entering viewport
+                    rootMargin: '50px',
                     threshold: 0
                 }
             );
     
-            // Observe all links
             document.querySelectorAll('[data-href]').forEach(link => {
                 observerRef.current?.observe(link);
             });
@@ -59,8 +46,8 @@ const RecommendedProducts = ({randomProducts} : {randomProducts: Array<Product>}
             <h2 className="text-2xl font-bold tracking-tight">You May Also Like</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {randomProducts?.filter((prod): prod is Product => prod !== null)
-            .map((prod: Product, index: number) => 
+            {randomProducts?.filter((prod): prod is ProductType => prod !== null)
+            .map((prod: ProductType, index: number) => 
                 <Link key={index} href={`/${prod['category_pk'].slice(9)}/${makeSlug(prod["clothing-name"])}`}>
                     <div className="bg-card rounded overflow-hidden shadow group">
                         <div className="block relative w-full aspect-square">

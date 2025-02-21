@@ -18,7 +18,7 @@ export const productsApi = createApi({
           method: 'POST',
           body: newProduct,
         }),
-        invalidatesTags: ['Products'], // Automatically refetch products after adding new one
+        invalidatesTags: ['Products'],
     }),
   }),
 });

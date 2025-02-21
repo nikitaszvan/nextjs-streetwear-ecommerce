@@ -69,7 +69,7 @@ const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ categ
 
   const searchProductsWithScoring = (products: Product[], search: string) => {
     if (!products || products.length === 0) {
-      return { results: [], bestMatch: null }; // Avoid processing if products are not available
+      return { results: [], bestMatch: null };
     }
   
     const searchWords = search.toLowerCase().split(' ');
@@ -198,7 +198,7 @@ const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ categ
         <div className="flex h-[60vh] flex-col items-center justify-center gap-4">
           <h1 className="text-3xl font-bold">No Results Found for "{search}"</h1>
           <h2 className="max-w-md text-2xl text-center text-neutral-500">
-            Did you mean: 
+            Did you mean:&nbsp;
             <Link className='underline' href={`/all-products?search=${encodeURIComponent(sortedProducts.bestMatch?.["clothing-name"] || '')}`}>
               {sortedProducts.bestMatch?.["clothing-name"]}
             </Link>?
