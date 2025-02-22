@@ -3,9 +3,18 @@
 import { useCart } from "@/context/cart-context";
 import { useScrollLock } from '@/hooks/scroll-lock';
 import { Cross1Icon } from "@radix-ui/react-icons";
+import { Trash, Trash2 } from 'lucide-react';
+import { ProductType } from "@/types/product-types";
+import { CartProductType } from "@/types/cart-types";
+
+
 const CartPreview = () => {
     const { cart: {items, isCartPreviewVisible} } = useCart();
     const { dispatch } = useCart();
+
+    const handleRemoveFromCart = (product: CartProductType) => {
+        dispatch({ type: 'REMOVE_ITEM', payload: product });
+    };
 
     const closeCartPreview = () => {
         dispatch({ type: 'HIDE_CART_PREVIEW' });
@@ -28,12 +37,12 @@ const CartPreview = () => {
                     <section className="py-4 px-4 pb-0 text-sm">Free Standard Shipping</section>
                     {items.length ? items.map((item, index) => 
                         <article key={index} className="pt-4 space-y-2 p-4">
-                            <div className="flex items-start between">
+                            <div className="flex items-start justify-between">
                                 <p className="line-clamp-3 text-sm font-medium leading-[1.125rem]">
                                     <a href="" className="router-link-active router-link-exact-active duration hover:underline">{item["clothing-name"]}</a>
                                 </p>
-                                <button data-test-id="base-button" type="button" aria-label="Remove Item" className="c-grey-30 duration hover:c-grey-10">
-                                    
+                                <button onClick={() => handleRemoveFromCart(item)} type="button" aria-label="Remove Item" className="h-full">
+                                    <Trash2 className="h-4 text-gray-500"/>
                                 </button>
                             </div>
                             <div className="flex gap-4">
