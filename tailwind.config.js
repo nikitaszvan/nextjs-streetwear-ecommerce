@@ -11,6 +11,9 @@ module.exports = {
   ],
   theme: {
   	extend: {
+		scale: {
+			'200': '2',
+		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

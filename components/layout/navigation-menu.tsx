@@ -69,15 +69,12 @@ const StyledMenuLink = ({label}: {label: string }) => {
 
 
 export default function MainNavigation({className}: MainNavigationProps) {
-  const [ cartCount, setCartCount ] = useState(0);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { cart: { totalItemCount } } = useCart();
+  const { isLoading, cart: { totalItemCount }} = useCart();
+
 
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
-  useEffect(() => {
-    setCartCount(totalItemCount);
-  }, [])
   useEffect(() => {
     setSearchQuery(searchParams.get("search") || "");
   }, [searchParams]);
@@ -144,9 +141,11 @@ export default function MainNavigation({className}: MainNavigationProps) {
             </div>
             <div className="h-6 w-6 relative">
                 <ShoppingBag />
-                <span className="absolute bottom-0 right-0 inline-flex h-5 w-5 translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full border-2 bg-white text-center text-xs">
-                  {cartCount}
-                </span>
+                {!isLoading && 
+                  <span className="absolute bottom-0 right-0 inline-flex h-5 w-5 translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full border-2 bg-white text-center text-xs">
+                    {totalItemCount}
+                  </span>
+                }
             </div>
         </div>
     </NavigationMenu>

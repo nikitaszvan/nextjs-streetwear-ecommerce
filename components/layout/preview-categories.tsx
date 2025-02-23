@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useProducts } from '@/hooks/use-products';
 import Image from 'next/image';
 import Link from 'next/link';
+import { makeSlug } from '@/utils/string-utils';
 
 interface Product {
   'category_pk': string;
@@ -29,9 +30,6 @@ const categories = [
   "shoes-men"
 ] as const;
 
-const makeSlug = (str: string) => {
-  return str.split(" ").map((str) => str.toLowerCase()).join('-');
-}
 
 export default function ProductsContainer() {
   const [shouldFetch, setShouldFetch] = useState(false);
