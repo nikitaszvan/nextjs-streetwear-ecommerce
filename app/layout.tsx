@@ -5,7 +5,6 @@ import StoreProvider from "./store-provider";
 import Footer from "@/components/layout/footer";
 import { CartProvider } from '@/context/cart-context';
 import CartPreview from "@/components/layout/cart-preview";
-
 import MainNavigation from "@/components/layout/navigation-menu";
 
 const geistSans = Geist({
@@ -28,6 +27,7 @@ export default function RootLayout({
 }: Readonly<{
   children?: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>

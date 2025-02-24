@@ -1,5 +1,5 @@
 
-import ProductPageComponent from "@/components/layout/product-page";
+import ProdRecsWrapper from "@/components/layout/prod-recos-wrapper";
 
 export default async function ProductPage({
     params
@@ -10,6 +10,6 @@ export default async function ProductPage({
     const { category, product } = await params;
 
     return (
-        <ProductPageComponent category={category} product={product}/>
+        <ProdRecsWrapper category={category} product={product}/>
     );
 }

@@ -19,6 +19,7 @@ export type CartProductType = ProductType & {
 export interface CartState {
     items: CartProductType[];
     isCartPreviewVisible: boolean;
+    justAddedProduct: boolean;
     totalItemCount: number;
     totalCartPrice: number;
 };
@@ -27,7 +28,7 @@ export type CartAction =
     | { type: 'ADD_ITEM'; payload: CartProductType }
     | { type: 'REMOVE_ITEM'; payload: CartProductType }
     | { type: 'CLEAR_CART' }
-    | { type: 'SHOW_CART_PREVIEW' }
+    | { type: 'SHOW_CART_PREVIEW'; payload: boolean } // payload boolean is if cart is opened by something being added
     | { type: 'HIDE_CART_PREVIEW' }
     | { type: 'SET_ITEMS'; payload: CartProductType[] }
 

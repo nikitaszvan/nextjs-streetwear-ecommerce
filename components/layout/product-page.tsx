@@ -10,6 +10,7 @@ import {
     BreadcrumbSeparator,
     BreadcrumbPage
 } from "@/components/ui/breadcrumb";
+import Link from "next/link";
 
 import Image from "next/image";
 
@@ -32,19 +33,16 @@ const makeTitleCase = (str: string) => {
     return str.split("-").map(word => word[0].toUpperCase() + word.slice(1)).join(" ");
 }
 
-const getRemainingCategories = (currentCategory: string) => {
-    return Object.keys(categoriesRef)
-        .filter(key => key !== currentCategory)
-        .map(key => key);
-};
 
 
 const ProductPageComponent = ({
     product,
-    category
+    category,
+    recos
 }: Readonly<{
     product: string;
     category: string;
+    recos: ProductType[];
 }>) => {
 
 
@@ -65,31 +63,27 @@ const ProductPageComponent = ({
         (p: ProductType) => (p['clothing-name']) === makeTitleCase(product)
     );
 
-    const recommendedprods = getRemainingCategories(category).map((cat) => {
-        const { randomProduct } = useProducts(cat, true, true);
-        return randomProduct;
-    });
 
     const colorChoices = [
         {
-            name: "Muted Red",
-            rgba: "rgba(153, 76, 76, 1)"
+            name: "Crimson Whisper",
+            rgba: "rgba(153, 76, 76, 0.7)"
         },
         {
-            name: "Muted Green",
-            rgba: "rgba(76, 102, 76, 1)"
+            name: "Forest Haze",
+            rgba: "rgba(76, 102, 76, 0.7)"
         },
         {
-            name: "Muted Blue",
-            rgba: "rgba(76, 76, 153, 1)"
+            name: "Twilight Indigo",
+            rgba: "rgba(76, 76, 153, 0.7)"
         },
         {
-            name: "Muted Yellow",
-            rgba: "rgba(153, 153, 76, 1)"
+            name: "Golden Dusk",
+            rgba: "rgba(153, 153, 76, 0.7)"
         },
         {
-            name: "Muted Cyan",
-            rgba: "rgba(76, 153, 153, 1)"
+            name: "Aqua Mist",
+            rgba: "rgba(76, 153, 153, 0.7)"
         }
     ];
 
@@ -103,11 +97,15 @@ const ProductPageComponent = ({
             <Breadcrumb className="!pl-1">
                 <BreadcrumbList>
                     <BreadcrumbItem>
-                        <BreadcrumbLink href="/all-products">All products</BreadcrumbLink>
+                        <Link href="/all-products" passHref>
+                            <span>All products</span>
+                        </Link>
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
-                        <BreadcrumbLink href={`/${category}`}>{categoriesRef[category]}</BreadcrumbLink>
+                        <Link href={`/${category}`} passHref>
+                            <span>{categoriesRef[category]}</span>
+                        </Link>
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbPage>
@@ -188,7 +186,7 @@ const ProductPageComponent = ({
                     </div>
                 </div>
             </div>
-            <RecommendedProducts randomProducts={recommendedprods} />
+            <RecommendedProducts randomProducts={recos} />
         </div>
     );
 }

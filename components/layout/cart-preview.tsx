@@ -9,10 +9,11 @@ import { CartProductType } from "@/types/cart-types";
 import Link from "next/link";
 import { makeSlug } from "@/utils/string-utils";
 import { useRef, useEffect } from "react";
+import { sizesRef } from "@/constants/product-constants";
 
 
 const CartPreview = () => {
-    const { cart: {items, isCartPreviewVisible, totalCartPrice} } = useCart();
+    const { cart: {items, isCartPreviewVisible, totalCartPrice, justAddedProduct} } = useCart();
     const { dispatch } = useCart();
     const divRef = useRef<HTMLDivElement | null>(null);
 
@@ -33,12 +34,12 @@ const CartPreview = () => {
     useScrollLock(isCartPreviewVisible);
 
     return (
-        <div onClick={closeCartPreview} className={`fixed top-0 z-overlay w-full h-screen h-full bg-black/25 z-50 flex justify-end ${isCartPreviewVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        <div onClick={closeCartPreview} className={`fixed top-0 z-overlay w-full h-screen h-full bg-black/25 z-50 flex transition-all duration-200 justify-end ${isCartPreviewVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <div onClick={(e) => e.stopPropagation()} className={`flex flex-col bg-white h-full w-[21rem] transform transition-all duration-200 ease-in-out ${
           isCartPreviewVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
         }`}>
                 <header className="w-full flex items-center between border-b border-gray-70 p-4 lg:px-6 title-3">
-                    <h1 className="line-clamp-1 w-full font-semibold text-lg">Added to Cart!</h1>
+                    <h1 className="line-clamp-1 w-full font-semibold text-lg">{justAddedProduct ? 'Added to Cart!' : 'Shopping Cart'}</h1>
                     <button onClick={closeCartPreview} type="button" className="">
                         <Cross1Icon aria-hidden="true" className="block shrink-0 w-$w h-$h" />
                     </button>
@@ -56,12 +57,12 @@ const CartPreview = () => {
                             </div>
                             <div className="flex gap-4">
                                 <Link onClick={closeCartPreview} href={`/${item['category_pk'].slice(9)}/${makeSlug(item['clothing-name'])}`} className="router-link-active router-link-exact-active shrink-0 self-start aspect-square h-[6rem] overflow-hidden" data-test-id="thumbnail">
-                                    <img alt={`${item["clothing-name"]} model`} className='object-cover scale-200' loading="lazy" src={item["image-url"]}/>
+                                    <img alt={`${item["clothing-name"]} model`} className='object-cover scale-200' src={item["image-url"]}/>
                                 </Link>
                                 <div className="w-full space-y-2">
                                     <div className="text-gray-700 text-sm" data-test-id="mini-cart-product-variants">
-                                        <p className="line-clamp-1 mb-1">{item.color!.name}</p>
-                                        <p className="line-clamp-1 mb-1">{item!.size}</p>
+                                        <p className="line-clamp-1 mb-1">Color: {item.color!.name}</p>
+                                        <p className="line-clamp-1 mb-1">{sizesRef[item.size!]}</p>
                                         <p className="line-clamp-1 mb-2">Qty: {item.quantity}</p>
                                     </div>
                                     <div className="text-sm lh-1 text-sm">
@@ -83,9 +84,9 @@ const CartPreview = () => {
                                 <span>CAD {totalCartPrice}</span>
                             </div>
                             <p className="pb-3 text-xs">Shipping &amp; Tax calculated at checkout</p>
-                            <a href="" className="flex py-2 px-6 w-full rounded-full bg-black">
-                                <span className="text-center text-white w-full">View Cart</span>
-                            </a>
+                            <Link href="/checkout" onClick={closeCartPreview} className="flex py-2 px-6 w-full rounded-full bg-black" passHref>
+                                <span className="text-center text-white w-full">Checkout</span>
+                            </Link>
                         </div>
                     </section>
                 </footer>

@@ -13,6 +13,7 @@ import {
 const initialState: CartState = {
   items: [],
   isCartPreviewVisible: false,
+  justAddedProduct: false,
   totalItemCount: 0,
   totalCartPrice: 0
 };
@@ -45,7 +46,6 @@ const addToIndexedDB = async (item: CartProductType): Promise<void> => {
   return openDatabase().then(db => {
     const transaction = db.transaction('cart', 'readwrite');
     const store = transaction.objectStore('cart');
-    console.log(item);
     store.put(item, item['unique-identifier']);
   });
 };
@@ -180,7 +180,6 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 
       updateTotalItemCountInDB(newState.totalItemCount);
       updateTotalPriceInDB(newState.totalItemCount);
-      console.log(newState.totalItemCount);
       return newState;
 
     case 'REMOVE_ITEM':
@@ -241,6 +240,7 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       newState = {
         ...state,
         isCartPreviewVisible: true,
+        justAddedProduct: action.payload
       };
       return newState;
 

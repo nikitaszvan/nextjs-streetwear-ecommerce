@@ -8,20 +8,16 @@ import {
     BreadcrumbPage
 } from "@/components/ui/breadcrumb";
 import CategoryWrapper from "@/components/layout/category-wrapper";
-
-
-const categoriesRef: Record<string, string> = {
-  "shirts-top-men": "Tops",
-  "outerwear-top-men": "Outerwear",
-  "pants-bottom-men": "Bottoms",
-  "shoes-men": "Shoes"
-} as const;
+import Link from "next/link";
+import { categoriesRef } from "@/constants/product-constants";
 
 export default async function CategoryPage({
   params,
 }: {
   params: { category: string }
 }) {
+
+
 
   const { category } = await params;
 
@@ -31,7 +27,9 @@ export default async function CategoryPage({
             <Breadcrumb className="!pl-1">
                 <BreadcrumbList>
                     <BreadcrumbItem>
-                        <BreadcrumbLink href="/all-products">All products</BreadcrumbLink>
+                        <Link href='/all-products' passHref>
+                          <span>All products</span>
+                        </Link>
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbPage>
