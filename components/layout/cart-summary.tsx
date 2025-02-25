@@ -19,7 +19,7 @@ const CartSummary = () => {
 
     return (
         <div className="my-8 xl:col-span-7">
-            <div className="">
+            <div className="sticky top-1">
                 <h1 className="mb-4 text-3xl font-bold leading-none tracking-tight">Your cart</h1>
                 <form>
                     <div className="relative w-full overflow-auto">
