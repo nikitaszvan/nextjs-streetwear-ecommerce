@@ -20,20 +20,12 @@ import RecommendedProducts from "./recommended-products";
 import AddToCartButton from "./add-to-cart-button";
 import { ProductType } from "@/types/product-types";
 import { ColorType } from "@/types/cart-types";
-
-const categoriesRef: Record<string, string> = {
-    "shirts-top-men": "Tops",
-    "outerwear-top-men": "Outerwear",
-    "pants-bottom-men": "Bottoms",
-    "shoes-men": "Shoes"
-} as const;
+import { categoriesRef } from "@/constants/product-constants";
 
 
 const makeTitleCase = (str: string) => {
     return str.split("-").map(word => word[0].toUpperCase() + word.slice(1)).join(" ");
 }
-
-
 
 const ProductPageComponent = ({
     product,
@@ -57,7 +49,7 @@ const ProductPageComponent = ({
         setSelectedSize(size);
     };
 
-    const { products } = useProducts(category, true);
+    const { products } = useProducts({category: category, shouldFetch: true});
 
     const prod: ProductType = products?.find(
         (p: ProductType) => (p['clothing-name']) === makeTitleCase(product)

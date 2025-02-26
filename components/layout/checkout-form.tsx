@@ -11,8 +11,6 @@ import {
 
 import Form from "next/form";
 
-
-
 export default function CheckoutForm({ amount }: { amount: number }) {
   const [clientSecret, setClientSecret] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -58,7 +56,7 @@ export default function CheckoutForm({ amount }: { amount: number }) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ amount: amount }),
+      body: JSON.stringify({ amount: amount*100 }),
     })
       .then((res) => res.json())
       .then((json) => setClientSecret(json.clientSecret));

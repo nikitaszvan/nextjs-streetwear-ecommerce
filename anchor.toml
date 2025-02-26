@@ -1,0 +1,10 @@
+[lcl-host]
+realm-apid = 'localhost'
+
+[org]
+apid = 'nikitaszvan'
+
+[service]
+apid = 'streetwear-ecommerce'
+category = 'javascript'
+cert-style = 'acme'

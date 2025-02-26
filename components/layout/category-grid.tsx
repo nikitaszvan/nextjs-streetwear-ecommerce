@@ -8,23 +8,13 @@ import { useRouter } from "next/navigation";
 import stringSimilarity from 'string-similarity';
 import { Skeleton } from "@/components/ui/skeleton";
 import { makeSlug } from "@/utils/string-utils";
-
-interface Product {
-  'category_pk': string;
-  'clothing-name': string;
-  'clothing-price': number;
-  'image-type': string;
-  'image-url': string;
-  'sort_key': string;
-  'upload-date': string;
-}
+import { ProductType } from "@/types/product-types";
 
 const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ category: string, categorySlug: string, sort: string, search?: string }>) => {
   const [shouldFetch, setShouldFetch] = useState(false);
   const router = useRouter();
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const { products, isLoading: loading, isError: error } = useProducts(categorySlug, shouldFetch);
-
+  const { products, isLoading: loading, isError: error } = useProducts({ category: categorySlug, shouldFetch: shouldFetch});
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver((entries) => {
@@ -49,7 +39,7 @@ const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ categ
     return () => observerRef.current?.disconnect();
   }, [router]);
 
-  const shuffleArray = (array: Product[]) => {
+  const shuffleArray = (array: ProductType[]) => {
     const newArray = [...array];
     for (let i = newArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -58,7 +48,7 @@ const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ categ
     return newArray;
   };
 
-  const sortProductsByPrice = (array: Product[], lowToHigh = true) => {
+  const sortProductsByPrice = (array: ProductType[], lowToHigh = true) => {
     return [...array].sort((a, b) => lowToHigh ? a['clothing-price'] - b['clothing-price'] : b['clothing-price'] - a['clothing-price']);
   };
 
@@ -66,7 +56,7 @@ const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ categ
     setShouldFetch(true);
   }, []);
 
-  const searchProductsWithScoring = (products: Product[], search: string) => {
+  const searchProductsWithScoring = (products: ProductType[], search: string) => {
     if (!products || products.length === 0) {
       return { results: [], bestMatch: null };
     }
@@ -107,7 +97,7 @@ const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ categ
       .sort((a, b) => b.score - a.score)
       .map(item => item.product);
   
-    let bestMatch: Product | null = null;
+    let bestMatch: ProductType | null = null;
   
     if (results.length > 0) {
       bestMatch = results[0];
@@ -119,13 +109,11 @@ const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ categ
   
     return { results, bestMatch };
   };
-  
 
-
-  const sortedProducts = useMemo<{ results: Product[]; bestMatch: Product | null }>(() => {
+  const sortedProducts = useMemo<{ results: ProductType[]; bestMatch: ProductType | null }>(() => {
     if (!products) return { results: [], bestMatch: null };
 
-    let searchResults: { results: Product[]; bestMatch: Product | null } = { results: [], bestMatch: null };
+    let searchResults: { results: ProductType[]; bestMatch: ProductType | null } = { results: [], bestMatch: null };
 
     if (search) {
       searchResults = searchProductsWithScoring(products, search);
@@ -175,7 +163,7 @@ const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ categ
         </ul>
       ) : sortedProducts.results.length > 0 ? (
         <ul className='mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-          {sortedProducts.results.map((product: Product, index: number) => (
+          {sortedProducts.results.map((product: ProductType, index: number) => (
             <li key={index} className="group">
               <Link href={`/${product['category_pk'].slice(9)}/${makeSlug(product['clothing-name'])}`} data-href={`${product['category_pk'].slice(9)}/${makeSlug(product['clothing-name'])}`}>
                 <article className="overflow-hidden bg-white">

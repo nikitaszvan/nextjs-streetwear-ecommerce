@@ -23,7 +23,7 @@ const StripeElementsWrapper = () => {
                 stripe={stripePromise}
                 options={{
                     mode: "payment",
-                    amount: Math.round(amount * 1000),
+                    amount: Math.round(amount * 100),
                     currency: "cad"
                 }}
             >
