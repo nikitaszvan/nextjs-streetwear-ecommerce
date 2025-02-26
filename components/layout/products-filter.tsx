@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { cn } from "@/lib/utils";
 import { Circle } from 'lucide-react';
@@ -8,14 +8,13 @@ interface ProductsFilterProps {
   selectedSort: string;
 }
 
-export default function ProductsFilter({ onFilterChange, selectedSort }: ProductsFilterProps) {
+const ProductsFilter = ({ onFilterChange, selectedSort }: ProductsFilterProps) => {
 
   const sortOptions = [
     { id: 'latest', label: 'Latest Arrivals' },
     { id: 'price-asc', label: 'Price: Low → High' },
     { id: 'price-desc', label: 'Price: High → Low' },
-  ]
-
+  ];
 
   return (
     <div className="flex flex-col py-4 small:px-0 pl-6 min-w-[250px] small:ml-[1.675rem] h-fit sticky top-[6rem]">
@@ -36,5 +35,7 @@ export default function ProductsFilter({ onFilterChange, selectedSort }: Product
       </div>
     </div>
   )
-}
+};
+
+export default ProductsFilter;
 

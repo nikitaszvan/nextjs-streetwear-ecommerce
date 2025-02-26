@@ -13,8 +13,7 @@ import { sizesRef } from "@/constants/product-constants";
 
 
 const CartPreview = () => {
-    const { cart: {items, isCartPreviewVisible, totalCartPrice, justAddedProduct} } = useCart();
-    const { dispatch } = useCart();
+    const { dispatch, cart: {items, isCartPreviewVisible, totalCartPrice, justAddedProduct} } = useCart();
     const divRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {

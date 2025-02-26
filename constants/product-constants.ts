@@ -13,3 +13,42 @@ export const sizesRef: Record<string, string> = {
     "XL": "Extra Large",
     "2XL": "Extra Extra Large"
 } as const;
+
+export const categories = [
+    "shirts-top-men",
+    "outerwear-top-men",
+    "pants-bottom-men",
+    "shoes-men"
+] as const;
+
+export const menuCategories: { title: string; href: string; description: string }[] = [
+    {
+        title: "Tops",
+        href: "/shirts-top-men",
+        description:
+            "Oversized tees and hoodies with bold graphics and boxy fits.",
+    },
+    {
+        title: "Outerwear",
+        href: "/outerwear-top-men",
+        description:
+            "Bombers and puffers in bold colors and collabs.",
+    },
+    {
+        title: "Bottoms",
+        href: "/pants-bottom-men",
+        description:
+            "Cargo pants and baggy jeans with utility features.",
+    },
+    {
+        title: "Footwear",
+        href: "/shoes-men",
+        description: "Limited sneakers and chunky trainers in rare colorways.",
+    },
+    {
+        title: "All",
+        href: "/all-products",
+        description:
+            "Urban comfort with bold graphics and loose fits.",
+    },
+];

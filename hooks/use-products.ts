@@ -1,22 +1,22 @@
 import { useGetProductsByCategoryQuery } from '@/lib/api/products-api';
+import { categories } from '@/constants/product-constants';
 
-const categories = [
-  "shirts-top-men",
-  "outerwear-top-men",
-  "pants-bottom-men",
-  "shoes-men"
-] as const;
+type UseProductsParamsType = {
+  category: string;
+  shouldFetch: boolean;
+  random?: boolean;
+}
 
-export function useProducts(category: string, shouldFetch: boolean, random?: boolean) {
+export const useProducts = ({ category, shouldFetch, random }: UseProductsParamsType) => {
   let products = [];
   let isLoading = false;
   let isError = false;
   let error = null;
-  let refetch = () => {};
+  let refetch = () => { };
   let randomProduct = null;
 
   if (category === "all-products") {
-    const queries = categories.map(cat => 
+    const queries = categories.map(cat =>
       useGetProductsByCategoryQuery(cat, {
         skip: !shouldFetch,
         refetchOnReconnect: true,
@@ -26,7 +26,7 @@ export function useProducts(category: string, shouldFetch: boolean, random?: boo
     isLoading = queries.some(query => query.isLoading);
     isError = queries.some(query => query.isError);
     error = queries.find(query => query.error)?.error || null;
-    
+
     queries.forEach(query => {
       if (query.data) {
         products.push(...query.data);

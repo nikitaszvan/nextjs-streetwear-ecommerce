@@ -1,10 +1,9 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { client } from "@/lib/dynamodb";
 
 const docClient = DynamoDBDocumentClient.from(client);
 
-export async function fetchCategoryProducts(pk: string) {
+export const fetchCategoryProducts = async (pk: string) => {
   try {
     const command = new QueryCommand({
       TableName: "streetwear-ecommerce-imageurls",

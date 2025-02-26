@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import stringSimilarity from 'string-similarity';
 import { Skeleton } from "@/components/ui/skeleton";
+import { makeSlug } from "@/utils/string-utils";
 
 interface Product {
   'category_pk': string;
@@ -60,8 +61,6 @@ const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ categ
   const sortProductsByPrice = (array: Product[], lowToHigh = true) => {
     return [...array].sort((a, b) => lowToHigh ? a['clothing-price'] - b['clothing-price'] : b['clothing-price'] - a['clothing-price']);
   };
-
-  const makeSlug = (str: string) => str.split(" ").map((str) => str.toLowerCase()).join('-');
 
   useEffect(() => {
     setShouldFetch(true);

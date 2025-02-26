@@ -21,7 +21,6 @@ const AddToCartButton = ({product, active}: AddToButtonType) => {
           quantity: 1,
         };
 
-    
         dispatch({ type: 'ADD_ITEM', payload: cartItem });
         dispatch({ type: 'SHOW_CART_PREVIEW', payload: true });
       };

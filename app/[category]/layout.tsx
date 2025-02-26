@@ -1,21 +1,13 @@
 import { notFound } from 'next/navigation';
+import { categoriesRef } from '@/constants/product-constants';
 
-const categoriesRef: Record<string, string> = {
-    "shirts-top-men": "Tops",
-    "outerwear-top-men": "Outerwear",
-    "pants-bottom-men": "Bottoms",
-    "shoes-men": "Shoes",
-    "all-products": "All"
-  } as const;
-
-export default async function CategoryLayout({
+const CategoryLayout = async ({
     children,
     params
-}:  Readonly<{
+}: Readonly<{
     children?: React.ReactNode;
     params: { category: string }
-  }>)
-   {
+}>) => {
     const { category } = await params;
 
     if (!Object.keys(categoriesRef).includes(category)) {
@@ -29,4 +21,6 @@ export default async function CategoryLayout({
             </div>
         </>
     )
-}
+};
+
+export default CategoryLayout;

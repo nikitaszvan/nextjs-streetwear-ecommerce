@@ -5,51 +5,9 @@ import { useProducts } from '@/hooks/use-products';
 import Image from 'next/image';
 import Link from 'next/link';
 import { makeSlug } from '@/utils/string-utils';
+import { ProductType } from '@/types/product-types';
+import { categoriesRef, categories } from '@/constants/product-constants';
 
-interface Product {
-  'category_pk': string;
-  'clothing-name': string;
-  'clothing-price': number;
-  'image-type': string;
-  'image-url': string;
-  'sort_key': string;
-  'upload-date': string;
-};
-
-const categoriesRef: Record<string, string> = {
-  "shirts-top-men": "Tops",
-  "outerwear-top-men": "Outerwear",
-  "pants-bottom-men": "Bottoms",
-  "shoes-men": "Shoes"
-} as const;
-
-const categories = [
-  "shirts-top-men",
-  "outerwear-top-men",
-  "pants-bottom-men",
-  "shoes-men"
-] as const;
-
-
-export default function ProductsContainer() {
-  const [shouldFetch, setShouldFetch] = useState(false);
-
-  useEffect(() => {
-    setShouldFetch(true);
-  }, []);
-
-  return (
-    <>
-      {categories.map(category => (
-        <PreviewCategories 
-          key={category} 
-          category={category} 
-          shouldFetch={shouldFetch}
-        />
-      ))}
-    </>
-  );
-}
 
 interface PreviewCategoriesProps {
   category: string;
@@ -57,7 +15,7 @@ interface PreviewCategoriesProps {
 }
 
 const PreviewCategories = ({ category, shouldFetch }: PreviewCategoriesProps) => {
-  const { products, isLoading: loading, isError: error } = useProducts(category, shouldFetch);
+  const { products, isLoading: loading, isError: error } = useProducts({ category: category, shouldFetch: shouldFetch });
 
   if (loading) {
     return (
@@ -86,7 +44,7 @@ const PreviewCategories = ({ category, shouldFetch }: PreviewCategoriesProps) =>
         <Link href={`/${makeSlug(category)}`} className="text-md font-medium text-neutral-600 self-end hover:underline">view all</Link>
         </div>
         <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-          {products?.slice(0, 4).map((product: Product, index: number) => (
+          {products?.slice(0, 4).map((product: ProductType, index: number) => (
             <div key={index} className="relative aspect-[3/4]">
                 <Link href={`${category}/${makeSlug(product["clothing-name"])}`}>
                   <Image
@@ -108,3 +66,26 @@ const PreviewCategories = ({ category, shouldFetch }: PreviewCategoriesProps) =>
     </div>
   );
 }
+
+const ProductsContainer = () => {
+  const [shouldFetch, setShouldFetch] = useState(false);
+
+  useEffect(() => {
+    setShouldFetch(true);
+  }, []);
+
+  return (
+    <>
+      {categories.map(category => (
+        <PreviewCategories 
+          key={category} 
+          category={category} 
+          shouldFetch={shouldFetch}
+        />
+      ))}
+    </>
+  );
+};
+
+export default ProductsContainer;
+

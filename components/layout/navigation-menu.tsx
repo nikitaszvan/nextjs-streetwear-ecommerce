@@ -20,42 +20,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/cart-context";
 import { usePathname } from "next/navigation";
+import { menuCategories } from "@/constants/product-constants";
 
-interface MainNavigationProps {
-  className?: string;
-}
-
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Tops",
-    href: "/shirts-top-men",
-    description:
-      "Oversized tees and hoodies with bold graphics and boxy fits.",
-  },
-  {
-    title: "Outerwear",
-    href: "/outerwear-top-men",
-    description:
-      "Bombers and puffers in bold colors and collabs.",
-  },
-  {
-    title: "Bottoms",
-    href: "/pants-bottom-men",
-    description:
-      "Cargo pants and baggy jeans with utility features.",
-  },
-  {
-    title: "Footwear",
-    href: "/shoes-men",
-    description: "Limited sneakers and chunky trainers in rare colorways.",
-  },
-  {
-    title: "All",
-    href: "/all-products",
-    description:
-      "Urban comfort with bold graphics and loose fits.",
-  },
-]
 
 const StyledMenuLink = ({ label }: { label: string }) => {
   return (
@@ -68,8 +34,39 @@ const StyledMenuLink = ({ label }: { label: string }) => {
   )
 };
 
+const ListItem = forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, href }, ref) => {
+  return (
+    <li>
+      <Link href={href!} legacyBehavior passHref>
+        <NavigationMenuLink asChild>
+          <a
+            ref={ref}
+            className={cn(
+              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+              className
+            )}
+          >
+            <div className="text-sm font-medium leading-none">{title}</div>
+            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+              {children}
+            </p>
+          </a>
+        </NavigationMenuLink>
+      </Link>
+    </li>
+  );
+});
 
-export default function MainNavigation({ className }: MainNavigationProps) {
+ListItem.displayName = "ListItem";
+
+interface MainNavigationProps {
+  className?: string;
+}
+
+const MainNavigation = ({ className }: MainNavigationProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isLoading, cart: { totalItemCount }, dispatch } = useCart();
@@ -112,13 +109,13 @@ export default function MainNavigation({ className }: MainNavigationProps) {
           <NavigationMenuTrigger className="!bg-transparent">Categories</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {components.map((component) => (
+              {menuCategories.map((cat) => (
                 <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
+                  key={cat.title}
+                  title={cat.title}
+                  href={cat.href}
                 >
-                  {component.description}
+                  {cat.description}
                 </ListItem>
               ))}
             </ul>
@@ -159,31 +156,5 @@ export default function MainNavigation({ className }: MainNavigationProps) {
   )
 }
 
-const ListItem = forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, href }, ref) => {
-  return (
-    <li>
-      <Link href={href!} legacyBehavior passHref>
-        <NavigationMenuLink asChild>
-          <a
-            ref={ref}
-            className={cn(
-              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-              className
-            )}
-          >
-            <div className="text-sm font-medium leading-none">{title}</div>
-            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-              {children}
-            </p>
-          </a>
-        </NavigationMenuLink>
-      </Link>
-    </li>
-  );
-});
-
-ListItem.displayName = "ListItem";
+export default MainNavigation;
 
