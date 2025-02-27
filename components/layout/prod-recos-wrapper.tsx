@@ -8,8 +8,8 @@ type ProdRecsWrapperProps = {
   product: string;
 };
 
-
 const ProdRecsWrapper = ({ category, product }: ProdRecsWrapperProps) => {
+
   const { randomProducts } = useProducts({
     category: category,
     shouldFetch: true,
