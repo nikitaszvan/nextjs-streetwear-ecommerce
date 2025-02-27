@@ -6,6 +6,7 @@ import Footer from "@/components/layout/footer";
 import { CartProvider } from '@/context/cart-context';
 import CartPreview from "@/components/layout/cart-preview";
 import MainNavigation from "@/components/layout/navigation-menu";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +35,9 @@ const RootLayout = ({
         <StoreProvider>
           <CartProvider>
             <main className="">
-              <MainNavigation className="z-50 p-4 sticky top-0 bg-white/90 backdrop-blur-sm nav-border-reveal"/>
+              <Suspense>
+                <MainNavigation className="z-50 p-4 sticky top-0 bg-white/90 backdrop-blur-sm nav-border-reveal" />
+              </Suspense>
               {children}
               <Footer />
               <CartPreview />

@@ -36,7 +36,7 @@
     "types/**/*.d.ts",
     "types/*.d.ts",
     ".next/types/**/*.ts"
-, "lib/dynamodb.js", "hooks/add-cat-images.js", "hooks/add-cat-images.mts", "test/test-script.js"  ],
+, "lib/dynamodb.js", "hooks/add-cat-images.js", "hooks/add-cat-images.mts", "test/test-script.js", "next.config.mjs", "next.config.mjs"  ],
   "exclude": [
     "node_modules"
   ]

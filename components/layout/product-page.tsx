@@ -51,7 +51,7 @@ const ProductPageComponent = ({
 
     const { products } = useProducts({category: category, shouldFetch: true});
 
-    const prod: ProductType = products?.find(
+    const prod: ProductType | undefined = products?.find(
         (p: ProductType) => (p['clothing-name']) === makeTitleCase(product)
     );
 

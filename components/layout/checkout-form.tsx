@@ -6,7 +6,6 @@ import {
   AddressElement,
   useStripe,
   useElements,
-  ExpressCheckoutElement
 } from '@stripe/react-stripe-js';
 
 import Form from "next/form";

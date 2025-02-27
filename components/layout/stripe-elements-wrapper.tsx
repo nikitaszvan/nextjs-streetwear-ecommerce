@@ -1,8 +1,7 @@
 "use client"
 
 import CheckoutForm from "@/components/layout/checkout-form";
-import { CheckoutProvider, Elements } from '@stripe/react-stripe-js';
-import { useState, useEffect } from 'react';
+import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { useCart } from "@/context/cart-context";
 

@@ -22,7 +22,7 @@ const openDatabase = (): Promise<IDBDatabase> => {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open('ecommerceDB', 1);
 
-    request.onupgradeneeded = function (event) {
+    request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
       if (!db.objectStoreNames.contains('cart')) {
         db.createObjectStore('cart');
@@ -32,11 +32,11 @@ const openDatabase = (): Promise<IDBDatabase> => {
       }
     };
 
-    request.onsuccess = function (event) {
+    request.onsuccess = (event) => {
       resolve((event.target as IDBOpenDBRequest).result);
     };
 
-    request.onerror = function (event) {
+    request.onerror = (event) => {
       reject((event.target as IDBOpenDBRequest).error);
     };
   });
@@ -87,11 +87,11 @@ const getTotalItemCountFromDB = async (): Promise<number> => {
     const store = transaction.objectStore('metadata');
     const request = store.get('totalItemCount');
 
-    request.onsuccess = function () {
+    request.onsuccess = () => {
       resolve(request.result || 0);
     };
 
-    request.onerror = function (event) {
+    request.onerror = (event) => {
       reject((event.target as IDBRequest).error);
     };
   });
@@ -104,11 +104,11 @@ const getTotalPriceFromDB = async (): Promise<number> => {
     const store = transaction.objectStore('metadata');
     const request = store.get('totalPrice');
 
-    request.onsuccess = function () {
+    request.onsuccess = () => {
       resolve(request.result || 0);
     };
 
-    request.onerror = function (event) {
+    request.onerror = (event) => {
       reject((event.target as IDBRequest).error);
     };
   });
@@ -122,11 +122,11 @@ const loadCartFromIndexedDB = async (): Promise<CartProductType[]> => {
       const request = store.getAll();
 
 
-      request.onsuccess = function () {
+      request.onsuccess = () => {
         resolve(request.result as CartProductType[]);
       };
 
-      request.onerror = function (event) {
+      request.onerror = (event) => {
         reject((event.target as IDBRequest).error);
       };
     });

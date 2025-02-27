@@ -1,6 +1,8 @@
 
 "use client"
 
+import Link from "next/link";
+
 const Footer = () => {
   return (
     <footer className="w-full bg-neutral-50 p-6 text-neutral-800 md:py-12 mt-12">
@@ -19,10 +21,10 @@ const Footer = () => {
                     <h3 className="mb-2 font-semibold">Products</h3>
                     <ul role="list" className="grid gap-1">
                         <li>
-                            <a className="underline-offset-4 hover:underline" href="/category/apparel">Apparel</a>
+                            <Link className="underline-offset-4 hover:underline" href="/category/apparel">Apparel</Link>
                         </li>
                         <li>
-                            <a className="underline-offset-4 hover:underline" href="/category/accessories">Accessories</a>
+                            <Link className="underline-offset-4 hover:underline" href="/category/accessories">Accessories</Link>
                         </li>
                     </ul>
                 </section>
@@ -30,13 +32,13 @@ const Footer = () => {
                     <h3 className="mb-2 font-semibold">Support</h3>
                     <ul role="list" className="grid gap-1">
                         <li>
-                            <a className="underline-offset-4 hover:underline" href="https://yournextstore.com/#features">Features</a>
+                            <Link className="underline-offset-4 hover:underline" href="https://yournextstore.com/#features">Features</Link>
                         </li>
                         <li>
-                            <a className="underline-offset-4 hover:underline" href="https://yournextstore.com/#pricing">Pricing</a>
+                            <Link className="underline-offset-4 hover:underline" href="https://yournextstore.com/#pricing">Pricing</Link>
                         </li>
                         <li>
-                            <a className="underline-offset-4 hover:underline" href="mailto:hi@yournextstore.com">Contact Us</a>
+                            <Link className="underline-offset-4 hover:underline" href="mailto:hi@yournextstore.com">Contact Us</Link>
                         </li>
                     </ul>
                 </section>
@@ -48,17 +50,17 @@ const Footer = () => {
                 <p>Streetwear for Men</p>
             </div>
             <div className="flex items-center gap-4">
-                <a className="inline-flex items-center gap-1 transition-colors hover:text-neutral-700" href="https://x.com/zaiste">
+                <Link className="inline-flex items-center gap-1 transition-colors hover:text-neutral-700" href="https://x.com/zaiste">
                     <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 596 596" fill="none">
                         <path fill="#fff" d="m1 19 230 307L0 577h52l203-219 164 219h177L353 252 568 19h-52L329 221 179 19H1Zm77 38h82l359 481h-81L78 57Z"></path>
                     </svg><span className="sr-only">Twitter</span>
-                </a>
-                <a className="inline-flex items-center gap-1 transition-colors hover:text-neutral-700" href="https://x.com/typeofweb">
+                </Link>
+                <Link className="inline-flex items-center gap-1 transition-colors hover:text-neutral-700" href="https://x.com/typeofweb">
                     <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 596 596" fill="none">
                         <path fill="#fff" d="m1 19 230 307L0 577h52l203-219 164 219h177L353 252 568 19h-52L329 221 179 19H1Zm77 38h82l359 481h-81L78 57Z"></path>
                     </svg>
                     <span className="sr-only">Twitter</span>
-                </a>
+                </Link>
             </div>
         </div>
     </footer>

@@ -3,13 +3,13 @@
 import { useCart } from "@/context/cart-context";
 import { useScrollLock } from '@/hooks/scroll-lock';
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { Trash, Trash2 } from 'lucide-react';
-import { ProductType } from "@/types/product-types";
+import { Trash2 } from 'lucide-react';
 import { CartProductType } from "@/types/cart-types";
 import Link from "next/link";
 import { makeSlug } from "@/utils/string-utils";
 import { useRef, useEffect } from "react";
 import { sizesRef } from "@/constants/product-constants";
+import Image from "next/image";
 
 
 const CartPreview = () => {
@@ -56,7 +56,7 @@ const CartPreview = () => {
                             </div>
                             <div className="flex gap-4">
                                 <Link onClick={closeCartPreview} href={`/${item['category_pk'].slice(9)}/${makeSlug(item['clothing-name'])}`} className="router-link-active router-link-exact-active shrink-0 self-start aspect-square h-[6rem] overflow-hidden" data-test-id="thumbnail">
-                                    <img alt={`${item["clothing-name"]} model`} className='object-cover scale-200' src={item["image-url"]}/>
+                                    <Image alt={`${item["clothing-name"]} model`} className='object-cover scale-200' src={item["image-url"]}/>
                                 </Link>
                                 <div className="w-full space-y-2">
                                     <div className="text-gray-700 text-sm" data-test-id="mini-cart-product-variants">

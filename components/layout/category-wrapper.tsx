@@ -16,21 +16,21 @@ export default function CategoryWrapper({
   categorySlug: string;
 }) {
 
-    const [selectedSort, setSelectedSort] = useState<string>('latest')
+  const [selectedSort, setSelectedSort] = useState<string>('latest')
 
-    const handleFilterChange = (value: string) => {
-      setSelectedSort(value);
-    };
+  const handleFilterChange = (value: string) => {
+    setSelectedSort(value);
+  };
 
-    const searchParams = useSearchParams();
-    const search = searchParams.get('search');
+  const searchParams = useSearchParams();
+  const search = searchParams.get('search');
 
   return (
     <>
-      <ProductsFilter onFilterChange={handleFilterChange} selectedSort={selectedSort}/>
+      <ProductsFilter onFilterChange={handleFilterChange} selectedSort={selectedSort} />
       <div className='mx-auto flex flex-col w-full max-w-7xl flex-1 px-4 pb-6 pt-2 sm:px-6 lg:px-8 gap-5'>
-            {children}
-        <CategoryGrid category={category} categorySlug={categorySlug} sort={selectedSort} search={search || undefined}/>
+        {children}
+        <CategoryGrid category={category} categorySlug={categorySlug} sort={selectedSort} search={search || undefined} />
       </div>
     </>
   );

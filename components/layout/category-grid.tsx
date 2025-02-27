@@ -14,7 +14,7 @@ const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ categ
   const [shouldFetch, setShouldFetch] = useState(false);
   const router = useRouter();
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const { products, isLoading: loading, isError: error } = useProducts({ category: categorySlug, shouldFetch: shouldFetch});
+  const { products } = useProducts({ category: categorySlug, shouldFetch: shouldFetch});
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver((entries) => {
@@ -131,7 +131,7 @@ const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ categ
     }
   }, [products, sort, search]);
 
-  const isLoadingResults = !search && sortedProducts.results.length === 0;
+  const isLoadingResults = (!search && sortedProducts.results.length) === 0;
 
   return (
     <>
@@ -147,7 +147,7 @@ const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ categ
           )}
           {search && (
             <h1 className="text-3xl font-bold leading-none tracking-tight text-foreground">
-              Searching for "{search}"
+              Searching for &quot;{search}&quot;
             </h1>
           )}
         </>
@@ -183,7 +183,7 @@ const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ categ
         </ul>
       ) : (
         <div className="flex h-[60vh] flex-col items-center justify-center gap-4">
-          <h1 className="text-3xl font-bold">No Results Found for "{search}"</h1>
+          <h1 className="text-3xl font-bold">No Results Found for &quot;{search}&quot;</h1>
           <h2 className="max-w-md text-2xl text-center text-neutral-500">
             Did you mean:&nbsp;
             <Link className='underline' href={`/all-products?search=${encodeURIComponent(sortedProducts.bestMatch?.["clothing-name"] || '')}`}>

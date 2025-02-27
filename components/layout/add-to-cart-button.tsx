@@ -3,7 +3,6 @@
 import { ProductType } from "@/types/product-types";
 import { CartProductType, ProductVariantType } from "@/types/cart-types";
 import { useCart } from "@/context/cart-context";
-import { ColorType } from "@/types/cart-types";
 
 type AddToButtonType = {
   product: ProductType & ProductVariantType;

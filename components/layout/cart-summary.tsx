@@ -3,10 +3,10 @@
 import { useCart } from "@/context/cart-context";
 import { CartProductType } from "@/types/cart-types";
 import Image from "next/image";
-import { sizesRef } from "@/constants/product-constants";
+import Link from "next/link";
 
 const CartSummary = () => {
-    const { cart: { items, isCartPreviewVisible, totalCartPrice, justAddedProduct } } = useCart();
+    const { cart: { items, totalCartPrice } } = useCart();
     const { dispatch } = useCart();
 
     const handleRemoveFromCart = (product: CartProductType) => {
@@ -45,11 +45,11 @@ const CartSummary = () => {
                                                 <Image alt="" src={item["image-url"]} width={96} height={96} quality={20} className="aspect-square rounded-md"/>
                                             </td>
                                             <td className="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] font-medium">
-                                                <a className="transition-colors hover:text-muted-foreground flex flex-col" href="/product/horizon-gaze-sunglasses">
+                                                <Link className="transition-colors hover:text-muted-foreground flex flex-col" href="/product/horizon-gaze-sunglasses">
                                                     <span>{item["clothing-name"]}</span>
                                                     <span className="font-light">{item.color!.name}, {item.size!}</span>
                                                     {/* <span className="font-light">{item.size!}</span> */}
-                                                </a>
+                                                </Link>
                                             </td>
                                             <td className="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px]">CAD {item["clothing-price"]}</td>
                                             <td className="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px]">
