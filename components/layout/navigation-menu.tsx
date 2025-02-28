@@ -2,7 +2,6 @@
 
 import { useState, forwardRef, useEffect, ChangeEvent } from "react";
 import { cn } from "@/lib/utils";
-import StreetwearLogo from "@/public/assets/svgs/streetwear-logo.svg";
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   NavigationMenu,
@@ -89,11 +88,14 @@ const MainNavigation = ({ className }: MainNavigationProps) => {
   };
 
   return (
+
     <NavigationMenu className={cn(
       "max-w-none gap-6 mx-auto flex w-full !px-[10%]",
       className
     )}>
-      <Link href="/"><Image width="60" height="60" src={StreetwearLogo} alt="streetwear logo" /></Link>
+      <Link href="/">
+        <Image width="60" height="60" src="/assets/svgs/streetwear-logo.svg" alt="streetwear logo" />
+      </Link>
       <NavigationMenuList className="mr-auto !bg-transparent !backdrop-blur-none">
         <NavigationMenuItem>
           <Link href="/" legacyBehavior passHref>
@@ -142,7 +144,7 @@ const MainNavigation = ({ className }: MainNavigationProps) => {
           </label>
         </div>
         <div className="h-6 w-6 relative">
-          <button onClick={() => pathname !== '/checkout' ? handleOpenCart() :  window.location.reload()} type='button' className="outline-none">
+          <button onClick={() => pathname !== '/checkout' ? handleOpenCart() : window.location.reload()} type='button' className="outline-none">
             <ShoppingBag />
             {!isLoading &&
               <span className="absolute bottom-0 right-0 inline-flex h-5 w-5 translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full border-2 bg-white text-center text-xs">
