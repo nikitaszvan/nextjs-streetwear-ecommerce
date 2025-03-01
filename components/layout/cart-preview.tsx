@@ -83,7 +83,7 @@ const CartPreview = () => {
                                 <span>CAD {totalCartPrice}</span>
                             </div>
                             <p className="pb-3 text-xs">Shipping &amp; Tax calculated at checkout</p>
-                            <Link href="/checkout" onClick={closeCartPreview} className="flex py-2 px-6 w-full rounded-full bg-black" passHref>
+                            <Link href="/cart-summary" onClick={closeCartPreview} className="flex py-2 px-6 w-full rounded-full bg-black" passHref>
                                 <span className="text-center text-white w-full">Checkout</span>
                             </Link>
                         </div>

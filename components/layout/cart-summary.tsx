@@ -5,7 +5,13 @@ import { CartProductType } from "@/types/cart-types";
 import Image from "next/image";
 import Link from "next/link";
 
-const CartSummary = () => {
+const CartSummary = ({
+    editable,
+    className
+}: {
+    editable?: boolean;
+    className?: string
+}) => {
     const { cart: { items, totalCartPrice } } = useCart();
     const { dispatch } = useCart();
 
@@ -18,9 +24,9 @@ const CartSummary = () => {
     }
 
     return (
-        <div className="my-8 xl:col-span-7">
-            <div className="sticky top-1">
-                <h1 className="mb-4 text-3xl font-bold leading-none tracking-tight">Your cart</h1>
+        <div className={className && className}>
+            <div className={!editable ? "sticky top-1" : ""}>
+                <h1 className="mb-4 text-3xl font-bold leading-none tracking-tight">{editable ? "Your cart" : "Cart Summary"}</h1>
                 <form>
                     <div className="relative w-full overflow-auto">
                         <table className="w-full caption-bottom text-sm">
@@ -37,33 +43,37 @@ const CartSummary = () => {
                                 </tr>
 
                             </thead>
-                            <tbody className="[&amp;_tr:last-child]:border-0">
+                            <tbody className="">
                                 {items.map((item, index) => {
                                     return (
-                                        <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                            <td className="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] hidden sm:table-cell sm:w-24">
-                                                <Image alt="" src={item["image-url"]} width={96} height={96} quality={20} className="aspect-square rounded-md"/>
+                                        <tr key={index} className={`border-b transition-colors hover:bg-muted/50 ${editable && 'h-[10rem]'}`}>
+                                            <td className="p-2 align-middle">
+                                                <Image alt="" src={item["image-url"]} width={editable ? 240 : 96} height={editable ? 240 : 96} quality={20} className="aspect-square rounded-md" />
                                             </td>
-                                            <td className="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] font-medium">
+                                            <td className="p-2 align-middle font-medium">
                                                 <Link className="transition-colors hover:text-muted-foreground flex flex-col" href="/product/horizon-gaze-sunglasses">
                                                     <span>{item["clothing-name"]}</span>
                                                     <span className="font-light">{item.color!.name}, {item.size!}</span>
                                                     {/* <span className="font-light">{item.size!}</span> */}
                                                 </Link>
                                             </td>
-                                            <td className="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px]">CAD {item["clothing-price"]}</td>
-                                            <td className="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px]">
+                                            <td className="p-2 align-middle">CAD {item["clothing-price"]}</td>
+                                            <td className="p-2 align-middle">
                                                 <span className="flex flex-row items-center text-foreground">
-                                                    <button onClick={() => handleRemoveFromCart(item)} className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 rounded-md text-xs group aspect-square p-0" type="button">
-                                                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-neutral-100 pb-0.5 font-bold leading-none text-black transition-colors group-hover:bg-neutral-500 group-hover:text-white">–</span>
-                                                    </button>
+                                                    {editable &&
+                                                        <button onClick={() => handleRemoveFromCart(item)} className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 rounded-md text-xs group aspect-square p-0" type="button">
+                                                            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-neutral-100 pb-0.5 font-bold leading-none text-black transition-colors group-hover:bg-neutral-500 group-hover:text-white">–</span>
+                                                        </button>
+                                                    }
                                                     <span className="inline-block min-w-8 px-1 text-center tabular-nums">{item.quantity}</span>
-                                                    <button onClick={() => handleAddToCart(item)} className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 rounded-md text-xs group aspect-square p-0" type="button" >
-                                                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-neutral-100 pb-0.5 font-bold leading-none text-black transition-colors group-hover:bg-neutral-500 group-hover:text-white">+</span>
-                                                    </button>
+                                                    {editable &&
+                                                        <button onClick={() => handleAddToCart(item)} className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 rounded-md text-xs group aspect-square p-0" type="button" >
+                                                            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-neutral-100 pb-0.5 font-bold leading-none text-black transition-colors group-hover:bg-neutral-500 group-hover:text-white">+</span>
+                                                        </button>
+                                                    }
                                                 </span>
                                             </td>
-                                            <td className="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;>[role=checkbox]]:translate-y-[2px] text-right"><span className="whitespace-nowrap tabular-nums text-foreground">CAD {Number(item["clothing-price"])*item.quantity}</span>
+                                            <td className="p-2 align-middle text-right"><span className="whitespace-nowrap tabular-nums text-foreground">CAD {Number(item["clothing-price"]) * item.quantity}</span>
                                             </td>
                                         </tr>
                                     );
@@ -72,7 +82,7 @@ const CartSummary = () => {
                             <tfoot className="border-t bg-muted/50 font-medium">
                                 <tr className="border-b transition-colors hover:bg-muted/50 text-lg font-bold">
                                     <td className="p-2 align-middle hidden w-24 sm:table-cell"></td>
-                                    <td className="p-2 align-middle text-right" colSpan={3}>TOTAL</td>
+                                    <td className="p-2 align-middle text-right" colSpan={3}>{editable && 'SUB'}TOTAL</td>
                                     <td className="p-2 align-middle text-right">
                                         <span className="relative tabular-nums text-foreground">CAD {totalCartPrice}</span>
                                     </td>

@@ -16,7 +16,6 @@ const ProdRecsWrapper = ({ category, product }: ProdRecsWrapperProps) => {
     random: true,
   });
 
-
   return (
     <ProductPageComponent
       category={category}

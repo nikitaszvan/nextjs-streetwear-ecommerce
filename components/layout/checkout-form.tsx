@@ -6,6 +6,7 @@ import {
   AddressElement,
   useStripe,
   useElements,
+  LinkAuthenticationElement
 } from '@stripe/react-stripe-js';
 
 import Form from "next/form";
@@ -22,6 +23,8 @@ export default function CheckoutForm({ amount }: { amount: number }) {
     e.preventDefault();
     setLoading(true);
 
+    console.log(elements);
+
     if (!stripe || !elements) return;
 
     const { error: submitError } = await elements.submit();
@@ -37,7 +40,7 @@ export default function CheckoutForm({ amount }: { amount: number }) {
       clientSecret,
       confirmParams: {
         return_url: `http://www.localhost:3000/payment-success`
-      }
+      },
     });
 
     if (error) {
@@ -64,7 +67,8 @@ export default function CheckoutForm({ amount }: { amount: number }) {
 
   return (
     <Form onSubmit={handlePay} action="#" className="flex flex-col gap-6">
-      <AddressElement options = {{ mode: "shipping" }} />
+      <LinkAuthenticationElement />
+      <AddressElement options = {{ mode: "shipping", fields: { phone: "always" }, validation: { phone: { required: "auto" } }}} />
       {clientSecret && <PaymentElement />}
       <button
         className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 h-10 px-8 w-full rounded-full text-lg"
