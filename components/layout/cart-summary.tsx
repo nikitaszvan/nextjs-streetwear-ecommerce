@@ -36,10 +36,10 @@ const CartSummary = ({
                                     <th className="h-10 px-2 text-left align-middle font-medium text-muted-foreground hidden w-24 sm:table-cell">
                                         <span className="sr-only">Image</span>
                                     </th>
-                                    <th className="h-10 px-2 text-left align-middle font-medium text-muted-foreground">Product</th>
-                                    <th className="h-10 px-2 text-left align-middle font-medium text-muted-foreground">Price</th>
-                                    <th className="h-10 px-2 text-left align-middle font-medium text-muted-foreground w-1/6 min-w-32">Quantity</th>
-                                    <th className="h-10 px-2 align-middle font-medium text-muted-foreground w-1/6 min-w-32 text-right">Total</th>
+                                    <th className={`h-10 px-2 text-left align-middle font-medium text-muted-foreground ${editable && 'text-lg'}`}>Product</th>
+                                    <th className={`h-10 px-2 text-left align-middle font-medium text-muted-foreground ${editable && 'text-lg'}`}>Price</th>
+                                    <th className={`h-10 px-2 text-left align-middle font-medium text-muted-foreground w-1/6 min-w-32 ${editable && 'text-lg'}`}>Quantity</th>
+                                    <th className={`h-10 px-2 align-middle font-medium text-muted-foreground w-1/6 min-w-32 text-right ${editable && 'text-lg'}`}>Total</th>
                                 </tr>
 
                             </thead>
@@ -47,8 +47,8 @@ const CartSummary = ({
                                 {items.map((item, index) => {
                                     return (
                                         <tr key={index} className={`border-b transition-colors hover:bg-muted/50 ${editable && 'h-[10rem]'}`}>
-                                            <td className="p-2 align-middle">
-                                                <Image alt="" src={item["image-url"]} width={editable ? 240 : 96} height={editable ? 240 : 96} quality={20} className="aspect-square rounded-md" />
+                                            <td className="relative p-2 align-middle aspect-square">
+                                                <Image alt="" src={item["image-url"]} quality={20} className="aspect-square rounded-md" fill/>
                                             </td>
                                             <td className="p-2 align-middle font-medium">
                                                 <Link className="transition-colors hover:text-muted-foreground flex flex-col" href="/product/horizon-gaze-sunglasses">
