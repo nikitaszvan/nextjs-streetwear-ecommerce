@@ -144,7 +144,16 @@ const MainNavigation = ({ className }: MainNavigationProps) => {
           </label>
         </div>
         <div className="h-6 w-6 relative">
-          <button onClick={() => pathname !== '/checkout' ? handleOpenCart() : window.location.reload()} type='button' className="outline-none">
+          <button
+            type='button'
+            className="outline-none"
+            onClick={() =>
+              pathname === '/cart-summary'
+                ? window.location.reload()
+                : pathname === '/checkout'
+                  ? (window.location.href = '/cart-summary')
+                  : handleOpenCart()
+          }>
             <ShoppingBag />
             {!isLoading &&
               <span className="absolute bottom-0 right-0 inline-flex h-5 w-5 translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full border-2 bg-white text-center text-xs">

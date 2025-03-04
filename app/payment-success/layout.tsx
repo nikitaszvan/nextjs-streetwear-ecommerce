@@ -1,9 +1,9 @@
+import PaymentSuccessComponent from "@/components/layout/payment-success";
 
-const PaymentSuccessLayout = () => {
-    
+const PaymentSuccessPage = () => {
   return (
-    <div>PaymentSuccessLayout</div>
+    <PaymentSuccessComponent />
   )
 }
 
-export default PaymentSuccessLayout;
+export default PaymentSuccessPage;
