@@ -7,6 +7,9 @@ import Link from "next/link";
 import { sizesRef } from "@/constants/product-constants";
 import classNames from "classnames";
 import { makeSlug } from "@/utils/string-utils";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@radix-ui/react-separator";
+import { Button } from "@/components/ui/button";
 
 
 const CartSummary = ({ editable = false, className = "" }) => {
@@ -52,8 +55,8 @@ const CartSummary = ({ editable = false, className = "" }) => {
 
     return (
         <div className={className}>
-            <div className={classNames({ "sticky top-1": !editable })}>
-                <div className="flex gap-3 items-end">
+            <div className={classNames({ "max-w-5xl mx-auto": editable })}>
+                <div className="flex gap-3 items-end mb-4">
                     <h1 className="text-3xl font-bold leading-none tracking-tight">
                         {editable ? "Your cart" : "Cart Summary"}
                     </h1>
@@ -83,7 +86,7 @@ const CartSummary = ({ editable = false, className = "" }) => {
                             </thead>
                             <tbody>
                                 {items.map((item, index) => (
-                                    <tr key={index} className={classNames("border-b transition-colors hover:bg-muted/50", { "h-[9rem]": editable })}>
+                                    <tr key={index} className={classNames("border-t transition-colors hover:bg-muted/50", { "h-[9rem]": editable })}>
                                         <td className="p-2 align-middle w-[12%]">
                                             <Image
                                                 alt=""
@@ -99,7 +102,7 @@ const CartSummary = ({ editable = false, className = "" }) => {
                                             {item["clothing-price"]}
                                         </td>
                                         <td className="p-2 align-middle">
-                                            <span className={classNames("flex flex-row items-center text-foreground", {"justify-center": editable})}>
+                                            <span className={classNames("flex flex-row items-center text-foreground", { "justify-center": editable })}>
                                                 {editable && (
                                                     <button
                                                         onClick={() => handleRemoveFromCart(item)}
@@ -135,20 +138,56 @@ const CartSummary = ({ editable = false, className = "" }) => {
                                     </tr>
                                 ))}
                             </tbody>
-                            <tfoot className="border-t bg-muted/50 font-medium">
-                                <tr className="border-b transition-colors hover:bg-muted/50 text-lg font-bold">
-                                    <td className="p-2 align-middle hidden w-24 sm:table-cell"></td>
-                                    <td className="p-2 align-middle text-right" colSpan={3}>
-                                        {editable && "SUB"}TOTAL
-                                    </td>
-                                    <td className="p-2 align-middle text-right">
-                                        <span className={classNames("relative tabular-nums text-foreground", { "text-lg": editable })}>
-                                            CAD {totalCartPrice}
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tfoot>
+                            {!editable &&
+                                <tfoot className="border-t bg-muted/50 font-medium">
+                                    <tr className="border-b transition-colors hover:bg-muted/50 text-lg font-bold">
+                                        <td className="p-2 align-middle hidden w-24 sm:table-cell"></td>
+                                        <td className="p-2 align-middle text-right" colSpan={3}>
+                                            {editable && "SUB"}TOTAL
+                                        </td>
+                                        <td className="p-2 align-middle text-right">
+                                            <span className={classNames("relative tabular-nums text-foreground", { "text-lg": editable })}>
+                                                CAD {totalCartPrice}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            }
                         </table>
+                        {editable &&
+                            <div className="mt-4">
+                                <Card>
+                                    <CardContent className="p-6">
+                                        <h2 className="font-semibold text-lg mb-4">Order Summary</h2>
+                                        <div className="space-y-4">
+                                            <div className="flex justify-between">
+                                                <span className="text-muted-foreground">Subtotal</span>
+                                                <span className="font-medium">CAD {totalCartPrice}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-muted-foreground">Shipping</span>
+                                                <span className="font-medium">Calculated at checkout</span>
+                                            </div>
+                                            <Separator />
+                                            <div className="flex justify-between text-lg font-semibold">
+                                                <span>Total</span>
+                                                <span>CAD {totalCartPrice}</span>
+                                            </div>
+                                            <Link href="/checkout">
+                                                <Button className="w-full my-2" size="lg">
+                                                    Confirm Cart
+                                                </Button>
+                                            </Link>
+                                            <Link href="/all-products">
+                                                <Button variant="outline" className="w-full my-2" size="lg">
+                                                    Continue Shopping
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        }
                     </div>
                 </form>
             </div>

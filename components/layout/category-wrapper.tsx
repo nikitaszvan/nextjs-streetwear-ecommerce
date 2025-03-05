@@ -37,7 +37,7 @@ export default function CategoryWrapper({
     <div className="flex p-2">
       <ProductsFilter onFilterChange={handleFilterChange} selectedSort={selectedSort} />
       <div className='mx-auto flex flex-col w-full max-w-7xl flex-1 px-4 pb-6 pt-2 sm:px-6 lg:px-8 gap-5'>
-      {category !== 'all-products' &&
+      {category !== 'All' &&
             <Breadcrumb className="!pl-1">
                 <BreadcrumbList>
                     <BreadcrumbItem>
@@ -47,7 +47,7 @@ export default function CategoryWrapper({
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbPage>
-                        <BreadcrumbLink>{categoriesRef[category]}</BreadcrumbLink>
+                        <BreadcrumbLink>{category}</BreadcrumbLink>
                     </BreadcrumbPage>
                 </BreadcrumbList>
             </Breadcrumb>
