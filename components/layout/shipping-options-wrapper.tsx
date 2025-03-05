@@ -2,7 +2,7 @@
 
 import { AddressElement } from "@stripe/react-stripe-js";
 import ShippingOptions from "./shipping-options";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { StripeAddressElementChangeEvent } from "@stripe/stripe-js/dist";
 
 

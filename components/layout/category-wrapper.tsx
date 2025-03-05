@@ -13,7 +13,6 @@ import { useState } from "react";
 import CategoryGrid from "@/components/layout/category-grid";
 import ProductsFilter from '@/components/layout/products-filter';
 import { useSearchParams } from 'next/navigation';
-import { categoriesRef } from "@/constants/product-constants";
 
 
 export default function CategoryWrapper({

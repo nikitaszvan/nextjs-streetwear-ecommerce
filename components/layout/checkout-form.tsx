@@ -3,7 +3,6 @@
 import { useState, useEffect, FormEvent } from "react";
 import {
   PaymentElement,
-  AddressElement,
   useStripe,
   useElements,
   LinkAuthenticationElement,

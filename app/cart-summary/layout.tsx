@@ -1,6 +1,5 @@
 
 import CartSummary from "@/components/layout/cart-summary";
-import Link from "next/link";
 
 export default function CartSummaryLayout() {
     return (

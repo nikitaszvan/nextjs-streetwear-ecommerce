@@ -3,6 +3,33 @@
 import { useEffect, useState } from 'react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
+type ShippingOption = {
+    id: string;
+    object: string;
+    active: boolean;
+    created: number;
+    delivery_estimate: {
+      maximum: {
+        unit: string;
+        value: number;
+      };
+      minimum: {
+        unit: string;
+        value: number;
+      };
+    };
+    display_name: string;
+    fixed_amount: {
+      amount: number;
+      currency: string;
+    };
+    livemode: boolean;
+    metadata: Record<string, string>;
+    tax_behavior: string;
+    tax_code: string | null;
+    type: string;
+  };
+
 const ShippingOptions = ({show} : {show: boolean}) => {
     const [shippingRates, setShippingRates] = useState([]);
     const [selectedRate, setSelectedRate] = useState<string | null>(null);
@@ -36,7 +63,7 @@ const ShippingOptions = ({show} : {show: boolean}) => {
           show ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 h-0'}`}
       >
             <RadioGroup className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
-                {shippingRates.map((rate: any) => (
+                {shippingRates.map((rate: ShippingOption) => (
                     <div key={rate.id} className="relative">
                         
                         <label
