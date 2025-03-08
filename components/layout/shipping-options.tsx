@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useCart } from '@/context/cart-context';
 
 type ShippingOption = {
     id: string;
@@ -9,30 +10,34 @@ type ShippingOption = {
     active: boolean;
     created: number;
     delivery_estimate: {
-      maximum: {
-        unit: string;
-        value: number;
-      };
-      minimum: {
-        unit: string;
-        value: number;
-      };
+        maximum: {
+            unit: string;
+            value: number;
+        };
+        minimum: {
+            unit: string;
+            value: number;
+        };
     };
     display_name: string;
     fixed_amount: {
-      amount: number;
-      currency: string;
+        amount: number;
+        currency: string;
     };
     livemode: boolean;
     metadata: Record<string, string>;
     tax_behavior: string;
     tax_code: string | null;
     type: string;
-  };
+};
 
-const ShippingOptions = ({show} : {show: boolean}) => {
+const ShippingOptions = ({ show }: { show: boolean }) => {
     const [shippingRates, setShippingRates] = useState([]);
     const [selectedRate, setSelectedRate] = useState<string | null>(null);
+
+    const { dispatch } = useCart();
+
+
 
 
     useEffect(() => {
@@ -54,30 +59,38 @@ const ShippingOptions = ({show} : {show: boolean}) => {
         fetchShippingRates();
     }, []);
 
-    const handleSelect = (rateId: string) => {
+    const handleSelect = (rateId: string, shippingOption: ShippingOption) => {
+        const { display_name, delivery_estimate: { maximum, minimum }, fixed_amount } = shippingOption;
         setSelectedRate(rateId);
+        dispatch({
+            type: 'ADD_SHIPPING_TO_CART',
+            payload: {
+                option: display_name,
+                minimumDays: minimum.value,
+                maximumDays: maximum.value,
+                price: fixed_amount.amount,
+            }
+        });
     };
 
     return (
-        <fieldset className={`transform transition-transform duration-300 ease-in-out ${
-          show ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 h-0'}`}
-      >
+        <fieldset className={`transform transition-transform duration-300 ease-in-out ${show ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 h-0'}`}
+        >
             <RadioGroup className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
                 {shippingRates.map((rate: ShippingOption) => (
                     <div key={rate.id} className="relative">
-                        
+
                         <label
                             htmlFor={rate.id}
-                            className={`grid content-end items-end rounded-md border shadow-sm px-2 py-2 transition-colors cursor-pointer hover:bg-neutral-50 ${
-                                selectedRate === rate.id ? 'border-foreground/60 border-2' : 'border-[#e6e6e6]'
-                            }`}
+                            className={`grid content-end items-end rounded-md border shadow-sm px-2 py-2 transition-colors cursor-pointer hover:bg-neutral-50 ${selectedRate === rate.id ? 'border-foreground/60 border-2' : 'border-[#e6e6e6]'
+                                }`}
                         >
                             <RadioGroupItem
-                            id={rate.id}
-                            value={rate.id}
-                            className="sr-only"
-                            onClick={() => handleSelect(rate.id)}
-                        />
+                                id={rate.id}
+                                value={rate.id}
+                                className="sr-only"
+                                onClick={() => handleSelect(rate.id, rate)}
+                            />
                             <p className="text-sm font-medium">{rate.display_name}</p>
                             {rate.delivery_estimate && (
                                 <p className="text-sm text-muted-foreground">

@@ -7,13 +7,15 @@ import {
   CartContextProps,
   CartProviderProps,
   CartContextType,
-  CartProductType
+  CartProductType,
+  CartShippingOptionType
 } from '@/types/cart-types';
 
 const initialState: CartState = {
   items: [],
   isCartPreviewVisible: false,
   justAddedProduct: false,
+  cartShippingOption: null,
   totalItemCount: 0,
   totalCartPrice: 0
 };
@@ -80,6 +82,13 @@ const updateTotalPriceInDB = async (price: number): Promise<void> => {
   store.put(price, 'totalPrice');
 };
 
+const updateShippingOptionInDB = async (shipping: CartShippingOptionType): Promise<void> => {
+  const db = await openDatabase();
+  const transaction = db.transaction('metadata', 'readwrite');
+  const store = transaction.objectStore('metadata');
+  store.put(shipping, 'shippingOption');
+};
+
 const getTotalItemCountFromDB = async (): Promise<number> => {
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
@@ -103,6 +112,23 @@ const getTotalPriceFromDB = async (): Promise<number> => {
     const transaction = db.transaction('metadata', 'readonly');
     const store = transaction.objectStore('metadata');
     const request = store.get('totalPrice');
+
+    request.onsuccess = () => {
+      resolve(request.result || 0);
+    };
+
+    request.onerror = (event) => {
+      reject((event.target as IDBRequest).error);
+    };
+  });
+};
+
+const getShippingOptionFromDB = async (): Promise<number> => {
+  const db = await openDatabase();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction('metadata', 'readonly');
+    const store = transaction.objectStore('metadata');
+    const request = store.get('shippingOption');
 
     request.onsuccess = () => {
       resolve(request.result || 0);
@@ -253,6 +279,16 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 
     default:
       return state;
+
+    case 'ADD_SHIPPING_TO_CART':
+      newState = {
+        ...state,
+        cartShippingOption: action.payload
+      }
+
+      updateShippingOptionInDB(action.payload);
+
+      return newState;
   }
 };
 
@@ -274,6 +310,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     }).then(() => {
       getTotalItemCountFromDB();
       getTotalPriceFromDB();
+      getShippingOptionFromDB();
       setIsLoading(false)
     });
   }, []);
