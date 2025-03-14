@@ -4,7 +4,10 @@ import withSvgr from "next-svgr";
 import autoCert from "anchor-pki/auto-cert/integrations/next";
 
 // Define your Next.js configuration
+
+
 const nextConfig = {
+  reactStrictMode: false,
   experimental: {
     turbo: {
       rules: {

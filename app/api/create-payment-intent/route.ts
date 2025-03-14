@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     const redis = await getRedisClient();
 
   try {
-    await redis.set(idempotencyKey, paymentIntent.id, {'EX': 300}); // Store for 5 minutes
+    await redis.set(idempotencyKey, paymentIntent.id, {'EX': 24 * 3600 * 1000}); // Store for 24 hours
   } catch (error) {
     console.error("Redis error:", error);
   }

@@ -35,7 +35,8 @@ export default function CheckoutForm({ amount }: { amount: number }) {
         setClientSecret(json.clientSecret);
         setKey(json.idempotencyKey);
       });
-  }, [amount]);
+  }, []);
+
 
 
   const handlePay = async (e: FormEvent<HTMLFormElement>) => {
@@ -50,36 +51,41 @@ export default function CheckoutForm({ amount }: { amount: number }) {
       return;
     }
 
-    const { error: submitError } = await elements.submit();
+    try {
+      const { error: submitError } = await elements.submit();
 
-    if (submitError) {
-      setErrorMessage(submitError.message);
-      setLoading(false);
-      return;
+      if (submitError) {
+        setErrorMessage(submitError.message);
+        setLoading(false);
+        return;
+      }
+    }
+    catch (error) {
+      console.error((error as Error).message);
     }
 
-    // Save to localStorage before calling confirmPayment
     console.log('Saving to localStorage:', { cartId: key, cart });
-    localStorage.setItem('purchaseCart', 
-      JSON.stringify({
-        cartId: key,
-        cart,
-      })
-    );
+    const existingCart = JSON.parse(localStorage.getItem('purchaseCart') || '[]');
+
+    const updatedCart = [...existingCart, { cartId: key, cart }];
+
+    localStorage.setItem('purchaseCart', JSON.stringify(updatedCart));
 
     try {
       const { error } = await stripe.confirmPayment({
         elements,
         clientSecret,
         confirmParams: {
-          return_url: `http://www.localhost:3000/payment-success?key=${key}`,
+          return_url: `http://www.localhost:3000/verify-payment`,
         },
-      });
+        redirect: 'if_required',
+      })
 
-      console.log('Confirm Payment Error:', error);
+      // `http://www.localhost:3000/payment-success?key=${key}`
 
       if (error) {
-        localStorage.removeItem('purchaseCart');
+        const filteredCart = updatedCart.filter(item => item.cartId !== key);
+        localStorage.setItem('purchaseCart', JSON.stringify(filteredCart));
         setErrorMessage(error.message);
       }
     } catch (err) {
@@ -99,7 +105,7 @@ export default function CheckoutForm({ amount }: { amount: number }) {
       <button
         className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 h-10 px-8 w-full rounded-full text-lg"
         type="submit"
-        disabled = {!stripe || loading}
+        disabled={!stripe || loading}
       >
         {!loading ? `Pay ${amount} CAD` : "Processing..."}
       </button>

@@ -8,7 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
-export default function PaymentSuccessComponent() {
+export default function PaymentSuccessComponent({ keyId }: {keyId: string}) {
   const [confirmationNumber, setConfirmationNumber] = useState("")
   const [currentDate, setCurrentDate] = useState("")
 
