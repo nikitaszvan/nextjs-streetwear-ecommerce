@@ -10,11 +10,12 @@ import { makeSlug } from "@/utils/string-utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@radix-ui/react-separator";
 import { Button } from "@/components/ui/button";
+import { Truck } from "lucide-react";
 
 
 const CartSummary = ({ editable = false, className = "" }) => {
     const {
-        cart: { items, totalCartPrice, totalItemCount },
+        cart: { items, totalCartPrice, totalItemCount, cartShippingOption },
         dispatch,
     } = useCart();
 
@@ -137,6 +138,21 @@ const CartSummary = ({ editable = false, className = "" }) => {
                                         </td>
                                     </tr>
                                 ))}
+                                {(!editable && (cartShippingOption && Object.keys(cartShippingOption).length > 0)) &&
+                                    <tr className="h-12">
+                                        <td className="">
+                                            <Truck className="mx-auto"/>
+                                        </td>
+                                        <td className="pl-2">
+                                            <strong>Shipping:</strong> {cartShippingOption.display_name}
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td className="flex justify-end p-2 font-semibold">
+                                            {cartShippingOption.fixed_amount.amount / 100}
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                             {!editable &&
                                 <tfoot className="border-t bg-muted/50 font-medium">
@@ -147,7 +163,7 @@ const CartSummary = ({ editable = false, className = "" }) => {
                                         </td>
                                         <td className="p-2 align-middle text-right">
                                             <span className={classNames("relative tabular-nums text-foreground", { "text-lg": editable })}>
-                                                CAD {totalCartPrice}
+                                                CAD {totalCartPrice + ((cartShippingOption && Object.keys(cartShippingOption).length > 0) ? cartShippingOption.fixed_amount.amount / 100 : 0)}
                                             </span>
                                         </td>
                                     </tr>

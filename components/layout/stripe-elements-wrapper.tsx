@@ -4,20 +4,19 @@ import CheckoutForm from "@/components/layout/checkout-form";
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { useCart } from "@/context/cart-context";
-import { useEffect } from "react";
-import BlurredCheckoutForm from "./blurred-checkout-form";
 
-const StripeElementsWrapper = () => {
-    const { cart: { totalCartPrice } } = useCart();
+const StripeElementsWrapper = ({ paymentId, clientSecret }: { paymentId: string | undefined, clientSecret: string | undefined}) => {
+    const { cart: { totalCartPrice, cartShippingOption } } = useCart();
 
     const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-    const amount = totalCartPrice;
-    console.log('StripeElementsWrapper render, amount:', amount);
+    let amount;
 
-  useEffect(() => {
-    console.log('StripeElementsWrapper useEffect');
-  }, []);
+    if (cartShippingOption && cartShippingOption.fixed_amount.amount) {
+        amount = totalCartPrice + cartShippingOption?.fixed_amount.amount/100;
+    } else {
+        amount = totalCartPrice;
+    };
 
 
     return (
@@ -35,7 +34,7 @@ const StripeElementsWrapper = () => {
                         currency: "cad"
                     }}
                 >
-                    <CheckoutForm amount={amount} />
+                    <CheckoutForm amount={amount} paymentId={ paymentId } clientSecret={ clientSecret }/>
                 </Elements>
             }
         </div>

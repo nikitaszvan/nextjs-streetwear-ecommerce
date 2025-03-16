@@ -2,7 +2,7 @@ export default function BlurredCheckoutForm() {
     return (
         <div className="max-w-2xl" style={{ filter: 'blur(3px)' }}>
             <div className="flex flex-col">
-                <div className="space-y-2">
+                <div className="space-y-[0.75rem]">
                     <div>
                         <label className="text-sm text-gray-700">Email</label>
                         <input

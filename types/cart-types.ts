@@ -16,18 +16,38 @@ export type CartProductType = ProductType & {
     quantity: number;
 } & ProductVariantType
 
-export type CartShippingOptionType = {
-    option: string;
-    minimumDays: number;
-    maximumDays: number;
-    price: number;
-}
+export type ShippingOptionType = {
+    id: string;
+    object: string;
+    active: boolean;
+    created: number;
+    delivery_estimate: {
+        maximum: {
+            unit: string;
+            value: number;
+        };
+        minimum: {
+            unit: string;
+            value: number;
+        };
+    };
+    display_name: string;
+    fixed_amount: {
+        amount: number;
+        currency: string;
+    };
+    livemode: boolean;
+    metadata: Record<string, string>;
+    tax_behavior: string;
+    tax_code: string | null;
+    type: string;
+};
 
 export interface CartState {
     items: CartProductType[];
     isCartPreviewVisible: boolean;
     justAddedProduct: boolean;
-    cartShippingOption: CartShippingOptionType | null;
+    cartShippingOption: ShippingOptionType | null;
     totalItemCount: number;
     totalCartPrice: number;
 };
@@ -39,7 +59,7 @@ export type CartAction =
     | { type: 'SHOW_CART_PREVIEW'; payload: boolean } // payload boolean is if cart is opened by something being added
     | { type: 'HIDE_CART_PREVIEW' }
     | { type: 'SET_ITEMS'; payload: CartProductType[] }
-    | { type: 'ADD_SHIPPING_TO_CART'; payload: CartShippingOptionType }
+    | { type: 'ADD_SHIPPING_TO_CART'; payload: ShippingOptionType }
     
 
 export type CartContextProps = {

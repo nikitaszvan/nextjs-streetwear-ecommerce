@@ -37,12 +37,17 @@ export default function PaymentVerifyLoader({ paymentId }: { paymentId: string |
                       return () => clearTimeout(timer);
                     
                 } else {
-                    const { code, message } = data.last_payment_error;
-                    setErrorMessage({
-                        main: code,
-                        sub: message
-                    });
-                    setValidPayment(false);
+                    const { code, message, decline_code } = data.last_payment_error;
+                    const timer = setTimeout(() => {
+                        setErrorMessage({
+                            main: code,
+                            sub: message + decline_code
+                        });
+                        setValidPayment(false);
+                      }, 4000);
+        
+                      return () => clearTimeout(timer);
+                    
                 }
             } catch (error) {
                 console.error('Error checking payment status:', error);
@@ -64,10 +69,10 @@ export default function PaymentVerifyLoader({ paymentId }: { paymentId: string |
                         </div>
                     </>
                     : validPayment === false ?
-                    <>
-                        <h3>{errorMessage.main}</h3>
-                        <p>{errorMessage.sub}</p>
-                    </>
+                    <div className="text-center space-y-2">
+                        <h3 className="text-xl font-semibold text-red-600">{errorMessage.main}</h3>
+                        <p className="text-sm text-muted-foreground">{errorMessage.sub}</p>
+                    </div>
                     : null
                 }
             </CardContent>
