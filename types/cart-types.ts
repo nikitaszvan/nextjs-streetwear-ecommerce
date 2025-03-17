@@ -47,7 +47,7 @@ export interface CartState {
     items: CartProductType[];
     isCartPreviewVisible: boolean;
     justAddedProduct: boolean;
-    cartShippingOption: ShippingOptionType | null;
+    cartShippingOption: ShippingOptionType | undefined;
     totalItemCount: number;
     totalCartPrice: number;
 };

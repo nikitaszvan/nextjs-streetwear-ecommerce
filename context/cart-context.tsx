@@ -8,14 +8,14 @@ import {
   CartProviderProps,
   CartContextType,
   CartProductType,
-  CartShippingOptionType
+  ShippingOptionType
 } from '@/types/cart-types';
 
 const initialState: CartState = {
   items: [],
   isCartPreviewVisible: false,
   justAddedProduct: false,
-  cartShippingOption: null,
+  cartShippingOption: undefined,
   totalItemCount: 0,
   totalCartPrice: 0
 };
@@ -82,7 +82,7 @@ const updateTotalPriceInDB = async (price: number): Promise<void> => {
   store.put(price, 'totalPrice');
 };
 
-const updateShippingOptionInDB = async (shipping: CartShippingOptionType): Promise<void> => {
+const updateShippingOptionInDB = async (shipping: ShippingOptionType): Promise<void> => {
   const db = await openDatabase();
   const transaction = db.transaction('metadata', 'readwrite');
   const store = transaction.objectStore('metadata');

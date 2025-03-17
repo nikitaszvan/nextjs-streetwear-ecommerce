@@ -7,13 +7,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(req: NextRequest) {
 
-    let { payment_intent } = await req.json();
+    let { charge_id } = await req.json();
 
-    if (Array.isArray(payment_intent)) {
-        payment_intent = payment_intent[0];
-    }
-
-    if (!payment_intent) {
+    if (!charge_id) {
 
         return NextResponse.json(
             { error: 'Payment intent ID is required' },
@@ -22,10 +18,10 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        const paymentStatus = await stripe.paymentIntents.retrieve(payment_intent);
+        const chargeInfo = await stripe.charges.retrieve(charge_id);
 
         return NextResponse.json(
-            paymentStatus,
+            chargeInfo,
             { status: 200 }
         );
     } catch (error) {

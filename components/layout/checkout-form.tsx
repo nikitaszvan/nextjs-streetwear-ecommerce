@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { StripeShippingAddressType } from "@/types/stripe-element-types";
+import PaymentVerifyLoader from "./payment-verify-loader";
 
 import Form from "next/form";
 
@@ -22,55 +23,46 @@ type ErrorMessageType = {
 
 export default function CheckoutForm({ amount, paymentId, clientSecret }: { amount: number, paymentId: string | undefined, clientSecret: string | undefined }) {
   const [clientSecretId, setClientSecretId] = useState<string>(clientSecret || "");
+  const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [key, setKey] = useState<string>("");
+  const [validPayment, setValidPayment] = useState<boolean | null>(null);
+  const [changeKey, setChangeKey] = useState<number>(0)
   const [paymentIntentId, setPaymentIntentId] = useState<string | null>(paymentId || null);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<ErrorMessageType>({ message: undefined });
   const [defaultBillingValues, setDefaultBillingValues] = useState({
-      billingDetails: {
-        name: '',
-        email: '',
-        phone: '',
-        address: {
-          postal_code: '',
-          country: '',
-        }
+    billingDetails: {
+      name: '',
+      email: '',
+      phone: '',
+      address: {
+        postal_code: '',
+        country: '',
       }
+    }
   });
 
   const [defaultEmail, setDefaultEmail] = useState("")
 
   const [defaultPaymentMethodOrder, setDefaultPaymentMethodOrder] = useState(
     [
-      "afterpay_clearpay",
       "card",
+      "afterpay_clearpay",
       "affirm",
       "klarna",
     ]
   );
 
-   const [defaultShipping, setDefaultShipping] = useState<StripeShippingAddressType>({
-    name: "",
-    phone: "",
-    address: {
-          city: "",
-          country: "",
-          line1: "",
-          line2: "",
-          postal_code: "",
-          state: ""
-    }
-      })
+  const [defaultShipping, setDefaultShipping] = useState<StripeShippingAddressType | undefined>(undefined);
 
   const cart = useCart();
   const stripe = useStripe();
   const elements = useElements();
-  const route = useRouter();
+  const router = useRouter();
 
   useEffect(() => {
     if (errorMessage) {
-      // Display the toast notification
-      toast(errorMessage.message);
+      toast.error(errorMessage.message);
     }
   }, [errorMessage]);
 
@@ -133,7 +125,7 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
       // `http://www.localhost:3000/payment-success?key=${key}`
 
       if (paymentIntent && (paymentIntent.status === 'succeeded')) {
-        route.push(`http://www.localhost:3000/checkout?payment_intent=${paymentIntent.id}&payment_intent_client_secret=${paymentIntent.client_secret}`)
+        router.push(`http://www.localhost:3000/checkout?payment_intent=${paymentIntent.id}&payment_intent_client_secret=${paymentIntent.client_secret}`)
       }
       else if (error) {
         const filteredCart = updatedCart.filter(item => item.cartId !== key);
@@ -147,49 +139,108 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
     setLoading(false);
   };
 
+
   useEffect(() => {
     const getPaymentAttemptInfo = async (id: string) => {
+      try {
+        setIsVerifying(true);
+        const response = await fetch('/api/get-payment-status', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ payment_intent: id }),
+        });
+
+        const data = await response.json();
+
         try {
-            const response = await fetch('/api/get-payment-status', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ payment_intent: id }),
-            });
+          const charge = await fetch('/api/get-payment-details', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ charge_id: data.latest_charge }),
+          });
 
-            const data = await response.json();
+          const chargeResponse = await charge.json();
 
-            setDefaultShipping({
-              name: data.shipping.name,
-              phone: data.shipping.phone,
-              address: data.shipping.address
-            });
+          console.log(chargeResponse);
+
+          setDefaultEmail(chargeResponse.billing_details.email);
+          setDefaultShipping(chargeResponse.shipping);
+          setDefaultBillingValues({ billingDetails: chargeResponse.billing_details });
+          setDefaultPaymentMethodOrder((prev) => [chargeResponse.payment_method_details.type, ...prev.filter((method) => method !== chargeResponse.payment_method_details.type)])
+          setChangeKey((prev) => prev + 1);
+
+          if (chargeResponse.status === "succeeded") {
+
+            const timer = setTimeout(() => {
+              setValidPayment(true);
+              setIsVerifying(false);
+              router.push(`/payment-success?key=${paymentId}`);
+            }, 8000);
+
+            return () => clearTimeout(timer);
+          }
+
+          else {
+
+            const timer = setTimeout(() => {
+              setValidPayment(false);
+              setIsVerifying(false);
+
+              setErrorMessage({message: chargeResponse.failure_message});
+            }, 8000);
+
+            return () => clearTimeout(timer);
+          }
         } catch (error) {
-            console.error('Error checking payment status:', error);
-        }
-    };
-    if (paymentId) getPaymentAttemptInfo(paymentId);
-}, [paymentId]);
 
+        }
+
+        // setDefaultShipping({
+        //   name: data.shipping.name,
+        //   phone: data.shipping.phone,
+        //   address: data.shipping.address
+        // });
+      } catch (error) {
+        console.error('Error checking payment status:', error);
+      }
+    };
+    if (paymentId && clientSecret) getPaymentAttemptInfo(paymentId);
+  }, [paymentId, clientSecret]);
 
   return (
-    <Form onSubmit={handlePay} action="#" className="flex flex-col gap-4">
+    <Form onSubmit={handlePay} action="#" className="flex flex-col gap-4 relative">
+      {(isVerifying) &&
+        <PaymentVerifyLoader />
+      }
       <LinkAuthenticationElement
+        key={changeKey + 'link-elem'}
         options={{
           defaultValues: {
             email: defaultEmail,
           },
-        }} />
-      {paymentIntentId && <ShippingOptionsWrapper paymentId={paymentIntentId} defaultShippingAddress={defaultShipping}/>}
+        }}
+        className={`${isVerifying && "pointer-events-none"}`}
+      />
+      {paymentIntentId &&
+        <ShippingOptionsWrapper
+          paymentId={paymentIntentId}
+          defaultShippingAddress={defaultShipping}
+          className={`${isVerifying && "pointer-events-none"}`}
+        />}
       {clientSecretId && <PaymentElement
+        key={changeKey + 'pay-elem'}
         options={{
           defaultValues: defaultBillingValues,
           paymentMethodOrder: defaultPaymentMethodOrder
         }}
+        className={`${isVerifying && "pointer-events-none"}`}
       />}
       <button
-        className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 h-10 px-8 w-full rounded-full text-lg"
+        className={`inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 h-10 px-8 w-full rounded-full text-lg ${isVerifying && "pointer-events-none"}`}
         type="submit"
         disabled={!stripe || loading}
       >

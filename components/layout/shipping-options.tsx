@@ -5,7 +5,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCart } from '@/context/cart-context';
 import { ShippingOptionType } from '@/types/cart-types';
 
-const ShippingOptions = ({ show, paymentId, defaultShipping }: { show: boolean; paymentId: string, defaultShipping?: ShippingOptionType }) => {
+const ShippingOptions = ({ show, paymentId, defaultShipping, className }: { show: boolean; paymentId: string, defaultShipping?: ShippingOptionType, className?: string }) => {
     const [shippingRates, setShippingRates] = useState([]);
     const [selectedRate, setSelectedRate] = useState<ShippingOptionType | null>(defaultShipping || null);
 

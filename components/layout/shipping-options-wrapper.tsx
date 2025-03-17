@@ -2,15 +2,30 @@
 
 import { AddressElement } from "@stripe/react-stripe-js";
 import ShippingOptions from "./shipping-options";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StripeAddressElementChangeEvent } from "@stripe/stripe-js/dist";
 import { useCart } from "@/context/cart-context";
 import { StripeShippingAddressType } from "@/types/stripe-element-types";
 
 
-const ShippingOptionsWrapper = ({ paymentId, defaultShippingAddress }: { paymentId: string, defaultShippingAddress: StripeShippingAddressType }) => {
+const ShippingOptionsWrapper = ({ paymentId, defaultShippingAddress, className }: { paymentId: string, defaultShippingAddress?: StripeShippingAddressType, className?: string }) => {
     const [isValid, setIsValid] = useState(false);
-    
+    const [addressKey, setAddressKey] = useState(0);
+    const [addressDefaultValues, setAddressDefaultValues] = useState(
+        {
+            name: "",
+            phone: "",
+            address: {
+                line1: "",
+                line2: "",
+                city: "",
+                country: "CA",
+                postal_code: "",
+                state: ""
+            }
+        }
+    )
+
     const { cart: { cartShippingOption } } = useCart();
 
     const handleChange = (event: StripeAddressElementChangeEvent) => {
@@ -21,24 +36,38 @@ const ShippingOptionsWrapper = ({ paymentId, defaultShippingAddress }: { payment
         }
     };
 
+    useEffect(() => {
+        if (defaultShippingAddress) {
+            setAddressDefaultValues({
+                name: defaultShippingAddress.name || "",
+                phone: defaultShippingAddress.phone || "",
+                address: defaultShippingAddress.address || {
+                    line1: "",
+                    line2: "",
+                    city: "",
+                    country: "",
+                    postal_code: "",
+                    state: ""
+                }
+            })
+            setAddressKey(prevKey => prevKey + 1);
+        }
+    }, [defaultShippingAddress]);
+
     return (
         <>
             <AddressElement
+                key={addressKey}
                 options={{
                     mode: "shipping",
                     fields: { phone: "always" },
                     validation: { phone: { required: "auto" } },
-                    defaultValues: 
-                    {
-                        name: defaultShippingAddress.name,
-                        phone: defaultShippingAddress.phone,
-                        address: defaultShippingAddress.address
-                    }
+                    defaultValues: addressDefaultValues
                 }}
                 onChange={handleChange}
-                className="z-10 bg-white"
+                className={`z-10 bg-white ${className}`}
             />
-            <ShippingOptions show={isValid} paymentId={paymentId} defaultShipping={cartShippingOption ? cartShippingOption : undefined} />
+            <ShippingOptions show={isValid} paymentId={paymentId} defaultShipping={cartShippingOption} className={className}/>
         </>
     )
 }

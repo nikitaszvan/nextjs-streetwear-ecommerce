@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
         const paymentUpdate = await stripe.paymentIntents.update(
             payment_intent_id,
             {
-                amount: amount + shipping_option?.fixed_amount.amount
+                amount: amount + shipping_option.fixed_amount.amount
             }
         );
 

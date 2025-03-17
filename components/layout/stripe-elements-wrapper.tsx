@@ -20,7 +20,7 @@ const StripeElementsWrapper = ({ paymentId, clientSecret }: { paymentId: string 
 
 
     return (
-        <div className="my-8 max-w-[65ch] xl:col-span-5">
+        <div className="my-8 max-w-[65ch] col-span-5">
             <section className="max-w-md">
                 <h2 className="text-3xl font-bold leading-none tracking-tight">Checkout</h2>
                 <p className="mb-4 mt-2 text-sm text-muted-foreground">Provide billing and shipping details below.</p>
