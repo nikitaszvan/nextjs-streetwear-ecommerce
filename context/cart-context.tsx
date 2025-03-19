@@ -8,17 +8,21 @@ import {
   CartProviderProps,
   CartContextType,
   CartProductType,
-  ShippingOptionType
 } from '@/types/cart-types';
+
+import { ShippingOptionType } from '@/types/stripe-element-types';
 
 const initialState: CartState = {
   items: [],
   isCartPreviewVisible: false,
   justAddedProduct: false,
-  cartShippingOption: undefined,
+  cartShippingOption: null,
   totalItemCount: 0,
-  totalCartPrice: 0
+  totalCartPrice: 0,
+  activeStripeSession: null
 };
+
+import { StripeSessionType } from '@/types/cart-types';
 
 const openDatabase = (): Promise<IDBDatabase> => {
   return new Promise((resolve, reject) => {
@@ -62,9 +66,35 @@ const removeFromIndexedDB = async (itemId: string): Promise<void> => {
 
 const clearIndexedDB = (): Promise<void> => {
   return openDatabase().then(db => {
-    const transaction = db.transaction('cart', 'readwrite');
-    const store = transaction.objectStore('cart');
-    store.clear();
+    return new Promise((resolve, reject) => {
+      // Create a transaction that includes both 'cart' and 'metadata' object stores
+      const transaction = db.transaction(['cart', 'metadata'], 'readwrite');
+
+      // Clear the 'cart' object store
+      const cartStore = transaction.objectStore('cart');
+      const cartClearRequest = cartStore.clear();
+
+      // Clear the 'metadata' object store
+      const metadataStore = transaction.objectStore('metadata');
+      const metadataClearRequest = metadataStore.clear();
+
+      // Handle success and error for both clear operations
+      cartClearRequest.onsuccess = () => {
+        console.log('Cart cleared successfully.');
+      };
+
+      metadataClearRequest.onsuccess = () => {
+        console.log('Metadata cleared successfully.');
+      };
+
+      transaction.oncomplete = () => {
+        resolve();
+      };
+
+      transaction.onerror = (event) => {
+        reject('Transaction error: ' + (event.target as IDBTransaction).error?.message);
+      };
+    });
   });
 };
 
@@ -80,6 +110,13 @@ const updateTotalPriceInDB = async (price: number): Promise<void> => {
   const transaction = db.transaction('metadata', 'readwrite');
   const store = transaction.objectStore('metadata');
   store.put(price, 'totalPrice');
+};
+
+const updateStripeSessionInDB = async (sessionInfo: StripeSessionType): Promise<void> => {
+  const db = await openDatabase();
+  const transaction = db.transaction('metadata', 'readwrite');
+  const store = transaction.objectStore('metadata');
+  store.put(sessionInfo, 'stripeSession');
 };
 
 const updateShippingOptionInDB = async (shipping: ShippingOptionType): Promise<void> => {
@@ -123,7 +160,7 @@ const getTotalPriceFromDB = async (): Promise<number> => {
   });
 };
 
-const getShippingOptionFromDB = async (): Promise<number> => {
+const getShippingOptionFromDB = async (): Promise<ShippingOptionType | null> => {
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
     const transaction = db.transaction('metadata', 'readonly');
@@ -131,7 +168,7 @@ const getShippingOptionFromDB = async (): Promise<number> => {
     const request = store.get('shippingOption');
 
     request.onsuccess = () => {
-      resolve(request.result || 0);
+      resolve(request.result || null);
     };
 
     request.onerror = (event) => {
@@ -139,6 +176,24 @@ const getShippingOptionFromDB = async (): Promise<number> => {
     };
   });
 };
+
+const getStripeSessionFromDB = async (): Promise<StripeSessionType | null> => {
+  const db = await openDatabase();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction('metadata', 'readonly');
+    const store = transaction.objectStore('metadata');
+    const request = store.get('stripeSession');
+
+    request.onsuccess = () => {
+      resolve(request.result || null);
+    };
+
+    request.onerror = (event) => {
+      reject((event.target as IDBRequest).error);
+    };
+  });
+};
+
 
 const loadCartFromIndexedDB = async (): Promise<CartProductType[]> => {
   return openDatabase().then(db => {
@@ -205,7 +260,7 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       }
 
       updateTotalItemCountInDB(newState.totalItemCount);
-      updateTotalPriceInDB(newState.totalItemCount);
+      updateTotalPriceInDB(newState.totalCartPrice);
       return newState;
 
     case 'REMOVE_ITEM':
@@ -256,10 +311,13 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
     case 'CLEAR_CART':
       newState = {
         ...initialState,
-        isCartPreviewVisible: state.isCartPreviewVisible,
       };
 
-      clearIndexedDB();
+      clearIndexedDB().then(() => {
+        console.log('IndexedDB cart cleared successfully.');
+      }).catch(error => {
+        console.error('Error clearing IndexedDB cart:', error);
+      });
       return newState;
 
     case 'SHOW_CART_PREVIEW':
@@ -286,7 +344,17 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
         cartShippingOption: action.payload
       }
 
-      updateShippingOptionInDB(action.payload);
+      updateShippingOptionInDB(action.payload!);
+
+      return newState;
+
+    case 'ADD_STRIPE_SESSION':
+      newState = {
+        ...state,
+        activeStripeSession: action.payload
+      }
+
+      updateStripeSessionInDB(action.payload!);
 
       return newState;
   }
@@ -307,10 +375,16 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       items.forEach(item => {
         dispatch({ type: 'ADD_ITEM', payload: item });
       });
-    }).then(() => {
+    }).then(async () => {
       getTotalItemCountFromDB();
       getTotalPriceFromDB();
-      getShippingOptionFromDB();
+      const shippingOption = await getShippingOptionFromDB();
+      const stripeSession = await getStripeSessionFromDB();
+
+
+      dispatch({ type: 'ADD_SHIPPING_TO_CART', payload: shippingOption });
+      dispatch({ type: 'ADD_STRIPE_SESSION', payload: stripeSession });
+
       setIsLoading(false)
     });
   }, []);

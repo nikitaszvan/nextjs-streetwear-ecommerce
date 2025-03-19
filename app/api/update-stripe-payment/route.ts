@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
 import Stripe from 'stripe';
-
 
 export async function POST(req: NextRequest) {
     const { payment_intent_id, shipping_option, amount } = await req.json();
@@ -11,19 +9,24 @@ export async function POST(req: NextRequest) {
     });
 
     try {
+        const updateData: Stripe.PaymentIntentUpdateParams = {
+            amount: amount + (shipping_option ? shipping_option.fixed_amount.amount : 0),
+        };
+
+        if (shipping_option) {
+            updateData.metadata = {
+                shipping_id: shipping_option.id,
+            };
+        }
+
         const paymentUpdate = await stripe.paymentIntents.update(
             payment_intent_id,
-            {
-                amount: amount + shipping_option.fixed_amount.amount
-            }
+            updateData
         );
 
-        return NextResponse.json(
-            paymentUpdate,
-            { status: 200 }
-        );
+        return NextResponse.json(paymentUpdate, { status: 200 });
     } catch (err) {
-        console.error(err)
+        console.error(err);
 
         return NextResponse.json(
             { error: 'Internal Server Error' },

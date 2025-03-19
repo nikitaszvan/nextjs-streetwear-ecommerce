@@ -1,5 +1,6 @@
 import { ReactNode, Context } from "react";
 import { ProductType } from "./product-types";
+import { ShippingOptionType, StripeShippingAddressType } from "./stripe-element-types";
 
 export type ColorType = {
     name: string;
@@ -16,40 +17,20 @@ export type CartProductType = ProductType & {
     quantity: number;
 } & ProductVariantType
 
-export type ShippingOptionType = {
-    id: string;
-    object: string;
-    active: boolean;
-    created: number;
-    delivery_estimate: {
-        maximum: {
-            unit: string;
-            value: number;
-        };
-        minimum: {
-            unit: string;
-            value: number;
-        };
-    };
-    display_name: string;
-    fixed_amount: {
-        amount: number;
-        currency: string;
-    };
-    livemode: boolean;
-    metadata: Record<string, string>;
-    tax_behavior: string;
-    tax_code: string | null;
-    type: string;
-};
+
+export type StripeSessionType = {
+    paymentId: string;
+    clientSecret: string;
+}
 
 export interface CartState {
     items: CartProductType[];
     isCartPreviewVisible: boolean;
     justAddedProduct: boolean;
-    cartShippingOption: ShippingOptionType | undefined;
+    cartShippingOption: ShippingOptionType | null;
     totalItemCount: number;
     totalCartPrice: number;
+    activeStripeSession: StripeSessionType | null;
 };
 
 export type CartAction =
@@ -59,8 +40,9 @@ export type CartAction =
     | { type: 'SHOW_CART_PREVIEW'; payload: boolean } // payload boolean is if cart is opened by something being added
     | { type: 'HIDE_CART_PREVIEW' }
     | { type: 'SET_ITEMS'; payload: CartProductType[] }
-    | { type: 'ADD_SHIPPING_TO_CART'; payload: ShippingOptionType }
-    
+    | { type: 'ADD_SHIPPING_TO_CART'; payload: ShippingOptionType | null }
+    | { type: 'ADD_STRIPE_SESSION'; payload: StripeSessionType | null }
+
 
 export type CartContextProps = {
     cart: CartState;

@@ -3,11 +3,11 @@
 import { useEffect, useState } from 'react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCart } from '@/context/cart-context';
-import { ShippingOptionType } from '@/types/cart-types';
+import { ShippingOptionType } from '@/types/stripe-element-types';
 
-const ShippingOptions = ({ show, paymentId, defaultShipping, className }: { show: boolean; paymentId: string, defaultShipping?: ShippingOptionType, className?: string }) => {
+const ShippingOptions = ({ show, paymentId, defaultShipping, className }: { show: boolean; paymentId: { paymentId: string, clientSecret: string }, defaultShipping: ShippingOptionType | string | null, className?: string }) => {
     const [shippingRates, setShippingRates] = useState([]);
-    const [selectedRate, setSelectedRate] = useState<ShippingOptionType | null>(defaultShipping || null);
+    const [selectedRate, setSelectedRate] = useState<ShippingOptionType | string | null>(defaultShipping);
 
     const { dispatch, cart: { totalCartPrice } } = useCart();
 
@@ -30,19 +30,28 @@ const ShippingOptions = ({ show, paymentId, defaultShipping, className }: { show
         fetchShippingRates();
     }, []);
 
+    const saveShippingOptionToSession = (option: ShippingOptionType) => {
+        sessionStorage.setItem('userShippingOptionFields', JSON.stringify(option));
+    }
+
     const updateShippingOption = (option: ShippingOptionType) => {
-        fetch('/api/update-shipping-option', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                payment_intent_id: paymentId,
-                shipping_option: option,
-                amount: totalCartPrice * 100,
-            }),
-        })
-            .then((res) => res.json());
+        saveShippingOptionToSession(option);
+
+        if (paymentId) {
+            fetch('/api/update-stripe-payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    payment_intent_id: paymentId.paymentId,
+                    shipping_option: option,
+                    amount: totalCartPrice * 100,
+                }),
+            });
+
+        }
+
     };
 
     const handleSelect = (shippingOption: ShippingOptionType) => {
@@ -56,6 +65,23 @@ const ShippingOptions = ({ show, paymentId, defaultShipping, className }: { show
         });
     };
 
+    const borderClass = (option: ShippingOptionType) => {
+
+        if (selectedRate && typeof selectedRate === 'object' && 'id' in selectedRate) {
+
+            return selectedRate.id === option.id
+                ? 'border-foreground/60 border-2'
+                : 'border-[#e6e6e6]';
+        } else if (typeof selectedRate === 'string') {
+
+            return selectedRate === option.id
+                ? 'border-foreground/60 border-2'
+                : 'border-[#e6e6e6]';
+        }
+
+        return 'border-[#e6e6e6]';
+    };
+
     return (
         <fieldset className={`transform transition-transform duration-300 ease-in-out ${show ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 h-0'}`}
         >
@@ -64,8 +90,7 @@ const ShippingOptions = ({ show, paymentId, defaultShipping, className }: { show
                     <div key={rate.id} className="relative">
                         <label
                             htmlFor={rate.id}
-                            className={`grid content-end items-end rounded-md border shadow-sm px-2 py-2 transition-colors cursor-pointer hover:bg-neutral-50 ${selectedRate?.id === rate.id ? 'border-foreground/60 border-2' : 'border-[#e6e6e6]'
-                                }`}
+                            className={`grid content-end items-end rounded-md border shadow-sm px-2 py-2 transition-colors cursor-pointer hover:bg-neutral-50 ${borderClass(rate)}`}
                         >
                             <RadioGroupItem
                                 id={rate.id}

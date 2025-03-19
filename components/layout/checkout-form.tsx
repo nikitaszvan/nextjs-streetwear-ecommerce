@@ -12,8 +12,9 @@ import { useCart } from "@/context/cart-context";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { StripeShippingAddressType } from "@/types/stripe-element-types";
+import { ShippingOptionType, StripeShippingAddressType } from "@/types/stripe-element-types";
 import PaymentVerifyLoader from "./payment-verify-loader";
+import { StripeSessionType } from "@/types/cart-types";
 
 import Form from "next/form";
 
@@ -22,12 +23,14 @@ type ErrorMessageType = {
 }
 
 export default function CheckoutForm({ amount, paymentId, clientSecret }: { amount: number, paymentId: string | undefined, clientSecret: string | undefined }) {
-  const [clientSecretId, setClientSecretId] = useState<string>(clientSecret || "");
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [key, setKey] = useState<string>("");
+  const [shippingId, setShippingId] = useState<ShippingOptionType | string | null>(null);
   const [validPayment, setValidPayment] = useState<boolean | null>(null);
   const [changeKey, setChangeKey] = useState<number>(0)
-  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(paymentId || null);
+  const [paymentIntentId, setPaymentIntentId] = useState<StripeSessionType | null>(
+    paymentId && clientSecret ? { paymentId, clientSecret } : null
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<ErrorMessageType>({ message: undefined });
   const [defaultBillingValues, setDefaultBillingValues] = useState({
@@ -44,21 +47,19 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
 
   const [defaultEmail, setDefaultEmail] = useState("")
 
-  const [defaultPaymentMethodOrder, setDefaultPaymentMethodOrder] = useState(
-    [
-      "card",
-      "afterpay_clearpay",
-      "affirm",
-      "klarna",
-    ]
-  );
-
   const [defaultShipping, setDefaultShipping] = useState<StripeShippingAddressType | undefined>(undefined);
 
-  const cart = useCart();
+  const { cart: { activeStripeSession, cartShippingOption, totalCartPrice }, dispatch, isLoading } = useCart();
+
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
+
+  const saveEmailToSession = (email: string) => {
+    const userEmailField = JSON.stringify(email);
+
+    sessionStorage.setItem('userEmailFields', userEmailField);
+  }
 
   useEffect(() => {
     if (errorMessage) {
@@ -67,24 +68,62 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
   }, [errorMessage]);
 
   useEffect(() => {
-    if (!paymentId || !clientSecret) {
-      fetch('/api/create-payment-intent', {
+    const storedAddressInfo = sessionStorage.getItem('userAddressFields');
+    const storedEmailInfo = sessionStorage.getItem('userEmailFields');
+
+    if (storedAddressInfo) {
+      setDefaultShipping(JSON.parse(storedAddressInfo));
+      setDefaultEmail(storedEmailInfo ? JSON.parse(storedEmailInfo) : "");
+    } else {
+      console.log('No user information found in session storage.');
+    }
+  }, [])
+
+
+  useEffect(() => {
+
+    const updateStripeAmount = (id: StripeSessionType) => {
+      fetch('/api/update-stripe-payment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ amount: amount * 100 }),
+        body: JSON.stringify({
+          payment_intent_id: id.paymentId,
+          shipping_option: cartShippingOption,
+          amount: totalCartPrice * 100,
+        }),
       })
-        .then((res) => res.json())
-        .then((json) => {
-          setClientSecretId(json.clientSecret);
-          setKey(json.idempotencyKey);
-          setPaymentIntentId(json.paymentIntentId);
-        });
-    } else {
-      setPaymentIntentId(paymentId);
+        .then((res) => res.json()
+        );
+    };
+
+
+    if (!isLoading) {
+      if (activeStripeSession) setPaymentIntentId(activeStripeSession);
+
+      else if (paymentId && clientSecret) setPaymentIntentId({ paymentId, clientSecret });
+
+      else {
+        fetch('/api/create-payment-intent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ amount: amount * 100 }),
+        })
+          .then((res) => res.json())
+          .then((json) => {
+            setKey(json.idempotencyKey);
+            dispatch({ type: "ADD_STRIPE_SESSION", payload:{ paymentId: json.paymentIntentId, clientSecret: json.clientSecret }});
+            setPaymentIntentId({paymentId: json.paymentIntentId, clientSecret: json.clientSecret});
+          });
+      }
     }
-  }, [amount, paymentId]);
+
+    if (paymentIntentId && !isVerifying) updateStripeAmount(paymentIntentId);
+
+  }, [isLoading]);
 
 
   const handlePay = async (e: FormEvent<HTMLFormElement>) => {
@@ -105,31 +144,29 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
 
     }
 
-    const existingCart = JSON.parse(localStorage.getItem('purchaseCart') || '[]');
-
-    const updatedCart = [...existingCart, { cartId: key, cart }];
-
-    localStorage.setItem('purchaseCart', JSON.stringify(updatedCart));
-
-
     try {
       const { paymentIntent, error } = await stripe.confirmPayment({
         elements,
-        clientSecret: clientSecretId,
+        clientSecret: paymentIntentId!.clientSecret,
         confirmParams: {
           return_url: `http://www.localhost:3000/checkout`,
         },
         redirect: 'if_required',
       });
 
+
       // `http://www.localhost:3000/payment-success?key=${key}`
 
+      if (!error) {
+        sessionStorage.removeItem('userAddressFields');
+        sessionStorage.removeItem('userEmailFields');
+        sessionStorage.removeItem('userShippingOptionFields');
+      }
+
       if (paymentIntent && (paymentIntent.status === 'succeeded')) {
-        router.push(`http://www.localhost:3000/checkout?payment_intent=${paymentIntent.id}&payment_intent_client_secret=${paymentIntent.client_secret}`)
+        router.push(`http://www.localhost:3000/checkout?payment_intent=${paymentIntent.id}&payment_intent_client_secret=${paymentIntent.client_secret}`);
       }
       else if (error) {
-        const filteredCart = updatedCart.filter(item => item.cartId !== key);
-        localStorage.setItem('purchaseCart', JSON.stringify(filteredCart));
         setErrorMessage({ message: error.message });
       }
     } catch (err) {
@@ -165,12 +202,10 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
 
           const chargeResponse = await charge.json();
 
-          console.log(chargeResponse);
-
           setDefaultEmail(chargeResponse.billing_details.email);
           setDefaultShipping(chargeResponse.shipping);
           setDefaultBillingValues({ billingDetails: chargeResponse.billing_details });
-          setDefaultPaymentMethodOrder((prev) => [chargeResponse.payment_method_details.type, ...prev.filter((method) => method !== chargeResponse.payment_method_details.type)])
+          setShippingId(chargeResponse.metadata.shipping_id);
           setChangeKey((prev) => prev + 1);
 
           if (chargeResponse.status === "succeeded") {
@@ -178,6 +213,10 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
             const timer = setTimeout(() => {
               setValidPayment(true);
               setIsVerifying(false);
+              dispatch({ type: "CLEAR_CART" });
+              sessionStorage.removeItem('userAddressFields');
+              sessionStorage.removeItem('userEmailFields');
+              sessionStorage.removeItem('userShippingOptionFields');
               router.push(`/payment-success?key=${paymentId}`);
             }, 8000);
 
@@ -190,7 +229,7 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
               setValidPayment(false);
               setIsVerifying(false);
 
-              setErrorMessage({message: chargeResponse.failure_message});
+              setErrorMessage({ message: chargeResponse.failure_message });
             }, 8000);
 
             return () => clearTimeout(timer);
@@ -199,17 +238,18 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
 
         }
 
-        // setDefaultShipping({
-        //   name: data.shipping.name,
-        //   phone: data.shipping.phone,
-        //   address: data.shipping.address
-        // });
+        setDefaultShipping({
+          name: data.shipping.name,
+          phone: data.shipping.phone,
+          address: data.shipping.address
+        });
       } catch (error) {
         console.error('Error checking payment status:', error);
       }
     };
     if (paymentId && clientSecret) getPaymentAttemptInfo(paymentId);
   }, [paymentId, clientSecret]);
+
 
   return (
     <Form onSubmit={handlePay} action="#" className="flex flex-col gap-4 relative">
@@ -224,27 +264,40 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
           },
         }}
         className={`${isVerifying && "pointer-events-none"}`}
+
+        onChange={(e) => {
+          setDefaultEmail(() => {
+
+            const activeEmail = e.value.email;
+
+            saveEmailToSession(activeEmail);
+
+            return activeEmail;
+          });
+        }}
       />
       {paymentIntentId &&
         <ShippingOptionsWrapper
+          key={changeKey + 'ship-wrap'}
           paymentId={paymentIntentId}
+          shipping={shippingId || cartShippingOption}
           defaultShippingAddress={defaultShipping}
           className={`${isVerifying && "pointer-events-none"}`}
         />}
-      {clientSecretId && <PaymentElement
+      {paymentIntentId && <PaymentElement
         key={changeKey + 'pay-elem'}
         options={{
           defaultValues: defaultBillingValues,
-          paymentMethodOrder: defaultPaymentMethodOrder
         }}
         className={`${isVerifying && "pointer-events-none"}`}
+
       />}
       <button
         className={`inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 h-10 px-8 w-full rounded-full text-lg ${isVerifying && "pointer-events-none"}`}
         type="submit"
         disabled={!stripe || loading}
       >
-        {!loading ? `Pay ${amount} CAD` : "Processing..."}
+        {!loading ? `Pay ${amount + (cartShippingOption ? cartShippingOption.fixed_amount.amount / 100 : 0)} CAD` : "Processing..."}
       </button>
       <ToastContainer />
     </Form>

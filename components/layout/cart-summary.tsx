@@ -138,7 +138,7 @@ const CartSummary = ({ editable = false, className = "" }) => {
                                         </td>
                                     </tr>
                                 ))}
-                                {(!editable && (cartShippingOption && Object.keys(cartShippingOption).length > 0)) &&
+                                {(!editable && (cartShippingOption && cartShippingOption.id)) &&
                                     <tr className="h-12">
                                         <td className="">
                                             <Truck className="mx-auto"/>
