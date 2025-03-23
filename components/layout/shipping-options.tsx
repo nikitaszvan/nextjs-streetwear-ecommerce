@@ -11,6 +11,8 @@ const ShippingOptions = ({ show, paymentId, defaultShipping, className }: { show
 
     const { dispatch, cart: { totalCartPrice } } = useCart();
 
+    console.log(show);
+
     useEffect(() => {
         const fetchShippingRates = async () => {
             try {

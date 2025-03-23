@@ -33,7 +33,7 @@ export default function CategoryWrapper({
   const search = searchParams.get('search');
 
   return (
-    <div className="flex p-2">
+    <div className="flex p-2 w-full">
       <ProductsFilter onFilterChange={handleFilterChange} selectedSort={selectedSort} />
       <div className='mx-auto flex flex-col w-full max-w-7xl flex-1 px-4 pb-6 pt-2 sm:px-6 lg:px-8 gap-5'>
       {category !== 'All' &&

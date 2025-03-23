@@ -28,7 +28,7 @@ const ShippingOptionsWrapper = ({ paymentId, shipping, defaultShippingAddress, c
     );
 
     let passedShipping = shipping;
-console.log(paymentId);
+
     const handlePostalCheck = (code: string) => {
 
         if (code) {

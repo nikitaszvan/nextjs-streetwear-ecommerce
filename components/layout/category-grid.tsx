@@ -182,7 +182,7 @@ const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ categ
           ))}
         </ul>
       ) : (
-        <div className="flex h-[60vh] flex-col items-center justify-center gap-4">
+        <div className="flex h-[60vh] w-full flex-col items-center justify-center gap-4">
           <h1 className="text-3xl font-bold">No Results Found for &quot;{search}&quot;</h1>
           <h2 className="max-w-md text-2xl text-center text-neutral-500">
             Did you mean:&nbsp;

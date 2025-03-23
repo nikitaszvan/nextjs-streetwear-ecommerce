@@ -13,12 +13,14 @@ export default async function CheckoutPage({
 
   let paymentId
   let clientSecret;
+  let idempotencyKey;
 
   if (searchParams) {
     try {
-      const { payment_intent, payment_intent_client_secret } = await searchParams;
+      const { idempotency_key, payment_intent, payment_intent_client_secret } = await searchParams;
       paymentId = payment_intent;
       clientSecret = payment_intent_client_secret;
+      idempotencyKey = idempotency_key;
     } catch (error) {
       console.error("Error resolving searchParams:", error);
     }
@@ -36,7 +38,7 @@ export default async function CheckoutPage({
           </Link>
           <CartSummary />
         </div>
-        <StripeElementsWrapper paymentId={ paymentId } clientSecret={ clientSecret }/>
+        <StripeElementsWrapper paymentId={ paymentId } clientSecret={ clientSecret } idempotencyKey={ idempotencyKey }/>
       </div>
       <h2 id="radix-:r5:" className="text-lg font-semibold leading-none tracking-tight sr-only">Checkout</h2>
     </main>

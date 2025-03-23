@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ 
     clientSecret: paymentIntent.client_secret, 
     paymentIntentId: paymentIntent.id,
-    idempotencyKey: idempotencyKey // Include idempotencyKey in the response
+    idempotencyKey: idempotencyKey
   });
 
   } catch (error) {

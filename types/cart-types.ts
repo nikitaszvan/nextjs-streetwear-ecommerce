@@ -21,6 +21,8 @@ export type CartProductType = ProductType & {
 export type StripeSessionType = {
     paymentId: string;
     clientSecret: string;
+    idempotencyKey: string;
+    
 }
 
 export interface CartState {
@@ -55,3 +57,12 @@ export type CartProviderProps = {
 }
 
 export type CartContextType = Context<CartContextProps>;
+
+export type PurchaseCartType = {
+    confirmation_number: string;
+    customerAddress: StripeShippingAddressType;
+    order_date: string;
+    purchaseItems: CartProductType[];
+    subTotal: number;
+    cartShippingOption: ShippingOptionType;
+}

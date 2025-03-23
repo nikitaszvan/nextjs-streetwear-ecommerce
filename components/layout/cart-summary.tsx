@@ -65,19 +65,19 @@ const CartSummary = ({ editable = false, className = "" }) => {
                 </div>
                 <form>
                     <div className="relative w-full overflow-auto">
-                        <table className="w-full caption-bottom text-sm">
+                        <table className="w-full caption-bottom text-sm table-fixed">
                             <thead>
                                 <tr className="border-b transition-colors hover:bg-muted/50">
                                     <th className="h-10 px-2 text-left align-middle font-medium text-muted-foreground hidden w-24 sm:table-cell">
                                         <span className="sr-only">Image</span>
                                     </th>
-                                    <th className={classNames("h-10 px-2 text-left align-middle font-medium text-muted-foreground", { "text-lg": editable })}>
+                                    <th className={classNames("h-10 px-2 text-left align-middle font-medium text-muted-foreground w-1/2", { "text-lg": editable })}>
                                         Product
                                     </th>
-                                    <th className={classNames("h-10 px-2 text-left align-middle font-medium text-muted-foreground", { "text-lg text-center": editable })}>
+                                    <th className={classNames("h-10 px-2 text-left align-middle font-medium text-muted-foreground w-1/6", { "text-lg text-center": editable })}>
                                         Price
                                     </th>
-                                    <th className={classNames("h-10 px-2 text-left align-middle font-medium text-muted-foreground w-1/6 min-w-32", { "text-lg text-center": editable })}>
+                                    <th className={classNames("h-10 px-2 text-left align-middle font-medium text-muted-foreground w-[10%] min-w-32", { "text-lg text-center": editable })}>
                                         Quantity
                                     </th>
                                     <th className={classNames("h-10 px-2 align-middle font-medium text-muted-foreground w-1/6 min-w-32 text-right", { "text-lg": editable })}>
@@ -89,14 +89,15 @@ const CartSummary = ({ editable = false, className = "" }) => {
                                 {items.map((item, index) => (
                                     <tr key={index} className={classNames("border-t transition-colors hover:bg-muted/50", { "h-[9rem]": editable })}>
                                         <td className="p-2 align-middle w-[12%]">
-                                            <Image
-                                                alt=""
-                                                src={item["image-url"]}
-                                                quality={20}
-                                                height={110}
-                                                width={110}
-                                                className="aspect-square rounded-md mx-auto"
-                                            />
+                                            <div className="w-full aspect-square relative">
+                                                <Image
+                                                    alt=""
+                                                    src={item["image-url"]}
+                                                    quality={20}
+                                                    className="rounded-md mx-auto overflow-hidden object-cover"
+                                                    fill
+                                                />
+                                            </div>
                                         </td>
                                         {renderProductDetails(editable, item)}
                                         <td className={classNames("p-2", { "font-lg text-base text-center": editable })}>
@@ -139,15 +140,15 @@ const CartSummary = ({ editable = false, className = "" }) => {
                                     </tr>
                                 ))}
                                 {(!editable && (cartShippingOption && cartShippingOption.id)) &&
-                                    <tr className="h-12">
+                                    <tr className="h-12 border-t transition-colors hover:bg-muted/50">
                                         <td className="">
-                                            <Truck className="mx-auto"/>
+                                            <Truck className="mx-auto" />
                                         </td>
-                                        <td className="pl-2">
+                                        <td className="pl-2 max-w-[260px]">
                                             <strong>Shipping:</strong> {cartShippingOption.display_name}
                                         </td>
-                                        <td></td>
-                                        <td></td>
+                                        <td className="w-0"></td>
+                                        <td className="w-0"></td>
                                         <td className="flex justify-end p-2 font-semibold">
                                             {cartShippingOption.fixed_amount.amount / 100}
                                         </td>

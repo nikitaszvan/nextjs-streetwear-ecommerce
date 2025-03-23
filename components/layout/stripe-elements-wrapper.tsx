@@ -5,7 +5,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { useCart } from "@/context/cart-context";
 
-const StripeElementsWrapper = ({ paymentId, clientSecret }: { paymentId: string | undefined, clientSecret: string | undefined}) => {
+const StripeElementsWrapper = ({ paymentId, clientSecret, idempotencyKey }: { paymentId: string | undefined, clientSecret: string | undefined, idempotencyKey: string | undefined}) => {
     const { cart: { totalCartPrice } } = useCart();
 
     const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -25,7 +25,7 @@ const StripeElementsWrapper = ({ paymentId, clientSecret }: { paymentId: string 
                         currency: "cad"
                     }}
                 >
-                    <CheckoutForm amount={totalCartPrice} paymentId={ paymentId } clientSecret={ clientSecret }/>
+                    <CheckoutForm amount={totalCartPrice} paymentId={ paymentId } clientSecret={ clientSecret } idempotencyKey={ idempotencyKey }/>
                 </Elements>
             }
         </div>

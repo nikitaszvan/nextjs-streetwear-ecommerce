@@ -7,53 +7,46 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { PurchaseCartType } from "@/types/cart-types"
 
-export default function PaymentSuccessComponent({ keyId }: {keyId: string}) {
-  const [confirmationNumber, setConfirmationNumber] = useState("")
-  const [currentDate, setCurrentDate] = useState("")
+export default function PaymentSuccess({ keyId }: { keyId: string | undefined }) {
+  const [orderDetails, setOrderDetails] = useState<PurchaseCartType | null>(null);
 
   useEffect(() => {
-    const generateConfirmationNumber = () => {
-      const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-      let result = ""
-      for (let i = 0; i < 8; i++) {
-        result += characters.charAt(Math.floor(Math.random() * characters.length))
+    if (keyId) {
+      const storedOrderDetails = localStorage.getItem(keyId);
+      if (storedOrderDetails) {
+        setOrderDetails(JSON.parse(storedOrderDetails));
       }
-      return result
     }
-
-    setConfirmationNumber(generateConfirmationNumber())
-
-    const now = new Date()
-    setCurrentDate(
-      now.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    )
-  }, [])
-
-  // Mock order items
-  const orderItems = [
-    { id: 1, name: "Premium Wireless Headphones", quantity: 1, price: 149.99 },
-    { id: 2, name: "Smartphone Case (Black)", quantity: 1, price: 24.99 },
-    { id: 3, name: "USB-C Fast Charging Cable", quantity: 2, price: 19.99 },
-  ]
-
-  // Calculate subtotal, tax, and total
-  const subtotal = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const tax = subtotal * 0.08 // 8% tax rate
-  const shipping = 5.99
-  const total = subtotal + tax + shipping
+  }, [keyId]);
 
   const handlePrint = () => {
-    window.print()
+    window.print();
   }
 
+  const formatDate = (dateString: string | undefined): string | null => {
+    if (!dateString) {
+      return null;
+    }
+
+    const dateObject = new Date(dateString);
+    if (isNaN(dateObject.getTime())) {
+      // Handle invalid date
+      return null;
+    }
+
+    return dateObject.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  };
+
   return (
+    orderDetails ? 
     <div className="container max-w-5xl mx-auto py-8 px-4">
       <Alert className="bg-green-50 border-green-200 mb-6">
         <Check className="h-5 w-5 text-green-600" />
@@ -78,11 +71,11 @@ export default function PaymentSuccessComponent({ keyId }: {keyId: string}) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="space-y-1">
               <p className="text-sm font-medium text-muted-foreground">Confirmation Number</p>
-              <p className="text-lg font-bold">{confirmationNumber}</p>
+              <p className="text-lg font-bold">{orderDetails?.confirmation_number}</p>
             </div>
             <div className="space-y-1">
               <p className="text-sm font-medium text-muted-foreground">Date & Time</p>
-              <p>{currentDate}</p>
+              <p>{formatDate(orderDetails?.order_date)}</p>
             </div>
           </div>
 
@@ -101,12 +94,12 @@ export default function PaymentSuccessComponent({ keyId }: {keyId: string}) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {orderItems.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>{item.name}</TableCell>
+                {orderDetails?.purchaseItems.map((item) => (
+                  <TableRow key={item["unique-identifier"]}>
+                    <TableCell>{item["clothing-name"]}</TableCell>
                     <TableCell className="text-right">{item.quantity}</TableCell>
-                    <TableCell className="text-right">${item.price.toFixed(2)}</TableCell>
-                    <TableCell className="text-right">${(item.price * item.quantity).toFixed(2)}</TableCell>
+                    <TableCell className="text-right">{item["clothing-price"]}</TableCell>
+                    <TableCell className="text-right">{(item["clothing-price"] * item.quantity)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -115,20 +108,16 @@ export default function PaymentSuccessComponent({ keyId }: {keyId: string}) {
             <div className="space-y-2 pt-4">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Tax (8%)</span>
-                <span>${tax.toFixed(2)}</span>
+                <span>{orderDetails?.subTotal} CAD</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Shipping</span>
-                <span>${shipping.toFixed(2)}</span>
+                <span>{orderDetails?.cartShippingOption.fixed_amount.amount! / 100} CAD</span>
               </div>
               <Separator className="my-2" />
               <div className="flex justify-between font-medium">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>{orderDetails?.subTotal! + orderDetails?.cartShippingOption.fixed_amount.amount! / 100} CAD</span>
               </div>
             </div>
           </div>
@@ -138,15 +127,19 @@ export default function PaymentSuccessComponent({ keyId }: {keyId: string}) {
           <div className="space-y-1">
             <h3 className="font-medium">Shipping Address</h3>
             <p className="text-muted-foreground">
-              John Doe
+              {orderDetails?.customerAddress.name}
               <br />
-              123 Main Street
+              {orderDetails?.customerAddress.address.line1}
+              {orderDetails?.customerAddress.address.line2 &&
+                <>
+                  <br />
+                  {orderDetails?.customerAddress.address.line2}
+                </>
+              }
               <br />
-              Apt 4B
+              {orderDetails?.customerAddress.address.city}, {orderDetails?.customerAddress.address.state} {orderDetails?.customerAddress.address.postal_code}
               <br />
-              New York, NY 10001
-              <br />
-              United States
+              {orderDetails?.customerAddress.address.country}
             </p>
           </div>
         </CardContent>
@@ -163,5 +156,6 @@ export default function PaymentSuccessComponent({ keyId }: {keyId: string}) {
         </CardFooter>
       </Card>
     </div>
+    : null
   )
 }

@@ -21,17 +21,18 @@ import { useCart } from "@/context/cart-context";
 import { usePathname } from "next/navigation";
 import { menuCategories } from "@/constants/product-constants";
 
+// const StyledMenuLink = ({ label, href }: { label: string; href: string }) => {
+//   return (
+//     <Link href={href} passHref>
+//       <NavigationMenuLink className={cn("!bg-transparent", navigationMenuTriggerStyle())} asChild>
+//         <a>
 
-const StyledMenuLink = ({ label }: { label: string }) => {
-  return (
-    <NavigationMenuLink
-      className={cn(
-        "!bg-transparent",
-        navigationMenuTriggerStyle())}>
-      {label}
-    </NavigationMenuLink>
-  )
-};
+//         </a>
+//         {label}
+//       </NavigationMenuLink>
+//     </Link>
+//   );
+// };
 
 const ListItem = forwardRef<
   React.ElementRef<"a">,
@@ -98,14 +99,18 @@ const MainNavigation = ({ className }: MainNavigationProps) => {
       </Link>
       <NavigationMenuList className="mr-auto !bg-transparent !backdrop-blur-none">
         <NavigationMenuItem>
-          <Link href="/" legacyBehavior passHref>
-            <StyledMenuLink label="New Arrivals" />
-          </Link>
+          <button className="py-2 px-4 font-medium">
+            <Link href="/all-products">
+              New Arrivals
+            </Link>
+          </button>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="/" legacyBehavior passHref>
-            <StyledMenuLink label="Best Sellers" />
-          </Link>
+          <button className="py-2 px-4 font-medium">
+            <Link href="/all-products">
+              Best Sellers
+            </Link>
+          </button>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuTrigger className="!bg-transparent">Categories</NavigationMenuTrigger>
@@ -124,9 +129,11 @@ const MainNavigation = ({ className }: MainNavigationProps) => {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="/docs" legacyBehavior passHref>
-            <StyledMenuLink label="SALE" />
-          </Link>
+          <button className="py-2 px-4 font-medium">
+            <Link href="/all-products">
+              SALE
+            </Link>
+          </button>
         </NavigationMenuItem>
       </NavigationMenuList>
       <div className="flex items-center ml-auto">
@@ -153,7 +160,7 @@ const MainNavigation = ({ className }: MainNavigationProps) => {
                 : pathname === '/checkout'
                   ? (window.location.href = '/cart-summary')
                   : handleOpenCart()
-          }>
+            }>
             <ShoppingBag />
             {!isLoading &&
               <span className="absolute bottom-0 right-0 inline-flex h-5 w-5 translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full border-2 bg-white text-center text-xs">

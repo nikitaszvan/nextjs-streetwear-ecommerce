@@ -56,7 +56,7 @@ const CartPreview = () => {
                             </div>
                             <div className="flex gap-4">
                                 <Link onClick={closeCartPreview} href={`/${item['category_pk'].slice(9)}/${makeSlug(item['clothing-name'])}`} className="relative router-link-active router-link-exact-active shrink-0 self-start aspect-square h-[6rem] overflow-hidden" data-test-id="thumbnail">
-                                    <Image alt={`${item["clothing-name"]} model`} className='scale-200' src={item["image-url"]} fill/>
+                                    <Image alt={`${item["clothing-name"]} model`} className='object-cover' src={item["image-url"]} fill/>
                                 </Link>
                                 <div className="w-full space-y-2">
                                     <div className="text-gray-700 text-sm" data-test-id="mini-cart-product-variants">

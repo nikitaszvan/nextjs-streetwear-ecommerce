@@ -22,14 +22,15 @@ type ErrorMessageType = {
   message: string | undefined;
 }
 
-export default function CheckoutForm({ amount, paymentId, clientSecret }: { amount: number, paymentId: string | undefined, clientSecret: string | undefined }) {
+export default function CheckoutForm({ amount, paymentId, clientSecret, idempotencyKey }: { amount: number, paymentId: string | undefined, clientSecret: string | undefined, idempotencyKey: string | undefined }) {
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [key, setKey] = useState<string>("");
   const [shippingId, setShippingId] = useState<ShippingOptionType | string | null>(null);
   const [validPayment, setValidPayment] = useState<boolean | null>(null);
-  const [changeKey, setChangeKey] = useState<number>(0)
+  const [changeKey, setChangeKey] = useState<number>(0);
+  const [clearData, setClearData] = useState<boolean>(false);
   const [paymentIntentId, setPaymentIntentId] = useState<StripeSessionType | null>(
-    paymentId && clientSecret ? { paymentId, clientSecret } : null
+    paymentId && clientSecret && idempotencyKey ? { paymentId, clientSecret, idempotencyKey } : null
   );
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<ErrorMessageType>({ message: undefined });
@@ -49,7 +50,7 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
 
   const [defaultShipping, setDefaultShipping] = useState<StripeShippingAddressType | undefined>(undefined);
 
-  const { cart: { activeStripeSession, cartShippingOption, totalCartPrice }, dispatch, isLoading } = useCart();
+  const { cart: { items, activeStripeSession, cartShippingOption, totalCartPrice }, dispatch, isLoading } = useCart();
 
   const stripe = useStripe();
   const elements = useElements();
@@ -93,16 +94,14 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
           shipping_option: cartShippingOption,
           amount: totalCartPrice * 100,
         }),
-      })
-        .then((res) => res.json()
-        );
+      });
     };
 
 
     if (!isLoading) {
       if (activeStripeSession) setPaymentIntentId(activeStripeSession);
 
-      else if (paymentId && clientSecret) setPaymentIntentId({ paymentId, clientSecret });
+      else if (paymentId && clientSecret && idempotencyKey) setPaymentIntentId({ paymentId, clientSecret, idempotencyKey });
 
       else {
         fetch('/api/create-payment-intent', {
@@ -114,14 +113,15 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
         })
           .then((res) => res.json())
           .then((json) => {
-            setKey(json.idempotencyKey);
-            dispatch({ type: "ADD_STRIPE_SESSION", payload:{ paymentId: json.paymentIntentId, clientSecret: json.clientSecret }});
-            setPaymentIntentId({paymentId: json.paymentIntentId, clientSecret: json.clientSecret});
+
+            const sessionInfo = { paymentId: json.paymentIntentId, clientSecret: json.clientSecret, idempotencyKey: json.idempotencyKey };
+            dispatch({ type: "ADD_STRIPE_SESSION", payload: sessionInfo });
+            setPaymentIntentId(sessionInfo);
           });
       }
     }
 
-    if (paymentIntentId && !isVerifying) updateStripeAmount(paymentIntentId);
+    if (paymentIntentId) updateStripeAmount(paymentIntentId);
 
   }, [isLoading]);
 
@@ -149,22 +149,15 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
         elements,
         clientSecret: paymentIntentId!.clientSecret,
         confirmParams: {
-          return_url: `http://www.localhost:3000/checkout`,
+          return_url: `http://www.localhost:3000/checkout?idempotency_key=${paymentIntentId?.idempotencyKey}`,
         },
         redirect: 'if_required',
       });
 
-
       // `http://www.localhost:3000/payment-success?key=${key}`
 
-      if (!error) {
-        sessionStorage.removeItem('userAddressFields');
-        sessionStorage.removeItem('userEmailFields');
-        sessionStorage.removeItem('userShippingOptionFields');
-      }
-
       if (paymentIntent && (paymentIntent.status === 'succeeded')) {
-        router.push(`http://www.localhost:3000/checkout?payment_intent=${paymentIntent.id}&payment_intent_client_secret=${paymentIntent.client_secret}`);
+        router.push(`http://www.localhost:3000/checkout?idempotency_key=${paymentIntentId?.idempotencyKey}&payment_intent=${paymentIntent.id}&payment_intent_client_secret=${paymentIntent.client_secret}`);
       }
       else if (error) {
         setErrorMessage({ message: error.message });
@@ -175,6 +168,40 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
 
     setLoading(false);
   };
+
+  const generateConfirmationNumber = () => {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    let result = ""
+    for (let i = 0; i < 8; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length))
+    }
+    return result
+  };
+
+  function storeOrderData(response: any) {
+    if (cartShippingOption !== null) {
+      localStorage.setItem(
+        idempotencyKey!,
+        JSON.stringify({
+          confirmation_number: generateConfirmationNumber(),
+          order_date: new Date(),
+          purchaseItems: items,
+          customerAddress: response.shipping,
+          subTotal: totalCartPrice,
+          cartShippingOption: cartShippingOption
+        })
+      );
+      console.log("Order data stored successfully.");
+      router.push(`/payment-success?key=${idempotencyKey}`);
+      dispatch({ type: "CLEAR_CART" });
+      sessionStorage.removeItem('userAddressFields');
+      sessionStorage.removeItem('userEmailFields');
+      sessionStorage.removeItem('userShippingOptionFields');
+    } else {
+      console.log("cartShippingOption is null, retrying...");
+      setTimeout(storeOrderData, 500); // Retry every 1 second
+    }
+  }
 
 
   useEffect(() => {
@@ -202,10 +229,13 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
 
           const chargeResponse = await charge.json();
 
+          console.log(chargeResponse);
+
           setDefaultEmail(chargeResponse.billing_details.email);
           setDefaultShipping(chargeResponse.shipping);
           setDefaultBillingValues({ billingDetails: chargeResponse.billing_details });
           setShippingId(chargeResponse.metadata.shipping_id);
+          console.log(chargeResponse.metadata.shipping_id);
           setChangeKey((prev) => prev + 1);
 
           if (chargeResponse.status === "succeeded") {
@@ -213,11 +243,7 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
             const timer = setTimeout(() => {
               setValidPayment(true);
               setIsVerifying(false);
-              dispatch({ type: "CLEAR_CART" });
-              sessionStorage.removeItem('userAddressFields');
-              sessionStorage.removeItem('userEmailFields');
-              sessionStorage.removeItem('userShippingOptionFields');
-              router.push(`/payment-success?key=${paymentId}`);
+              if (!clearData) storeOrderData(chargeResponse);
             }, 8000);
 
             return () => clearTimeout(timer);
@@ -248,7 +274,7 @@ export default function CheckoutForm({ amount, paymentId, clientSecret }: { amou
       }
     };
     if (paymentId && clientSecret) getPaymentAttemptInfo(paymentId);
-  }, [paymentId, clientSecret]);
+  }, [paymentId, clientSecret, cartShippingOption]);
 
 
   return (
