@@ -87,7 +87,7 @@ const CartSummary = ({ editable = false, className = "" }) => {
                             </thead>
                             <tbody>
                                 {items.map((item, index) => (
-                                    <tr key={index} className={classNames("border-t transition-colors hover:bg-muted/50", { "h-[9rem]": editable })}>
+                                    <tr key={index} className={classNames("border-t transition-colors hover:bg-muted/50 bg-white z-10", { "h-[9rem]": editable })}>
                                         <td className="p-2 align-middle w-[12%]">
                                             <div className="w-full aspect-square relative">
                                                 <Image
@@ -139,18 +139,18 @@ const CartSummary = ({ editable = false, className = "" }) => {
                                         </td>
                                     </tr>
                                 ))}
-                                {(!editable && (cartShippingOption && cartShippingOption.id)) &&
-                                    <tr className="h-12 border-t transition-colors hover:bg-muted/50">
+                                {!editable &&
+                                    <tr className={`transition-all hover:bg-muted/50 ${cartShippingOption ? 'translate-y-0 opacity-100 h-14 border-t' : '-translate-y-full opacity-0 h-0'}`}>
                                         <td className="">
                                             <Truck className="mx-auto" />
                                         </td>
-                                        <td className="pl-2 max-w-[260px]">
-                                            <strong>Shipping:</strong> {cartShippingOption.display_name}
+                                        <td className="pl-2">
+                                            <strong>Shipping:</strong> {cartShippingOption?.display_name}
                                         </td>
                                         <td className="w-0"></td>
                                         <td className="w-0"></td>
-                                        <td className="flex justify-end p-2 font-semibold">
-                                            {cartShippingOption.fixed_amount.amount / 100}
+                                        <td className={`align-middle text-right font-bold ${cartShippingOption && "p-2"}`}>
+                                            {cartShippingOption && cartShippingOption.fixed_amount.amount / 100}
                                         </td>
                                     </tr>
                                 }
