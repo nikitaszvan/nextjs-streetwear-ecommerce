@@ -10,7 +10,7 @@ export async function GET() {
 
     try {
         const shippingRates = await stripe.shippingRates.list({
-            limit: 10, // Adjust the limit as needed
+            limit: 10,
         });
 
         return NextResponse.json(

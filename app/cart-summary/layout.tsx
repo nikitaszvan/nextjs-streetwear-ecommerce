@@ -1,5 +1,5 @@
 
-import CartSummary from "@/components/layout/cart-summary";
+import CartSummary from "@/components/cart/cart-summary";
 
 export default function CartSummaryLayout() {
     return (

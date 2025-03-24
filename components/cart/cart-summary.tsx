@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { sizesRef } from "@/constants/product-constants";
 import classNames from "classnames";
-import { makeSlug } from "@/utils/string-utils";
+import { makeSlug } from "@/lib/utils/string-utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@radix-ui/react-separator";
 import { Button } from "@/components/ui/button";

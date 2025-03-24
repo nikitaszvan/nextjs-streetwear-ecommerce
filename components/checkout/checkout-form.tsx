@@ -191,14 +191,12 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
           cartShippingOption: cartShippingOption
         })
       );
-      console.log("Order data stored successfully.");
       router.push(`/payment-success?key=${idempotencyKey}`);
       dispatch({ type: "CLEAR_CART" });
       sessionStorage.removeItem('userAddressFields');
       sessionStorage.removeItem('userEmailFields');
       sessionStorage.removeItem('userShippingOptionFields');
     } else {
-      console.log("cartShippingOption is null, retrying...");
       setTimeout(storeOrderData, 500); // Retry every 1 second
     }
   }
@@ -229,13 +227,10 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
 
           const chargeResponse = await charge.json();
 
-          console.log(chargeResponse);
-
           setDefaultEmail(chargeResponse.billing_details.email);
           setDefaultShipping(chargeResponse.shipping);
           setDefaultBillingValues({ billingDetails: chargeResponse.billing_details });
           setShippingId(chargeResponse.metadata.shipping_id);
-          console.log(chargeResponse.metadata.shipping_id);
           setChangeKey((prev) => prev + 1);
 
           if (chargeResponse.status === "succeeded") {

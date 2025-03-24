@@ -1,5 +1,5 @@
 import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { client } from "@/lib/dynamodb";
+import { client } from "@/lib/config/dynamodb-config";
 
 const docClient = DynamoDBDocumentClient.from(client);
 

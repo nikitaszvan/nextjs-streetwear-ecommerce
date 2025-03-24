@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/classname-utils";
 import { Circle } from 'lucide-react';
 
 interface ProductsFilterProps {

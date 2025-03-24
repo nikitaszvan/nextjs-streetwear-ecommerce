@@ -17,7 +17,7 @@ import Image from "next/image";
 import { useProducts } from "@/hooks/use-products";
 
 import RecommendedProducts from "./recommended-products";
-import AddToCartButton from "./add-to-cart-button";
+import AddToCartButton from "../cart/add-to-cart-button";
 import { ProductType } from "@/types/product-types";
 import { ColorType } from "@/types/cart-types";
 import { categoriesRef } from "@/constants/product-constants";

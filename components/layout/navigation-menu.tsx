@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, forwardRef, useEffect, ChangeEvent } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/classname-utils";
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   NavigationMenu,

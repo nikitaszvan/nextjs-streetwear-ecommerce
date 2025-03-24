@@ -1,13 +1,12 @@
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import PaymentSuccess from "@/components/layout/payment-success";
-import getRedisClient from "@/utils/redis";
+import PaymentSuccess from "@/components/checkout/payment-success";
+import getRedisClient from "@/lib/utils/redis-client-utils";
 
-// Server Action
 const verifyPayment = async (key: string) => {
   const redis = await getRedisClient();
   const isValid = await redis.get(key);
-  return !!isValid; // Return true if valid, false otherwise
+  return !!isValid;
 }
 
 const PaymentSuccessPage = async ({
@@ -15,17 +14,14 @@ const PaymentSuccessPage = async ({
 }: {
   searchParams: Promise<Record<string, string | undefined>>;
 }) => {
-  const { key } = await searchParams; // Access it directly as an object
+  const { key } = await searchParams;
 
-  // Verify the payment
   const validUser = key ? await verifyPayment(key) : false;
 
-  // If the payment is not valid, you can redirect or show a not found page
   if (!validUser) {
-    return notFound(); // or you can redirect to an error page
+    return notFound();
   }
 
-  // If valid, render the PaymentSuccess component
   return (
     <Suspense fallback={<p>Verifying payment...</p>}>
       <PaymentSuccess keyId={key} />

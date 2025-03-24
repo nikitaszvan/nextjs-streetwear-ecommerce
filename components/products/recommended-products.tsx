@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useRef, useEffect } from "react";
 import Image from "next/image";
 import { ProductType } from "@/types/product-types";
-import { makeSlug } from "@/utils/string-utils";
+import { makeSlug } from "@/lib/utils/string-utils";
 
 const RecommendedProducts = ({randomProducts} : {randomProducts: Array<ProductType>}) => {
      const router = useRouter();

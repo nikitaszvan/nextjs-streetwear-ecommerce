@@ -1,6 +1,6 @@
 
-import CartSummary from "@/components/layout/cart-summary";
-import StripeElementsWrapper from "@/components/layout/stripe-elements-wrapper";
+import CartSummary from "@/components/cart/cart-summary";
+import StripeElementsWrapper from "@/components/checkout/stripe-elements-wrapper";
 import { ChevronLeftIcon } from "lucide-react";
 import Link from "next/link";
 

@@ -7,7 +7,7 @@ export const productsApi = createApi({
   endpoints: (builder) => ({
     getProductsByCategory: builder.query({
       query: (category) => ({
-        url: '/products',
+        url: '/get-products-dynamodb',
         params: { category }
       }),
       providesTags: ['Products']

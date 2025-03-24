@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import stringSimilarity from 'string-similarity';
 import { Skeleton } from "@/components/ui/skeleton";
-import { makeSlug } from "@/utils/string-utils";
+import { makeSlug } from "@/lib/utils/string-utils";
 import { ProductType } from "@/types/product-types";
 
 const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ category: string, categorySlug: string, sort: string, search?: string }>) => {

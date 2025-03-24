@@ -1,12 +1,11 @@
 "use client"
 
-import { useState, useEffect } from 'react';
 import { useProducts } from '@/hooks/use-products';
 import Image from 'next/image';
 import Link from 'next/link';
-import { makeSlug } from '@/utils/string-utils';
+import { makeSlug } from '@/lib/utils/string-utils';
 import { ProductType } from '@/types/product-types';
-import { categoriesRef, categories } from '@/constants/product-constants';
+import { categoriesRef } from '@/constants/product-constants';
 
 
 interface PreviewCategoriesProps {
@@ -31,6 +30,7 @@ const PreviewCategories = ({ category, shouldFetch }: PreviewCategoriesProps) =>
   }
 
   if (error) {
+    console.log(error);
     return (
       <div className="text-red-500 p-4 bg-red-50 rounded-lg">
         Error: {error}
@@ -65,27 +65,6 @@ const PreviewCategories = ({ category, shouldFetch }: PreviewCategoriesProps) =>
       </div>
     </div>
   );
-}
-
-const ProductsContainer = () => {
-  const [shouldFetch, setShouldFetch] = useState(false);
-
-  useEffect(() => {
-    setShouldFetch(true);
-  }, []);
-
-  return (
-    <>
-      {categories.map(category => (
-        <PreviewCategories 
-          key={category} 
-          category={category} 
-          shouldFetch={shouldFetch}
-        />
-      ))}
-    </>
-  );
 };
 
-export default ProductsContainer;
-
+export default PreviewCategories;

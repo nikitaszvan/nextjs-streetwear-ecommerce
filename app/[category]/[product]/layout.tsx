@@ -1,4 +1,4 @@
-import ProdRecsWrapper from "@/components/layout/prod-recos-wrapper";
+import ProdRecsWrapper from "@/components/products/prod-recos-wrapper";
 
 export default async function ProductPageLayout({
     params

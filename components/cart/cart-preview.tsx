@@ -6,7 +6,7 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 import { Trash2 } from 'lucide-react';
 import { CartProductType } from "@/types/cart-types";
 import Link from "next/link";
-import { makeSlug } from "@/utils/string-utils";
+import { makeSlug } from "@/lib/utils/string-utils";
 import { useRef, useEffect } from "react";
 import { sizesRef } from "@/constants/product-constants";
 import Image from "next/image";

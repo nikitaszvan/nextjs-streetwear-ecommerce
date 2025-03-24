@@ -14,7 +14,7 @@ export const useProducts = ({ category, shouldFetch, random }: UseProductsParams
   let isError = false;
   let error = null;
   let refetch = () => { };
-  let randomProducts: any[] = []; // Change to an array for multiple products
+  let randomProducts: any[] = [];
 
   if (category === "all-products") {
     const queries = categories.map(cat =>
@@ -60,7 +60,7 @@ export const useProducts = ({ category, shouldFetch, random }: UseProductsParams
   }
 
   return {
-    randomProducts, // Return the array of random products
+    randomProducts,
     products,
     isLoading,
     isError,

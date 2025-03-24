@@ -1,6 +1,6 @@
 "use client";
 
-import ProductPageComponent from "./product-page";
+import ProductPageComponent from "../products/product-page";
 import { useProducts } from "@/hooks/use-products";
 
 type ProdRecsWrapperProps = {
