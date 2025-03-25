@@ -5,32 +5,23 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCart } from '@/context/cart-context';
 import { ShippingOptionType } from '@/types/stripe-element-types';
 
-const ShippingOptions = ({ show, paymentId, defaultShipping, className }: { show: boolean; paymentId: { paymentId: string, clientSecret: string }, defaultShipping: ShippingOptionType | string | null, className?: string }) => {
-    const [shippingRates, setShippingRates] = useState([]);
+const ShippingOptions = ({ 
+    show,
+    paymentId,
+    defaultShipping,
+    shippingOptions,
+    className
+}: { 
+    show: boolean,
+    paymentId: { paymentId: string, clientSecret: string },
+    defaultShipping: ShippingOptionType | string | null,
+    shippingOptions: ShippingOptionType[] | [],
+    className?: string 
+}) => {
+
     const [selectedRate, setSelectedRate] = useState<ShippingOptionType | string | null>(defaultShipping);
 
     const { dispatch, cart: { totalCartPrice } } = useCart();
-
-    console.log(show);
-
-    useEffect(() => {
-        const fetchShippingRates = async () => {
-            try {
-                const response = await fetch('/api/get-shipping-rates');
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-                setShippingRates(data.data);
-            } catch (error) {
-                console.error('Error fetching shipping rates:', error);
-            }
-        };
-
-        fetchShippingRates();
-    }, []);
 
     const saveShippingOptionToSession = (option: ShippingOptionType) => {
         sessionStorage.setItem('userShippingOptionFields', JSON.stringify(option));
@@ -88,7 +79,7 @@ const ShippingOptions = ({ show, paymentId, defaultShipping, className }: { show
         <fieldset className={`transform transition-transform duration-300 ease-in-out ${show ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 h-0'}`}
         >
             <RadioGroup className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
-                {shippingRates.map((rate: ShippingOptionType) => (
+                {shippingOptions.map((rate: ShippingOptionType) => (
                     <div key={rate.id} className="relative">
                         <label
                             htmlFor={rate.id}

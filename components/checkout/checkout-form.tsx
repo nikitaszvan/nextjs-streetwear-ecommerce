@@ -22,10 +22,12 @@ type ErrorMessageType = {
   message: string | undefined;
 }
 
+
+
 export default function CheckoutForm({ amount, paymentId, clientSecret, idempotencyKey }: { amount: number, paymentId: string | undefined, clientSecret: string | undefined, idempotencyKey: string | undefined }) {
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
-  const [key, setKey] = useState<string>("");
   const [shippingId, setShippingId] = useState<ShippingOptionType | string | null>(null);
+  const [shippingRates, setShippingRates] = useState<ShippingOptionType[] | []>([]);
   const [validPayment, setValidPayment] = useState<boolean | null>(null);
   const [changeKey, setChangeKey] = useState<number>(0);
   const [clearData, setClearData] = useState<boolean>(false);
@@ -45,6 +47,9 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
       }
     }
   });
+
+  const getUrl = window.location;
+  const baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
 
   const [defaultEmail, setDefaultEmail] = useState("")
 
@@ -78,7 +83,26 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
     } else {
       console.log('No user information found in session storage.');
     }
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    const fetchShippingRates = async () => {
+      try {
+        const response = await fetch('/api/get-shipping-rates');
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        setShippingRates(data.data);
+      } catch (error) {
+        console.error('Error fetching shipping rates:', error);
+      }
+    };
+
+    fetchShippingRates();
+  }, []);
 
 
   useEffect(() => {
@@ -96,7 +120,6 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
         }),
       });
     };
-
 
     if (!isLoading) {
       if (activeStripeSession) setPaymentIntentId(activeStripeSession);
@@ -128,6 +151,10 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
 
   const handlePay = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!cartShippingOption) {
+      setErrorMessage({ message: "Shipping option must be selected" });
+      return;
+    }
     setLoading(true);
 
     if (!stripe || !elements) {
@@ -149,15 +176,13 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
         elements,
         clientSecret: paymentIntentId!.clientSecret,
         confirmParams: {
-          return_url: `http://www.localhost:3000/checkout?idempotency_key=${paymentIntentId?.idempotencyKey}`,
+          return_url: `${baseUrl}?idempotency_key=${paymentIntentId?.idempotencyKey}`,
         },
         redirect: 'if_required',
       });
 
-      // `http://www.localhost:3000/payment-success?key=${key}`
-
       if (paymentIntent && (paymentIntent.status === 'succeeded')) {
-        router.push(`http://www.localhost:3000/checkout?idempotency_key=${paymentIntentId?.idempotencyKey}&payment_intent=${paymentIntent.id}&payment_intent_client_secret=${paymentIntent.client_secret}`);
+        router.push(`${baseUrl}?idempotency_key=${paymentIntentId?.idempotencyKey}&payment_intent=${paymentIntent.id}&payment_intent_client_secret=${paymentIntent.client_secret}`);
       }
       else if (error) {
         setErrorMessage({ message: error.message });
@@ -196,6 +221,7 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
       sessionStorage.removeItem('userAddressFields');
       sessionStorage.removeItem('userEmailFields');
       sessionStorage.removeItem('userShippingOptionFields');
+      setClearData(true);
     } else {
       setTimeout(storeOrderData, 500); // Retry every 1 second
     }
@@ -230,7 +256,11 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
           setDefaultEmail(chargeResponse.billing_details.email);
           setDefaultShipping(chargeResponse.shipping);
           setDefaultBillingValues({ billingDetails: chargeResponse.billing_details });
-          setShippingId(chargeResponse.metadata.shipping_id);
+          const fullShippingRate: ShippingOptionType = shippingRates[chargeResponse.metadata.shipping_id];
+          if (fullShippingRate) {
+            dispatch({ type: "ADD_SHIPPING_TO_CART", payload: fullShippingRate });
+            setShippingId(fullShippingRate);
+          }
           setChangeKey((prev) => prev + 1);
 
           if (chargeResponse.status === "succeeded") {
@@ -304,6 +334,7 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
           shipping={shippingId || cartShippingOption}
           defaultShippingAddress={defaultShipping}
           className={`${isVerifying && "pointer-events-none"}`}
+          shippingOptions={shippingRates}
         />}
       {paymentIntentId && <PaymentElement
         key={changeKey + 'pay-elem'}

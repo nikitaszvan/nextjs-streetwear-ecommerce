@@ -8,7 +8,19 @@ import { useCart } from "@/context/cart-context";
 import { ShippingOptionType, StripeShippingAddressType } from "@/types/stripe-element-types";
 
 
-const ShippingOptionsWrapper = ({ paymentId, shipping, defaultShippingAddress, className }: { paymentId: { paymentId: string , clientSecret: string }, shipping: ShippingOptionType | string | null, defaultShippingAddress?: StripeShippingAddressType, className?: string }) => {
+const ShippingOptionsWrapper = ({ 
+    paymentId,
+    shipping,
+    defaultShippingAddress,
+    className,
+    shippingOptions
+}: { 
+    paymentId: { paymentId: string , clientSecret: string },
+    shipping: ShippingOptionType | string | null,
+    defaultShippingAddress?: StripeShippingAddressType,
+    className?: string,
+    shippingOptions: ShippingOptionType[] | []
+}) => {
     const [isValid, setIsValid] = useState(false);
     const [addressKey, setAddressKey] = useState(0);
     const [shippingsOptionsKey, setShippingsOptionKey] = useState(0);
@@ -99,7 +111,7 @@ const ShippingOptionsWrapper = ({ paymentId, shipping, defaultShippingAddress, c
 
                 className={`z-10 bg-white ${className}`}
             />
-            <ShippingOptions key={shippingsOptionsKey + 'ship-key'} show={handlePostalCheck(addressDefaultValues.address.postal_code)} paymentId={paymentId} defaultShipping={passedShipping} className={className} />
+            <ShippingOptions key={shippingsOptionsKey + 'ship-key'} shippingOptions={shippingOptions} show={handlePostalCheck(addressDefaultValues.address.postal_code)} paymentId={paymentId} defaultShipping={passedShipping} className={className} />
         </>
     )
 }

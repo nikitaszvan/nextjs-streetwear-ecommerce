@@ -21,6 +21,8 @@ export default async function CheckoutPage({
       paymentId = payment_intent;
       clientSecret = payment_intent_client_secret;
       idempotencyKey = idempotency_key;
+
+      console.log(searchParams);
     } catch (error) {
       console.error("Error resolving searchParams:", error);
     }
