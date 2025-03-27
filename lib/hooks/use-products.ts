@@ -1,5 +1,10 @@
+// Data Access Layer
 import { useGetProductsByCategoryQuery } from '@/lib/api/products-api';
+
+// Constants
 import { categories } from '@/constants/product-constants';
+
+// Types
 import { ProductType } from '@/types/product-types';
 
 type UseProductsParamsType = {

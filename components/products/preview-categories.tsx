@@ -1,10 +1,22 @@
 "use client"
 
-import { useProducts } from '@/hooks/use-products';
+// Presentation Layer
 import Image from 'next/image';
 import Link from 'next/link';
+
+// Service Layer
 import { makeSlug } from '@/lib/utils/string-utils';
+
+// Data Access Layer
+import { useProducts } from '@/lib/hooks/use-products';
+
+// External Libraries
+//
+
+// Types
 import { ProductType } from '@/types/product-types';
+
+// Constants
 import { categoriesRef } from '@/constants/product-constants';
 
 

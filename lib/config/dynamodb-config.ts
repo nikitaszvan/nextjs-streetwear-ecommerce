@@ -1,5 +1,5 @@
+// External Libraries
 import { DynamoDBClient, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
-
 
 const config: DynamoDBClientConfig = {
     region: process.env.AWS_REGION,

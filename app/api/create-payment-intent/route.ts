@@ -1,6 +1,9 @@
+// External Libraries
 import { NextRequest, NextResponse } from 'next/server';
-import { v4 as uuidv4 } from 'uuid'; 
+import { v4 as uuidv4 } from 'uuid';
 import Stripe from 'stripe';
+
+// Service Layer
 import getRedisClient from '@/lib/utils/redis-client-utils';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {

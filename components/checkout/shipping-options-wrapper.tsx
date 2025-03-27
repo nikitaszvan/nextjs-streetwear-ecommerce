@@ -1,10 +1,13 @@
 "use client"
 
+// External Libraries
 import { AddressElement } from "@stripe/react-stripe-js";
-import ShippingOptions from "./shipping-options";
 import { useEffect, useState } from "react";
-import { StripeAddressElementChangeEvent } from "@stripe/stripe-js/dist";
-import { useCart } from "@/context/cart-context";
+
+// Presentation Layer
+import ShippingOptions from "./shipping-options";
+
+// Types
 import { ShippingOptionType, StripeShippingAddressType } from "@/types/stripe-element-types";
 
 
@@ -13,15 +16,16 @@ const ShippingOptionsWrapper = ({
     shipping,
     defaultShippingAddress,
     className,
-    shippingOptions
+    shippingOptions,
+    isVerifying
 }: { 
     paymentId: { paymentId: string , clientSecret: string },
     shipping: ShippingOptionType | string | null,
     defaultShippingAddress?: StripeShippingAddressType,
     className?: string,
-    shippingOptions: ShippingOptionType[] | []
+    shippingOptions: ShippingOptionType[] | [],
+    isVerifying: boolean
 }) => {
-    const [isValid, setIsValid] = useState(false);
     const [addressKey, setAddressKey] = useState(0);
     const [shippingsOptionsKey, setShippingsOptionKey] = useState(0);
     const [addressDefaultValues, setAddressDefaultValues] = useState<StripeShippingAddressType>(
@@ -111,7 +115,7 @@ const ShippingOptionsWrapper = ({
 
                 className={`z-10 bg-white ${className}`}
             />
-            <ShippingOptions key={shippingsOptionsKey + 'ship-key'} shippingOptions={shippingOptions} show={handlePostalCheck(addressDefaultValues.address.postal_code)} paymentId={paymentId} defaultShipping={passedShipping} className={className} />
+            <ShippingOptions key={shippingsOptionsKey + 'ship-key'} shippingOptions={shippingOptions} show={handlePostalCheck(addressDefaultValues.address.postal_code)} paymentId={paymentId} defaultShipping={passedShipping} className={`${isVerifying && 'pointer-events-none'} ${className}`} />
         </>
     )
 }

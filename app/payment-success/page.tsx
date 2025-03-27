@@ -1,6 +1,11 @@
-import { notFound } from 'next/navigation';
+// External Libraries
 import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
+
+// Presentation Layer
 import PaymentSuccess from "@/components/checkout/payment-success";
+
+// Service Layers
 import getRedisClient from "@/lib/utils/redis-client-utils";
 
 const verifyPayment = async (key: string) => {
@@ -23,9 +28,12 @@ const PaymentSuccessPage = async ({
   }
 
   return (
-    <Suspense fallback={<p>Verifying payment...</p>}>
-      <PaymentSuccess keyId={key} />
-    </Suspense>
+    <main role="main" aria-label="Payment Success Page">
+      <Suspense fallback={<p>Verifying payment...</p>}>
+        <h1 className="sr-only">Payment Success</h1>
+        <PaymentSuccess keyId={key} />
+      </Suspense>
+    </main>
   );
 };
 

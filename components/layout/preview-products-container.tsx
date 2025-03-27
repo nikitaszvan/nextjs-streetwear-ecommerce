@@ -1,7 +1,12 @@
 "use client"
 
+// Presentation Layer
 import PreviewCategories from "@/components/products/preview-categories";
+
+// External Libraries
 import { useState, useEffect } from "react";
+
+// Constants
 import { categories } from '@/constants/product-constants';
 
 const PreviewProductsContainer = () => {

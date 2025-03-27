@@ -1,7 +1,6 @@
 "use client"
 
-import { useState } from "react";
-
+// Presentation Layer
 import {
     Breadcrumb,
     BreadcrumbList,
@@ -10,16 +9,25 @@ import {
     BreadcrumbSeparator,
     BreadcrumbPage
 } from "@/components/ui/breadcrumb";
-import Link from "next/link";
-
-import Image from "next/image";
-
-import { useProducts } from "@/hooks/use-products";
-
 import RecommendedProducts from "./recommended-products";
 import AddToCartButton from "../cart/add-to-cart-button";
+import Link from "next/link";
+import Image from "next/image";
+
+// Service Layer
+//
+
+// Data Access Layer
+import { useProducts } from "@/lib/hooks/use-products";
+
+// External Libraries
+import { useState } from "react";
+
+// Types
 import { ProductType } from "@/types/product-types";
 import { ColorType } from "@/types/cart-types";
+
+// Constants
 import { categoriesRef } from "@/constants/product-constants";
 
 

@@ -1,8 +1,15 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+// External Libraries
+import { useState } from 'react';
+
+// Presentation Layer
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
+// Context
 import { useCart } from '@/context/cart-context';
+
+// Types
 import { ShippingOptionType } from '@/types/stripe-element-types';
 
 const ShippingOptions = ({ 
@@ -42,9 +49,7 @@ const ShippingOptions = ({
                     amount: totalCartPrice * 100,
                 }),
             });
-
         }
-
     };
 
     const handleSelect = (shippingOption: ShippingOptionType) => {

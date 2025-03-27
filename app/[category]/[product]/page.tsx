@@ -1,3 +1,4 @@
+// Presentation Layer
 import ProdRecsWrapper from "@/components/products/prod-recos-wrapper";
 
 export default async function ProductPage({

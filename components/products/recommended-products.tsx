@@ -1,11 +1,21 @@
 "use client"
 
+// Presentation Layer
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useRef, useEffect } from "react";
 import Image from "next/image";
-import { ProductType } from "@/types/product-types";
+
+// Service Layer
 import { makeSlug } from "@/lib/utils/string-utils";
+
+// Data Access Layer
+//
+
+// External Libraries
+import { useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+// Types
+import { ProductType } from "@/types/product-types";
 
 const RecommendedProducts = ({randomProducts} : {randomProducts: Array<ProductType>}) => {
      const router = useRouter();

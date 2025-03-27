@@ -1,13 +1,18 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Check, ShoppingBag, ArrowLeft, Printer } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Separator } from "@/components/ui/separator"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { PurchaseCartType } from "@/types/cart-types"
+// External Libraries
+import { useState, useEffect } from "react";
+import { Check, ShoppingBag, ArrowLeft, Printer } from "lucide-react";
+
+// Presentation Layer
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
+// Types
+import { PurchaseCartType } from "@/types/cart-types";
 
 export default function PaymentSuccess({ keyId }: { keyId: string | undefined }) {
   const [orderDetails, setOrderDetails] = useState<PurchaseCartType | null>(null);

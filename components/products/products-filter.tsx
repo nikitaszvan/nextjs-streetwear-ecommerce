@@ -1,6 +1,8 @@
 "use client"
-
+// Service Layer
 import { cn } from "@/lib/utils/classname-utils";
+
+// External Libraries
 import { Circle } from 'lucide-react';
 
 interface ProductsFilterProps {

@@ -1,7 +1,10 @@
 "use client";
 
+// Presentation Layer
 import ProductPageComponent from "../products/product-page";
-import { useProducts } from "@/hooks/use-products";
+
+// Data Access Layer
+import { useProducts } from "@/lib/hooks/use-products";
 
 type ProdRecsWrapperProps = {
   category: string;

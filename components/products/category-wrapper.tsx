@@ -1,5 +1,6 @@
 "use client"
 
+// Presentation Layer
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -8,11 +9,22 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage
 } from "@/components/ui/breadcrumb";
-import Link from "next/link";
-import { useState } from "react";
 import CategoryGrid from "@/components/products/category-grid";
 import ProductsFilter from '@/components/products/products-filter';
+import Link from "next/link";
+
+// External Libraries
+import { useState } from "react";
 import { useSearchParams } from 'next/navigation';
+
+// Service Layer
+//
+
+// Data Access Layer
+//
+
+// Types
+//
 
 
 export default function CategoryWrapper({

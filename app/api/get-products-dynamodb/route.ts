@@ -1,5 +1,8 @@
+// External Libraries
 import { NextResponse } from 'next/server';
-import { fetchCategoryProducts } from '@/hooks/fetch-products';
+
+// Service Layer
+import { fetchCategoryProducts } from '@/lib/hooks/use-fetch-products';
 
 export async function GET(request: Request) {
     try {

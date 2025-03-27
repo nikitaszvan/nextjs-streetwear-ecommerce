@@ -1,6 +1,9 @@
 "use client";
 
+// External Libraries
 import { createContext, useContext, useReducer, useEffect, useState } from 'react';
+
+// Types
 import {
   CartState,
   CartAction,
@@ -8,10 +11,7 @@ import {
   CartProviderProps,
   CartContextType,
   CartProductType,
-  StripeSessionType,
 } from '@/types/cart-types';
-
-import { ShippingOptionType } from '@/types/stripe-element-types';
 
 const initialState: CartState = {
   items: [],

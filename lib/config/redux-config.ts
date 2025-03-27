@@ -1,5 +1,8 @@
+// External Libraries
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
+
+// Data Access Layer
 import { productsApi } from '../api/products-api';
 
 export const store = () => {

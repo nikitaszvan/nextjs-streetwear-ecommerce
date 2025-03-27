@@ -1,6 +1,9 @@
 "use client"
 
+// External Libraries
 import { Loader2 } from "lucide-react";
+
+// Presentation Layer
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function PaymentVerifyLoader() {

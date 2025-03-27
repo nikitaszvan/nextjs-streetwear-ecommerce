@@ -1,6 +1,7 @@
 
 "use client"
 
+// Presentation Layer
 import Link from "next/link";
 
 const Footer = () => {

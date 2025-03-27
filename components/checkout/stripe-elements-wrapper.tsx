@@ -1,10 +1,14 @@
 "use client"
 
+// Presentation Layer
 import CheckoutForm from "@/components/checkout/checkout-form";
+
+// Context
+import { useCart } from "@/context/cart-context";
+
+// External Libraries
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { useCart } from "@/context/cart-context";
-import { useEffect, useState } from "react";
 
 const StripeElementsWrapper = ({ paymentId, clientSecret, idempotencyKey }: { paymentId: string | undefined, clientSecret: string | undefined, idempotencyKey: string | undefined}) => {
     const { cart: { totalCartPrice } } = useCart();

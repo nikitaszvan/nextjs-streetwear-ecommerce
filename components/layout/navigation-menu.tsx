@@ -1,8 +1,6 @@
 "use client"
 
-import { useState, forwardRef, useEffect, ChangeEvent } from "react";
-import { cn } from "@/lib/utils/classname-utils";
-import { useRouter, useSearchParams } from 'next/navigation';
+// Presentation Layer
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -10,29 +8,31 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { Input } from "@/components/ui/input";
-import { ShoppingBag } from 'lucide-react';
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
-import { useCart } from "@/context/cart-context";
-import { usePathname } from "next/navigation";
+import { ShoppingBag } from 'lucide-react';
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+
+// Service Layer
+import { cn } from "@/lib/utils/classname-utils";
+
+// Data Access Layer
+//
+
+// External Libraries
+import { useState, forwardRef, useEffect, ChangeEvent } from "react";
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+
+// Types
+//
+
+// Constants
 import { menuCategories } from "@/constants/product-constants";
 
-// const StyledMenuLink = ({ label, href }: { label: string; href: string }) => {
-//   return (
-//     <Link href={href} passHref>
-//       <NavigationMenuLink className={cn("!bg-transparent", navigationMenuTriggerStyle())} asChild>
-//         <a>
-
-//         </a>
-//         {label}
-//       </NavigationMenuLink>
-//     </Link>
-//   );
-// };
+// Context
+import { useCart } from "@/context/cart-context";
 
 const ListItem = forwardRef<
   React.ElementRef<"a">,
@@ -72,11 +72,13 @@ const MainNavigation = ({ className }: MainNavigationProps) => {
   const { isLoading, cart: { totalItemCount }, dispatch } = useCart();
   const pathname = usePathname();
 
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+
   const handleOpenCart = () => {
     dispatch({ type: 'SHOW_CART_PREVIEW', payload: false });
   };
 
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+
   useEffect(() => {
     setSearchQuery(searchParams.get("search") || "");
   }, [searchParams]);

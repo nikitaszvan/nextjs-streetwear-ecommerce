@@ -1,13 +1,22 @@
 "use client";
 
-import { useProducts } from "@/hooks/use-products";
+// Presentation Layer
 import Image from "next/image";
-import { useEffect, useState, useRef, useMemo } from "react";
 import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// Service Layer
+import { makeSlug } from "@/lib/utils/string-utils";
+
+// Data Access Layer
+import { useProducts } from "@/lib/hooks/use-products";
+
+// External Libraries
+import { useEffect, useState, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import stringSimilarity from 'string-similarity';
-import { Skeleton } from "@/components/ui/skeleton";
-import { makeSlug } from "@/lib/utils/string-utils";
+
+// Types
 import { ProductType } from "@/types/product-types";
 
 const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ category: string, categorySlug: string, sort: string, search?: string }>) => {

@@ -1,4 +1,7 @@
+// External Libraries
 import { ReactNode, Context } from "react";
+
+// Types
 import { ProductType } from "./product-types";
 import { ShippingOptionType, StripeShippingAddressType } from "./stripe-element-types";
 
