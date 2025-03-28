@@ -20,7 +20,7 @@ const CartPreviewHeader = ({
   };
 
   return (
-    <header className="w-full flex items-center justify-between p-4 lg:px-6 title-3" aria-labelledby="cart-header-title">
+    <header className="w-full flex items-center justify-between p-4 lg:px-6 title-3 border-b" aria-labelledby="cart-header-title">
       <h1 id="cart-header-title" className="line-clamp-1 w-full font-semibold text-lg">
         {justAddedProduct ? 'Added to Cart!' : 'Shopping Cart'}
       </h1>

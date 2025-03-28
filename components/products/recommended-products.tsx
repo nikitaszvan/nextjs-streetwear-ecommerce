@@ -7,9 +7,6 @@ import Image from "next/image";
 // Service Layer
 import { makeSlug } from "@/lib/utils/string-utils";
 
-// Data Access Layer
-//
-
 // External Libraries
 import { useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";

@@ -93,7 +93,7 @@ const MainNavigation = ({ className }: MainNavigationProps) => {
   return (
 
     <NavigationMenu className={cn(
-      "max-w-none gap-6 mx-auto flex w-full !px-[10%]",
+      "max-w-none gap-6 mx-auto flex w-full !px-[10%] print:hidden",
       className
     )}>
       <Link href="/">
@@ -164,7 +164,7 @@ const MainNavigation = ({ className }: MainNavigationProps) => {
                   : handleOpenCart()
             }>
             <ShoppingBag />
-            {!isLoading &&
+            {(!isLoading && totalItemCount > 0) &&
               <span className="absolute bottom-0 right-0 inline-flex h-5 w-5 translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full border-2 bg-white text-center text-xs">
                 {totalItemCount}
               </span>

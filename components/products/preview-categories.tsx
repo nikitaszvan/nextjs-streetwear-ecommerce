@@ -30,13 +30,19 @@ const PreviewCategories = ({ category, shouldFetch }: PreviewCategoriesProps) =>
 
   if (loading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div 
-            key={index} 
-            className="aspect-[3/4] bg-gray-200 rounded-lg animate-pulse"
-          />
-        ))}
+      <div className='my-[3rem]'>
+        <div className="justify-end gap-4 px-4 py-2 w-fit flex">
+          <h3 className="text-xl font-bold tracking-tight">{categoriesRef[category]}</h3>
+          <Link href={`/${makeSlug(category)}`} className="text-md font-medium text-neutral-600 self-end hover:underline">view all</Link>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div
+              key={index}
+              className="aspect-[3/4] bg-gray-200 rounded-lg animate-pulse"
+            />
+          ))}
+        </div>
       </div>
     );
   }
@@ -54,26 +60,26 @@ const PreviewCategories = ({ category, shouldFetch }: PreviewCategoriesProps) =>
       <div className="justify-end gap-4 px-4 py-2 w-fit flex">
         <h3 className="text-xl font-bold tracking-tight">{categoriesRef[category]}</h3>
         <Link href={`/${makeSlug(category)}`} className="text-md font-medium text-neutral-600 self-end hover:underline">view all</Link>
-        </div>
-        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-          {products?.slice(0, 4).map((product: ProductType, index: number) => (
-            <div key={index} className="relative aspect-[3/4]">
-                <Link href={`${category}/${makeSlug(product["clothing-name"])}`}>
-                  <Image
-                    src={product['image-url']}
-                    alt={`Streetwear product ${index + 1}`}
-                    fill
-                    className="!relative object-cover rounded-lg transition-transform"
-                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    priority={index < 4}
-                  />
-                </Link>
-                <div className="p-2">
-                    <h2 className="text-md font-medium text-neutral-700">{product['clothing-name']}</h2>
-                    <footer className="text-sm font-normal text-neutral-900"><p>$ {product['clothing-price']}</p></footer>
-                </div>
+      </div>
+      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+        {products?.slice(0, 4).map((product: ProductType, index: number) => (
+          <div key={index} className="relative aspect-[3/4]">
+            <Link href={`${category}/${makeSlug(product["clothing-name"])}`}>
+              <Image
+                src={product['image-url']}
+                alt={`Streetwear product ${index + 1}`}
+                fill
+                className="!relative object-cover rounded-lg transition-transform"
+                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                priority={index < 4}
+              />
+            </Link>
+            <div className="p-2">
+              <h2 className="text-md font-medium text-neutral-700">{product['clothing-name']}</h2>
+              <footer className="text-sm font-normal text-neutral-900"><p>$ {product['clothing-price']}</p></footer>
             </div>
-          ))}
+          </div>
+        ))}
       </div>
     </div>
   );

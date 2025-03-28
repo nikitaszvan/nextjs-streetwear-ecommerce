@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 
 // Presentation Layer
-import PaymentSuccess from "@/components/checkout/payment-success";
+import PaymentSuccess from "@/components/payment-success/payment-success";
 
 // Service Layers
 import getRedisClient from "@/lib/utils/redis-client-utils";

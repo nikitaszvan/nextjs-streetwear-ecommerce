@@ -17,13 +17,14 @@ const ShippingOptions = ({
     paymentId,
     defaultShipping,
     shippingOptions,
-    className
+    isVerifying,
 }: { 
     show: boolean,
     paymentId: { paymentId: string, clientSecret: string },
     defaultShipping: ShippingOptionType | string | null,
     shippingOptions: ShippingOptionType[] | [],
-    className?: string 
+    className?: string,
+    isVerifying: boolean
 }) => {
 
     const [selectedRate, setSelectedRate] = useState<ShippingOptionType | string | null>(defaultShipping);
@@ -81,7 +82,7 @@ const ShippingOptions = ({
     };
 
     return (
-        <fieldset className={`transform transition-transform duration-300 ease-in-out ${show ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 h-0'}`}
+        <fieldset className={`transform transition-transform duration-300 ease-in-out ${show ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 h-0'} ${isVerifying && 'pointer-events-none'}`}
         >
             <RadioGroup className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
                 {shippingOptions.map((rate: ShippingOptionType) => (

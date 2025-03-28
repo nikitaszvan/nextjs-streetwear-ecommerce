@@ -4,7 +4,26 @@ export const generateConfirmationNumber = () => {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     let result = ""
     for (let i = 0; i < 8; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length))
+        result += characters.charAt(Math.floor(Math.random() * characters.length))
     }
     return result
-  };
+};
+
+export const formatDate = (dateString: string | undefined): string | null => {
+    if (!dateString) {
+        return null;
+    }
+
+    const dateObject = new Date(dateString);
+    if (isNaN(dateObject.getTime())) {
+        return null;
+    }
+
+    return dateObject.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+};

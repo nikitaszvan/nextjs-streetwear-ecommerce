@@ -115,7 +115,7 @@ const ShippingOptionsWrapper = ({
 
                 className={`z-10 bg-white ${className}`}
             />
-            <ShippingOptions key={shippingsOptionsKey + 'ship-key'} shippingOptions={shippingOptions} show={handlePostalCheck(addressDefaultValues.address.postal_code)} paymentId={paymentId} defaultShipping={passedShipping} className={`${isVerifying && 'pointer-events-none'} ${className}`} />
+            <ShippingOptions key={shippingsOptionsKey + 'ship-key'} shippingOptions={shippingOptions} show={handlePostalCheck(addressDefaultValues.address.postal_code)} paymentId={paymentId} defaultShipping={passedShipping} isVerifying={isVerifying}/>
         </>
     )
 }

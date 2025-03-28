@@ -6,12 +6,12 @@ import ProductPageComponent from "../products/product-page";
 // Data Access Layer
 import { useProducts } from "@/lib/hooks/use-products";
 
-type ProdRecsWrapperProps = {
+type ProdRecsWrapperParams = {
   category: string;
   product: string;
 };
 
-const ProdRecsWrapper = ({ category, product }: ProdRecsWrapperProps) => {
+const ProdRecsWrapper = ({ category, product }: ProdRecsWrapperParams) => {
 
   const { randomProducts } = useProducts({
     category: category,

@@ -22,6 +22,31 @@ export const categories = [
     "shoes-men"
 ] as const;
 
+export const colorChoices = [
+    {
+        name: "Crimson Whisper",
+        rgba: "rgba(153, 76, 76, 0.7)"
+    },
+    {
+        name: "Forest Haze",
+        rgba: "rgba(76, 102, 76, 0.7)"
+    },
+    {
+        name: "Twilight Indigo",
+        rgba: "rgba(76, 76, 153, 0.7)"
+    },
+    {
+        name: "Golden Dusk",
+        rgba: "rgba(153, 153, 76, 0.7)"
+    },
+    {
+        name: "Aqua Mist",
+        rgba: "rgba(76, 153, 153, 0.7)"
+    }
+];
+
+export const sizeChoices = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
+
 export const menuCategories: { title: string; href: string; description: string }[] = [
     {
         title: "Tops",

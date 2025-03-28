@@ -2,6 +2,8 @@
 
 // External Libraries
 import classNames from "classnames";
+import { ShoppingBagIcon, ShoppingBasketIcon } from "lucide-react";
+import Link from "next/link";
 
 // Context
 import { useCart } from "@/context/cart-context";
@@ -10,28 +12,51 @@ import { useCart } from "@/context/cart-context";
 import CartSummaryHeader from "./cart-summary-header";
 import CartSummaryTable from "./cart-summary-table";
 import CartSummaryConfirm from "./cart-summary-confirm";
+import { Button } from "@/components/ui/button";
 
 const CartSummary = ({ editable = false, className = "" }) => {
-  const {
-    cart: { items, totalCartPrice, totalItemCount, cartShippingOption },
-    dispatch,
-  } = useCart();
+    const {
+        cart: { items, totalCartPrice, totalItemCount, cartShippingOption },
+        dispatch,
+    } = useCart();
 
-  return (
-    <section className={className} aria-labelledby="cart-summary-section">
-      <div className={classNames({ "max-w-5xl mx-auto": editable })}>
-        <CartSummaryHeader editable={editable} totalItemCount={totalItemCount} />
-        <CartSummaryTable
-          items={items}
-          editable={editable}
-          dispatch={dispatch}
-          cartShippingOption={cartShippingOption}
-          totalCartPrice={totalCartPrice}
-        />
-        {editable && <CartSummaryConfirm totalCartPrice={totalCartPrice} />}
-      </div>
-    </section>
-  );
+    const emptyCart = () => (
+        <div className="flex flex-col items-center justify-center px-6 h-full mt-12 mb-8">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted mb-3">
+                <ShoppingBasketIcon className="h-10 w-10 text-muted-foreground" />
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight mb-2">Your cart is empty</h2>
+            <p className="text-muted-foreground mb-6 max-w-md text-center">
+                Looks like you haven't added anything to your cart yet.
+            </p>
+            <Button asChild size="lg" className="gap-2 mt-8">
+                <Link href="/all-products">
+                    <ShoppingBagIcon className="h-5 w-5" />
+                    Continue Shopping
+                </Link>
+            </Button>
+        </div>
+    );
+
+    return (
+        <section className={className} aria-labelledby="cart-summary-section">
+            <div className={classNames({ "max-w-5xl mx-auto": editable })}>
+                <CartSummaryHeader editable={editable} totalItemCount={totalItemCount} />
+                {!!totalCartPrice ? (
+                    <>
+                        <CartSummaryTable
+                            items={items}
+                            editable={editable}
+                            dispatch={dispatch}
+                            cartShippingOption={cartShippingOption}
+                            totalCartPrice={totalCartPrice}
+                        />
+                        {editable && <CartSummaryConfirm totalCartPrice={totalCartPrice} />}
+                    </>
+                ) : emptyCart()}
+            </div>
+        </section>
+    );
 };
 
 export default CartSummary;

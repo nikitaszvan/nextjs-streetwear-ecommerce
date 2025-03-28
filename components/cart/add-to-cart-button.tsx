@@ -7,6 +7,9 @@ import { useCart } from "@/context/cart-context";
 import { ProductType } from "@/types/product-types";
 import { CartProductType, ProductVariantType } from "@/types/cart-types";
 
+// Presentation Layer
+import { Button } from "../ui/button";
+
 type AddToButtonType = {
   product: ProductType & ProductVariantType;
   active: boolean;
@@ -27,14 +30,14 @@ const AddToCartButton = ({ product, active }: AddToButtonType) => {
   };
 
   return (
-    <button
+    <Button
       onClick={handleAddToCart}
-      className={`inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow h-10 px-8 rounded-full text-lg relative ${!active && 'bg-gray-400'}`}
+      className={`rounded-full text-base`}
       id="button-add-to-cart"
       type="button"
       disabled={!active}
       aria-disabled={!active}
-      aria-label="Add to cart"
+      aria-label={`Add ${product['clothing-name']} to cart`}
     >
       <span className="transition-opacity ease-in opacity-100">Add to cart</span>
       <span className="ease-out transition-opacity pointer-events-none absolute z-10 opacity-0" aria-hidden="true">
@@ -53,7 +56,7 @@ const AddToCartButton = ({ product, active }: AddToButtonType) => {
           <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
         </svg>
       </span>
-    </button>
+    </Button>
   );
 };
 

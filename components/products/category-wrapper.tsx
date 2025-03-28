@@ -9,22 +9,13 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage
 } from "@/components/ui/breadcrumb";
-import CategoryGrid from "@/components/products/category-grid";
+import CategoryGrid from "@/components/products/category-grid/category-grid";
 import ProductsFilter from '@/components/products/products-filter';
 import Link from "next/link";
 
 // External Libraries
 import { useState } from "react";
 import { useSearchParams } from 'next/navigation';
-
-// Service Layer
-//
-
-// Data Access Layer
-//
-
-// Types
-//
 
 
 export default function CategoryWrapper({

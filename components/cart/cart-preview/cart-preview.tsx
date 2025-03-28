@@ -13,6 +13,7 @@ import { useScrollLock } from '@/lib/hooks/use-scroll-lock';
 import CartPreviewHeader from './cart-preview-header';
 import CartPreviewItem from './cart-preview-item';
 import CartPreviewFooter from './cart-preview-footer';
+import { ShoppingBasketIcon, ShoppingCartIcon } from "lucide-react";
 
 const CartPreview = () => {
   const { dispatch, cart: { items, isCartPreviewVisible, totalCartPrice, justAddedProduct } } = useCart();
@@ -43,11 +44,23 @@ const CartPreview = () => {
         className={`flex flex-col bg-white h-full w-[21rem] transform transition-all duration-200 ease-in-out ${isCartPreviewVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}
       >
         <CartPreviewHeader justAddedProduct={justAddedProduct} dispatch={dispatch} />
-        <div ref={divRef} className="overflow-y-auto grow pb-0 px-0 space-y-4 divide-y" aria-labelledby="cart-items">
+        <div ref={divRef} className={`overflow-y-auto grow pb-0 px-0 space-y-4 ${items.length && 'divide-y'}`} aria-labelledby="cart-items">
           <h2 id="cart-items" className="sr-only">Cart Items</h2>
-          {items.length ? items.map((item, index) => (
-            <CartPreviewItem key={index} item={item} dispatch={dispatch} />
-          )) : <div>Cart is empty</div>}
+          {items.length ?
+            items.map((item, index) =>
+              <CartPreviewItem key={index} item={item} dispatch={dispatch} className={index === 0 ? "border-none" : ""} />
+            )
+            :
+            <div className="flex flex-col items-center justify-center px-6 h-full !my-0">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted mb-3">
+                <ShoppingBasketIcon className="h-6 w-6 text-muted-foreground" />
+              </div>
+              <h2 className="text-lg font-bold tracking-tight mb-2">Your cart is empty</h2>
+              <p className="text-sm text-muted-foreground mb-6 max-w-md text-center">
+                Looks like you haven't added anything to your cart yet.
+              </p>
+            </div>
+          }
         </div>
         <CartPreviewFooter totalCartPrice={totalCartPrice} dispatch={dispatch} />
       </div>

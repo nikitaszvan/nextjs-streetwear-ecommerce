@@ -135,8 +135,10 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
         })}
       action="#"
       className="flex flex-col gap-4 relative"
+      aria-labelledby="checkout-form-title"
     >
-      {(isVerifying) && <PaymentVerifyLoader />}
+      <h1 id="checkout-form-title" className="sr-only">Checkout Form</h1>
+      {isVerifying && <PaymentVerifyLoader />}
       <EmailInput key={changeKey + 'link-elem'} isVerifying={isVerifying} savedEmail={defaultEmail} />
       {paymentIntentId &&
         <ShippingOptionsWrapper

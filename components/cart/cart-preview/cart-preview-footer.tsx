@@ -5,6 +5,9 @@ import { Dispatch } from "react";
 // Types
 import { CartAction } from "@/types/cart-types";
 
+// Presentation Layer
+import { Button } from "@/components/ui/button";
+
 type CartFooterParams = {
   totalCartPrice: number;
   dispatch: Dispatch<CartAction>;
@@ -29,9 +32,11 @@ const CartPreviewFooter = ({
             <span>CAD {totalCartPrice}</span>
           </div>
           <p className="pb-3 text-xs">Shipping &amp; Tax calculated at checkout</p>
-          <Link href="/cart-summary" onClick={closeCartPreview} className="flex py-2 px-6 w-full rounded-full bg-black" passHref>
-            <span className="text-center text-white w-full">Checkout</span>
-          </Link>
+          <Button onClick={closeCartPreview} className="flex py-2 px-6 w-full rounded-full bg-black" disabled={!!!totalCartPrice}>
+            <Link href="/cart-summary" passHref>
+              <span className={`text-center text-white w-full`}>Checkout</span>
+            </Link>
+          </Button>
         </div>
       </section>
     </footer>

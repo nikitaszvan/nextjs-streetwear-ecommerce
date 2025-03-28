@@ -14,9 +14,6 @@ import AddToCartButton from "../cart/add-to-cart-button";
 import Link from "next/link";
 import Image from "next/image";
 
-// Service Layer
-//
-
 // Data Access Layer
 import { useProducts } from "@/lib/hooks/use-products";
 
@@ -29,6 +26,7 @@ import { ColorType } from "@/types/cart-types";
 
 // Constants
 import { categoriesRef } from "@/constants/product-constants";
+import { colorChoices, sizeChoices } from "@/constants/product-constants";
 
 
 const makeTitleCase = (str: string) => {
@@ -44,7 +42,6 @@ const ProductPageComponent = ({
     category: string;
     recos: ProductType[];
 }>) => {
-
 
     const [selectedColor, setSelectedColor] = useState<ColorType | null>(null);
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
@@ -62,32 +59,6 @@ const ProductPageComponent = ({
     const prod: ProductType | undefined = products?.find(
         (p: ProductType) => (p['clothing-name']) === makeTitleCase(product)
     );
-
-
-    const colorChoices = [
-        {
-            name: "Crimson Whisper",
-            rgba: "rgba(153, 76, 76, 0.7)"
-        },
-        {
-            name: "Forest Haze",
-            rgba: "rgba(76, 102, 76, 0.7)"
-        },
-        {
-            name: "Twilight Indigo",
-            rgba: "rgba(76, 76, 153, 0.7)"
-        },
-        {
-            name: "Golden Dusk",
-            rgba: "rgba(153, 153, 76, 0.7)"
-        },
-        {
-            name: "Aqua Mist",
-            rgba: "rgba(76, 153, 153, 0.7)"
-        }
-    ];
-
-    const sizeChoices = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
 
     if (!prod) return <div>Product not found</div>;
 

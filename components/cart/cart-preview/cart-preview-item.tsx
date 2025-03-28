@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Trash2 } from 'lucide-react';
 import { Dispatch } from "react";
+import { cn } from "@/lib/utils/classname-utils";
 
 // Service Layer
 import { makeSlug } from "@/lib/utils/string-utils";
@@ -17,11 +18,13 @@ import { CartAction } from "@/types/cart-types";
 type CartItemParams = {
   item: CartProductType;
   dispatch: Dispatch<CartAction>;
+  className?: string;
 };
 
 const CartPreviewItem = ({
   item,
-  dispatch
+  dispatch,
+  className
 }: CartItemParams) => {
 
   const handleRemoveFromCart = (product: CartProductType) => {
@@ -33,7 +36,7 @@ const CartPreviewItem = ({
   };
 
   return (
-    <article className="pt-4 space-y-2 p-4 px-5" aria-labelledby={`product-${item['category_pk']}`}>
+    <article className={cn("pt-4 space-y-2 p-4 px-5", className)} aria-labelledby={`product-${item['category_pk']}`}>
       <div className="flex items-start justify-between">
         <h2 id={`product-${item['category_pk']}`} className="sr-only">{item["clothing-name"]}</h2>
         <p className="line-clamp-3 text-md py-1 font-medium leading-[1.125rem]">
