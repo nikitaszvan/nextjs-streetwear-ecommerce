@@ -10,12 +10,25 @@ import { useSortedProducts } from "@/lib/hooks/use-sorted-products";
 import ProductListLoadingSkeleton from "./product-list-loading-skeleton";
 import NoSearchResults from "./no-search-results";
 import ProductList from "./product-list";
+import Header from "./header";
 
-const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ category: string, categorySlug: string, sort: string, search?: string }>) => {
+type CategoryGridParams = {
+  category: string;
+  categorySlug: string;
+  sort: string;
+  search?: string;
+};
+
+const CategoryGrid = ({
+  category,
+  categorySlug,
+  sort,
+  search
+}: CategoryGridParams) => {
   const [shouldFetch, setShouldFetch] = useState(false);
   const router = useRouter();
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const { products } = useProducts({ category: categorySlug, shouldFetch: shouldFetch });
+  const { products } = useProducts({ category: categorySlug, shouldFetch });
 
   const { results, bestMatch } = useSortedProducts({ products, sort, search });
 
@@ -47,32 +60,16 @@ const CategoryGrid = ({ category, categorySlug, sort, search }: Readonly<{ categ
   }, []);
 
   return (
-    <>
-      {categorySlug !== 'all-products' ?
-        <h1 className="text-3xl font-bold leading-none tracking-tight text-foreground">
-          {category}
-          <div className="text-lg font-semibold text-muted-foreground">Category</div>
-        </h1>
-        :
-        <>
-          {!search ? (
-            <h1 className="text-3xl font-bold leading-none tracking-tight text-foreground">All Products</h1>
-          ) : (
-            <h1 className="text-3xl font-bold leading-none tracking-tight text-foreground">
-              Searching for &quot;{search}&quot;
-            </h1>
-          )}
-        </>
-      }
-
-      {!!!(!search && results.length) ?
+    <main>
+      <Header categorySlug={categorySlug} category={category} search={search} />
+      {results.length === 0 && !search ? (
         <ProductListLoadingSkeleton />
-        : results.length > 0 ?
-          <ProductList products={results} />
-          :
-          <NoSearchResults search={search} bestMatch={bestMatch} />
-      }
-    </>
+      ) : results.length > 0 ? (
+        <ProductList products={results} />
+      ) : (
+        <NoSearchResults search={search} bestMatch={bestMatch} />
+      )}
+    </main>
   );
 };
 

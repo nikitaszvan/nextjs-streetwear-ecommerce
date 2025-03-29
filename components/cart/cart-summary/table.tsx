@@ -3,14 +3,14 @@ import classNames from "classnames";
 import { Truck } from "lucide-react";
 
 // Presentation Layer
-import CartItemRow from './cart-summary-item-row';
+import CartItemRow from './table-item-row';
 
 // Types
 import { CartAction, CartProductType } from "@/types/cart-types";
 import { Dispatch } from "react";
 import { ShippingOptionType } from "@/types/stripe-element-types";
 
-type CartSummaryTableParams = {
+type TableParams = {
   items: CartProductType[] | [];
   editable: boolean;
   dispatch: Dispatch<CartAction>;
@@ -18,13 +18,13 @@ type CartSummaryTableParams = {
   totalCartPrice: number;
 }
 
-const CartSummaryTable = ({
+const Table = ({
   items,
   editable,
   dispatch,
   cartShippingOption,
   totalCartPrice
-}: CartSummaryTableParams) => (
+}: TableParams) => (
   <div className="relative w-full overflow-auto">
     <table className="w-full caption-bottom text-sm table-fixed" aria-labelledby="cart-summary-title">
       <caption id="cart-summary-title" className="sr-only">Cart Summary</caption>
@@ -86,4 +86,4 @@ const CartSummaryTable = ({
   </div>
 );
 
-export default CartSummaryTable;
+export default Table;

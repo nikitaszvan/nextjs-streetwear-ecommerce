@@ -10,7 +10,7 @@ import { formatDate } from "@/lib/utils/string-utils";
 // Presentation Layer
 import { Separator } from "@/components/ui/separator";
 
-const PaymentSuccessHeader = ({ orderDetails }: { orderDetails: PurchaseCartType }) => (
+const Header = ({ orderDetails }: { orderDetails: PurchaseCartType }) => (
     <header className=" pb-0 flex flex-col" aria-labelledby="order-confirmation-title">
         <div className="flex justify-between items-center">
             <div className="">
@@ -34,4 +34,4 @@ const PaymentSuccessHeader = ({ orderDetails }: { orderDetails: PurchaseCartType
     </header>
 );
 
-export default PaymentSuccessHeader;
+export default Header;

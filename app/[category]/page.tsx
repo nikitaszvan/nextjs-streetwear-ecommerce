@@ -2,7 +2,7 @@
 import { Suspense } from "react";
 
 // Presentation Layer
-import CategoryWrapper from "@/components/products/category-wrapper";
+import CategoryWrapper from "@/components/products/category-grid/category-wrapper";
 
 // Constants
 import { categoriesRef } from "@/constants/product-constants";
@@ -15,6 +15,7 @@ export default async function CategoryPage({
   const { category } = await params;
   
   const categoryData = categoriesRef[category];
+
   if (!categoryData) {
     return <p>Category not found</p>;
   }

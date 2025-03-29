@@ -21,7 +21,7 @@ type CartItemParams = {
   className?: string;
 };
 
-const CartPreviewItem = ({
+const CartItem = ({
   item,
   dispatch,
   className
@@ -69,4 +69,4 @@ const CartPreviewItem = ({
   );
 };
 
-export default CartPreviewItem;
+export default CartItem;

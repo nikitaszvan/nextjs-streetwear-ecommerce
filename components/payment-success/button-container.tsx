@@ -4,7 +4,7 @@ import { ArrowLeft, Printer } from "lucide-react";
 // Presentation Layer
 import { Button } from "@/components/ui/button";
 
-const PaymentSuccessButtonContainer = () => {
+const ButtonContainer = () => {
   const handlePrint = () => {
     window.print();
   };
@@ -32,4 +32,4 @@ const PaymentSuccessButtonContainer = () => {
   );
 };
 
-export default PaymentSuccessButtonContainer;
+export default ButtonContainer;

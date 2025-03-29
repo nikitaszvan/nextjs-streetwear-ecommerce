@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-separator";
 
-const CartSummaryConfirm = ({ totalCartPrice }: { totalCartPrice: number }) => (
+const Footer = ({ totalCartPrice }: { totalCartPrice: number }) => (
   <div className="mt-4">
     <Card>
       <CardContent className="p-6" aria-labelledby="order-summary-title">
@@ -41,4 +41,4 @@ const CartSummaryConfirm = ({ totalCartPrice }: { totalCartPrice: number }) => (
   </div>
 );
 
-export default CartSummaryConfirm;
+export default Footer;

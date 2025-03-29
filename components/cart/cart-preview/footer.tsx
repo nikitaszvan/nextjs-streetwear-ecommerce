@@ -8,15 +8,15 @@ import { CartAction } from "@/types/cart-types";
 // Presentation Layer
 import { Button } from "@/components/ui/button";
 
-type CartFooterParams = {
+type FooterParams = {
   totalCartPrice: number;
   dispatch: Dispatch<CartAction>;
 };
 
-const CartPreviewFooter = ({
+const Footer = ({
   totalCartPrice,
   dispatch
-}: CartFooterParams) => {
+}: FooterParams) => {
 
   const closeCartPreview = () => {
     dispatch({ type: 'HIDE_CART_PREVIEW' });
@@ -43,4 +43,4 @@ const CartPreviewFooter = ({
   );
 };
 
-export default CartPreviewFooter;
+export default Footer;

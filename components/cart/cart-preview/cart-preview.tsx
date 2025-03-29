@@ -10,9 +10,9 @@ import { useCart } from "@/context/cart-context";
 import { useScrollLock } from '@/lib/hooks/use-scroll-lock';
 
 // Presentation Layer
-import CartPreviewHeader from './cart-preview-header';
-import CartPreviewItem from './cart-preview-item';
-import CartPreviewFooter from './cart-preview-footer';
+import Header from './header';
+import CartItem from './cart-item';
+import Footer from './footer';
 import { ShoppingBasketIcon, ShoppingCartIcon } from "lucide-react";
 
 const CartPreview = () => {
@@ -43,12 +43,12 @@ const CartPreview = () => {
         onClick={(e) => e.stopPropagation()}
         className={`flex flex-col bg-white h-full w-[21rem] transform transition-all duration-200 ease-in-out ${isCartPreviewVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}
       >
-        <CartPreviewHeader justAddedProduct={justAddedProduct} dispatch={dispatch} />
+        <Header justAddedProduct={justAddedProduct} dispatch={dispatch} />
         <div ref={divRef} className={`overflow-y-auto grow pb-0 px-0 space-y-4 ${items.length && 'divide-y'}`} aria-labelledby="cart-items">
           <h2 id="cart-items" className="sr-only">Cart Items</h2>
           {items.length ?
             items.map((item, index) =>
-              <CartPreviewItem key={index} item={item} dispatch={dispatch} className={index === 0 ? "border-none" : ""} />
+              <CartItem key={index} item={item} dispatch={dispatch} className={index === 0 ? "border-none" : ""} />
             )
             :
             <div className="flex flex-col items-center justify-center px-6 h-full !my-0">
@@ -62,7 +62,7 @@ const CartPreview = () => {
             </div>
           }
         </div>
-        <CartPreviewFooter totalCartPrice={totalCartPrice} dispatch={dispatch} />
+        <Footer totalCartPrice={totalCartPrice} dispatch={dispatch} />
       </div>
     </div>
   );

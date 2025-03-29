@@ -4,7 +4,7 @@ import { Check } from "lucide-react";
 // Presentation Layer
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const PaymentSuccessAlert = () => (
+const SuccessAlert = () => (
   <Alert className="bg-green-50 border-green-200 mb-6" role="alert" aria-live="assertive">
     <Check className="h-5 w-5 text-green-600" aria-hidden="true" />
     <AlertTitle className="text-green-800 text-lg font-medium">Payment Successful</AlertTitle>
@@ -14,4 +14,4 @@ const PaymentSuccessAlert = () => (
   </Alert>
 );
 
-export default PaymentSuccessAlert;
+export default SuccessAlert;

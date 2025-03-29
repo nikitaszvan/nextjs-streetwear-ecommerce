@@ -5,15 +5,15 @@ import { Dispatch } from "react";
 // Types
 import { CartAction } from "@/types/cart-types";
 
-type CartHeaderParams = {
+type HeaderParams = {
   justAddedProduct: boolean;
   dispatch: Dispatch<CartAction>;
 };
 
-const CartPreviewHeader = ({
+const Header = ({
   justAddedProduct,
   dispatch,
-}: CartHeaderParams) => {
+}: HeaderParams) => {
 
   const closeCartPreview = () => {
     dispatch({ type: 'HIDE_CART_PREVIEW' });
@@ -31,4 +31,4 @@ const CartPreviewHeader = ({
   );
 };
 
-export default CartPreviewHeader;
+export default Header;

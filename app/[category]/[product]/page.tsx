@@ -1,5 +1,5 @@
 // Presentation Layer
-import ProdRecsWrapper from "@/components/products/prod-recos-wrapper";
+import ProdRecsWrapper from "@/components/products/product-page/prod-recs-wrapper";
 
 export default async function ProductPage({
     params

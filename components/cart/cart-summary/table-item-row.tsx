@@ -13,17 +13,17 @@ import { sizesRef } from "@/constants/product-constants";
 import { CartAction, CartProductType } from "@/types/cart-types";
 import { Dispatch } from "react";
 
-type CartSummaryItemRowParams = {
+type ItemRowParams = {
   item: CartProductType;
   editable: boolean;
   dispatch: Dispatch<CartAction>;
 };
 
-const CartSummaryItemRow = ({
+const TableItemRow = ({
   item,
   editable,
   dispatch
-}: CartSummaryItemRowParams) => {
+}: ItemRowParams) => {
   const handleRemoveFromCart = (product: CartProductType) => {
     dispatch({ type: "REMOVE_ITEM", payload: product });
   };
@@ -111,4 +111,4 @@ const CartSummaryItemRow = ({
   );
 };
 
-export default CartSummaryItemRow;
+export default TableItemRow;

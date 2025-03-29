@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 // Types
 import { PurchaseCartType } from "@/types/cart-types";
 
-const PaymentSuccessOrderSummary = ({ orderDetails }: { orderDetails: PurchaseCartType }) => {
+const OrderSummary = ({ orderDetails }: { orderDetails: PurchaseCartType }) => {
 
 
     return (
@@ -62,4 +62,4 @@ const PaymentSuccessOrderSummary = ({ orderDetails }: { orderDetails: PurchaseCa
     );
 };
 
-export default PaymentSuccessOrderSummary;
+export default OrderSummary;

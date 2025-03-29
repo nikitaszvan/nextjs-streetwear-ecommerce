@@ -9,9 +9,9 @@ import Link from "next/link";
 import { useCart } from "@/context/cart-context";
 
 // Presentation Layer
-import CartSummaryHeader from "./cart-summary-header";
-import CartSummaryTable from "./cart-summary-table";
-import CartSummaryConfirm from "./cart-summary-confirm";
+import Header from "./header";
+import Table from "./table";
+import Footer from "./footer";
 import { Button } from "@/components/ui/button";
 
 const CartSummary = ({ editable = false, className = "" }) => {
@@ -41,17 +41,17 @@ const CartSummary = ({ editable = false, className = "" }) => {
     return (
         <section className={className} aria-labelledby="cart-summary-section">
             <div className={classNames({ "max-w-5xl mx-auto": editable })}>
-                <CartSummaryHeader editable={editable} totalItemCount={totalItemCount} />
+                <Header editable={editable} totalItemCount={totalItemCount} />
                 {!!totalCartPrice ? (
                     <>
-                        <CartSummaryTable
+                        <Table
                             items={items}
                             editable={editable}
                             dispatch={dispatch}
                             cartShippingOption={cartShippingOption}
                             totalCartPrice={totalCartPrice}
                         />
-                        {editable && <CartSummaryConfirm totalCartPrice={totalCartPrice} />}
+                        {editable && <Footer totalCartPrice={totalCartPrice} />}
                     </>
                 ) : emptyCart()}
             </div>

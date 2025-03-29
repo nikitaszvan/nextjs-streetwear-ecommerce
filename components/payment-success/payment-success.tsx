@@ -4,11 +4,11 @@
 import { useState, useEffect } from "react";
 
 // Presentation Layer
-import PaymentSuccessAlert from "./payment-success-alert";
-import PaymentSuccessButtonContainer from "./payment-success-button-container";
-import PaymentSuccessHeader from "./payment-success-header";
-import PaymentSuccessOrderSummary from "./payment-success-order-summary";
-import PaymentSuccessShippingAddress from "./payment-success-shipping-address";
+import PaymentSuccessAlert from "./success-alert";
+import PaymentSuccessButtonContainer from "./button-container";
+import PaymentSuccessHeader from "./header";
+import PaymentSuccessOrderSummary from "./order-summary";
+import PaymentSuccessShippingAddress from "./shipping-address";
 
 // Types
 import { PurchaseCartType } from "@/types/cart-types";

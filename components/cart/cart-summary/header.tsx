@@ -1,12 +1,12 @@
-type CartHeaderParams = {
+type HeaderParams = {
     editable: boolean;
     totalItemCount: number;
   };
   
-  const CartSummaryHeader = ({
+  const Header = ({
     editable,
     totalItemCount
-  }: CartHeaderParams) => (
+  }: HeaderParams) => (
     <header className="flex gap-3 items-end mb-4" aria-labelledby="cart-summary-title">
       <h1 id="cart-summary-title" className="text-3xl font-bold leading-none tracking-tight">
         {editable ? "Your cart" : "Cart Summary"}
@@ -19,4 +19,4 @@ type CartHeaderParams = {
     </header>
   );
   
-  export default CartSummaryHeader;
+  export default Header;

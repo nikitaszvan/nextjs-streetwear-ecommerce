@@ -27,3 +27,7 @@ export const formatDate = (dateString: string | undefined): string | null => {
         minute: "2-digit"
     });
 };
+
+export const makeTitleCase = (str: string) => {
+    return str.split("-").map(word => word[0].toUpperCase() + word.slice(1)).join(" ");
+}

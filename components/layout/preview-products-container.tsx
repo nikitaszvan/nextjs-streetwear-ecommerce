@@ -1,7 +1,7 @@
 "use client"
 
 // Presentation Layer
-import PreviewCategories from "@/components/products/preview-categories";
+import PreviewCategories from "@/components/layout/preview-categories";
 
 // External Libraries
 import { useState, useEffect } from "react";

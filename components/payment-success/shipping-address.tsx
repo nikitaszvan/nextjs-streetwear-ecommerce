@@ -4,7 +4,7 @@ import { CardContent } from "@/components/ui/card";
 // Types
 import { PurchaseCartType } from "@/types/cart-types";
 
-const PaymentSuccessShippingAddress = ({ orderDetails }: { orderDetails: PurchaseCartType }) => {
+const ShippingAddress = ({ orderDetails }: { orderDetails: PurchaseCartType }) => {
   const {
     customerAddress: {
       name,
@@ -36,4 +36,4 @@ const PaymentSuccessShippingAddress = ({ orderDetails }: { orderDetails: Purchas
   );
 };
 
-export default PaymentSuccessShippingAddress;
+export default ShippingAddress;
