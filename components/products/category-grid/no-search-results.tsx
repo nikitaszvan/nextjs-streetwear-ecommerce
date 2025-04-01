@@ -12,14 +12,14 @@ const NoSearchResults = ({ search, bestMatch }: NoSearchResultsParams) => {
       className="flex h-[60vh] w-full flex-col items-center justify-center gap-4"
       aria-labelledby="no-results-heading"
     >
-      <h1 id="no-results-heading" className="text-3xl font-bold">
+      <h1 id="no-results-heading" className="text-2xl font-bold">
         No Results Found for &quot;{search}&quot;
       </h1>
       {bestMatch && (
-        <h2 className="max-w-md text-2xl text-center text-neutral-500">
+        <h2 className="max-w-md text-xl text-center text-neutral-500">
           Did you mean:&nbsp;
           <Link
-            className="underline text-blue-600 hover:text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="underline text-blue-600 hover:text-blue-800"
             href={`/all-products?search=${encodeURIComponent(
               bestMatch["clothing-name"]
             )}`}

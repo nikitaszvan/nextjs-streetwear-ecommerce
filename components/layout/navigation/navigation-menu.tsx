@@ -14,7 +14,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ShoppingBag } from 'lucide-react';
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-
+import HamburgerMenu from "./hamburger-menu";
+import MobileSearchInput from "./mobile-search-input";
 // Service Layer
 import { cn } from "@/lib/utils/classname-utils";
 
@@ -93,13 +94,13 @@ const MainNavigation = ({ className }: MainNavigationProps) => {
   return (
 
     <NavigationMenu className={cn(
-      "max-w-none gap-6 mx-auto flex w-full !px-[10%] print:hidden",
+      "max-w-none gap-2 md:gap-6 mx-auto flex w-full !px-[10%] print:hidden",
       className
     )}>
-      <Link href="/">
-        <Image width="60" height="60" src="/assets/svgs/streetwear-logo.svg" alt="streetwear logo" />
+      <Link href="/" className="relative h-[2.5rem] aspect-video">
+        <Image src="/assets/svgs/streetwear-logo.svg" alt="streetwear logo" fill />
       </Link>
-      <NavigationMenuList className="mr-auto !bg-transparent !backdrop-blur-none">
+      <NavigationMenuList className="mr-auto !bg-transparent !backdrop-blur-none hidden md:flex">
         <NavigationMenuItem>
           <button className="py-2 px-4 font-medium">
             <Link href="/all-products">
@@ -138,8 +139,15 @@ const MainNavigation = ({ className }: MainNavigationProps) => {
           </button>
         </NavigationMenuItem>
       </NavigationMenuList>
+
       <div className="flex items-center ml-auto">
-        <div className="mr-5 ml-auto sm:ml-0">
+        <MobileSearchInput
+          className="md:hidden"
+          maxSearchLength={36}
+          searchValue={searchQuery}
+          handleSearch={handleSearch}
+        />
+        <div className="mr-5 ml-auto sm:ml-0 hidden md:flex">
           <label className="flex items-center">
             <span className="sr-only">Search</span>
             <Input
@@ -171,6 +179,9 @@ const MainNavigation = ({ className }: MainNavigationProps) => {
             }
           </button>
         </div>
+        <HamburgerMenu 
+          className="md:hidden"
+        />
       </div>
     </NavigationMenu>
   )

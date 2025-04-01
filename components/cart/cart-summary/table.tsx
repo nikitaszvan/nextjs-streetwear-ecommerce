@@ -30,10 +30,10 @@ const Table = ({
       <caption id="cart-summary-title" className="sr-only">Cart Summary</caption>
       <thead>
         <tr className="border-b transition-colors hover:bg-muted/50">
-          <th scope="col" className="h-10 px-2 text-left align-middle font-medium text-muted-foreground hidden w-24 sm:table-cell">
+          <th scope="col" className="h-10 px-2 text-left align-middle font-medium text-muted-foreground hidden w-[15%] sm:table-cell">
             <span className="sr-only">Image</span>
           </th>
-          <th scope="col" className={classNames("h-10 px-2 text-left align-middle font-medium text-muted-foreground w-1/2", { "text-lg": editable })}>
+          <th scope="col" className={classNames("h-10 px-2 text-left align-middle font-medium text-muted-foreground", { "text-lg": editable })}>
             Product
           </th>
           <th scope="col" className={classNames("h-10 px-2 text-left align-middle font-medium text-muted-foreground w-1/6", { "text-lg text-center": editable })}>
@@ -53,7 +53,7 @@ const Table = ({
         ))}
         {!editable && cartShippingOption && (
           <tr className="transition-all hover:bg-muted/50 translate-y-0 opacity-100 h-14 border-t">
-            <td className="">
+            <td className="hidden sm:table-cell">
               <Truck className="mx-auto" aria-hidden="true" />
             </td>
             <td className="pl-2">
@@ -76,7 +76,7 @@ const Table = ({
             </td>
             <td className="p-2 align-middle text-right">
               <span className={classNames("relative tabular-nums text-foreground", { "text-lg": editable })}>
-                CAD {totalCartPrice + (cartShippingOption ? cartShippingOption.fixed_amount.amount / 100 : 0)}
+                {totalCartPrice + (cartShippingOption ? cartShippingOption.fixed_amount.amount / 100 : 0)}
               </span>
             </td>
           </tr>

@@ -5,12 +5,12 @@ const ProductDetails = ({
     productName: string;
     productPrice: number;
   }) => (
-    <article aria-labelledby="product-name">
+    <article aria-labelledby="product-name" className="flex flex-col gap-4">
       <h1 id="product-name" className="text-3xl font-bold leading-none tracking-tight text-foreground">
         {productName}
       </h1>
       <p className="mt-2 text-2xl font-medium leading-none tracking-tight text-foreground/70">
-        {productPrice} CAD
+        $ {productPrice}
       </p>
       <section aria-labelledby="product-description">
         <h2 id="product-description" className="sr-only">

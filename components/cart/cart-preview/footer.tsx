@@ -1,6 +1,6 @@
 // External Libraries
-import Link from "next/link";
 import { Dispatch } from "react";
+import { useRouter } from "next/navigation";
 
 // Types
 import { CartAction } from "@/types/cart-types";
@@ -22,6 +22,8 @@ const Footer = ({
     dispatch({ type: 'HIDE_CART_PREVIEW' });
   };
 
+  const router = useRouter();
+
   return (
     <footer className="bottom-0 w-full border-t bg-white p-4 lg:px-6" aria-labelledby="cart-summary-footer">
       <h2 id="cart-summary-footer" className="sr-only">Cart Summary Footer</h2>
@@ -32,10 +34,17 @@ const Footer = ({
             <span>CAD {totalCartPrice}</span>
           </div>
           <p className="pb-3 text-xs">Shipping &amp; Tax calculated at checkout</p>
-          <Button onClick={closeCartPreview} className="flex py-2 px-6 w-full rounded-full bg-black" disabled={!!!totalCartPrice}>
-            <Link href="/cart-summary" passHref>
-              <span className={`text-center text-white w-full`}>Checkout</span>
-            </Link>
+          <Button
+            onClick={() => {
+              if (totalCartPrice) {
+                closeCartPreview();
+                router.push('/cart-summary');
+              }
+            }}
+            className="flex py-2 px-6 w-full rounded-full bg-black"
+            disabled={!totalCartPrice}
+          >
+            <span className="text-center text-white w-full">Checkout</span>
           </Button>
         </div>
       </section>

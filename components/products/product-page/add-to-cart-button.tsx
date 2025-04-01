@@ -8,7 +8,7 @@ import { ProductType } from "@/types/product-types";
 import { CartProductType, ProductVariantType } from "@/types/cart-types";
 
 // Presentation Layer
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 
 type AddToButtonType = {
   product: ProductType & ProductVariantType;
@@ -32,7 +32,7 @@ const AddToCartButton = ({ product, active }: AddToButtonType) => {
   return (
     <Button
       onClick={handleAddToCart}
-      className={`rounded-full text-base`}
+      className={`rounded-full text-base mt-10`}
       id="button-add-to-cart"
       type="button"
       disabled={!active}

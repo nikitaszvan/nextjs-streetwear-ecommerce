@@ -39,7 +39,7 @@ const CartSummary = ({ editable = false, className = "" }) => {
     );
 
     return (
-        <section className={className} aria-labelledby="cart-summary-section">
+        <section className={`${classNames} ${classNames({"md:static": !editable})}`} aria-labelledby="cart-summary-section">
             <div className={classNames({ "max-w-5xl mx-auto": editable })}>
                 <Header editable={editable} totalItemCount={totalItemCount} />
                 {!!totalCartPrice ? (

@@ -30,12 +30,12 @@ export default async function CheckoutPage({
 
   return (
     <main
-      className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pb-6 pt-2 sm:px-6 lg:px-8"
+      className="mx-auto flex w-full max-w-7xl flex-col px-4 pb-6 pt-2 sm:px-6 lg:px-8"
       role="main"
       aria-label="Checkout Page"
     >
-      <div className="min-h-[calc(100dvh-7rem)] xl:grid xl:grid-cols-12 xl:gap-x-8">
-        <div className="my-8 xl:col-span-7 sticky top-[4rem] h-fit">
+      <div className="gap-4 lg:gap-10 w-full flex flex-col lg:flex-row items-center lg:items-start">
+        <div className="lg:my-8 lg:sticky md:relative lg:top-[4rem] h-fit w-fit flex-1 lg:max-w-2xl lg:min-w-[33rem] max-w-2xl">
           <Link href="/cart-summary" className="flex mb-4 items-center w-fit" aria-label="Edit Cart">
             <ChevronLeftIcon height={20} aria-hidden="true" />
             <span className="hover:underline">Edit Cart</span>

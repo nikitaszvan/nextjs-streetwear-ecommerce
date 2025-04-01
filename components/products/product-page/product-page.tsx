@@ -2,7 +2,7 @@
 
 // Presentation Layer
 import RecommendedProducts from "./recommended-products";
-import AddToCartButton from "@/components/cart/add-to-cart-button";
+import AddToCartButton from "@/components/products/product-page/add-to-cart-button";
 import BreadcrumbLinks from "../category-grid/breadcrumb-links";
 import ProductDetails from "./product-details";
 import ColorPicker from "./color-picker";
@@ -48,7 +48,7 @@ const ProductPageComponent = ({
       <BreadcrumbLinks category={category} product={product} />
       <div className="flex gap-4">
         <ProductImage imageUrl={prod["image-url"]} altText={`Product Image for ${product}`}/>
-        <div className="flex-1">
+        <div className="flex flex-col flex-1 gap-4">
           <ProductDetails productName={makeTitleCase(product)} productPrice={prod["clothing-price"]} />
           <ColorPicker selectedColor={selectedColor} onSelectColor={setSelectedColor} />
           <SizePicker selectedSize={selectedSize} onSelectSize={setSelectedSize} />

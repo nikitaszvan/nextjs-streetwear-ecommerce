@@ -16,7 +16,6 @@ const SizePicker = ({
         <button
           key={index}
           onClick={() => onSelectSize(size)}
-          data-test-id="vf-size-picker"
           type="button"
           role="radio"
           aria-checked={selectedSize === size}

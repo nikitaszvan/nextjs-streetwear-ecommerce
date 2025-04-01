@@ -84,7 +84,7 @@ const ShippingOptions = ({
     return (
         <fieldset className={`transform transition-transform duration-300 ease-in-out ${show ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 h-0'} ${isVerifying && 'pointer-events-none'}`}
         >
-            <RadioGroup className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
+            <RadioGroup className="grid gap-4 grid-cols-2">
                 {shippingOptions.map((rate: ShippingOptionType) => (
                     <div key={rate.id} className="relative">
                         <label

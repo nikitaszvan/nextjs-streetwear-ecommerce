@@ -36,7 +36,7 @@ const TableItemRow = ({
 
   return (
     <tr className={classNames("border-t transition-colors hover:bg-muted/50 bg-white z-10", { "h-[9rem]": editable })} aria-labelledby={`product-${item['category_pk']}`}>
-      <td className="p-2 align-middle w-[12%]">
+      <td className={classNames("p-2 align-middle hidden sm:block")}>
         <div className="w-full aspect-square relative">
           <Image
             alt={`${item["clothing-name"]} image`}
@@ -47,7 +47,7 @@ const TableItemRow = ({
           />
         </div>
       </td>
-      <td className="p-2 align-middle font-medium">
+      <td className={classNames("p-2 align-middle font-medium")}>
         <Link
           className="transition-colors hover:text-muted-foreground flex flex-col"
           href={productLink}

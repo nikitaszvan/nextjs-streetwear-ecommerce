@@ -9,9 +9,7 @@ export default function CartSummaryPage() {
       aria-label="Cart Summary"
     >
       <h1 className="sr-only">Cart Summary</h1> {/* Screen reader only heading for context */}
-      <div className="xl:grid xl:grid-cols-12 xl:gap-x-8 py-6">
-        <CartSummary editable className="col-span-12" />
-      </div>
+      <CartSummary editable className="col-span-12" />
     </main>
   );
 }

@@ -8,7 +8,6 @@ import { CartProductType } from '@/types/cart-types';
 
 type UsePaymentAttemptInfoParams = {
     paymentId: string | undefined;
-    clientSecret: string | undefined;
     cartShippingOption: any;
     shippingRates: ShippingOptionType[];
     idempotencyKey: string | undefined;
@@ -30,7 +29,6 @@ type UsePaymentAttemptInfoParams = {
 
 export default async function usePaymentAttemptInfo({
     paymentId,
-    clientSecret,
     cartShippingOption,
     shippingRates,
     idempotencyKey,

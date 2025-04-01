@@ -5,7 +5,7 @@ import StoreProvider from "./store-provider";
 import Footer from "@/components/layout/footer";
 import { CartProvider } from '@/context/cart-context';
 import CartPreview from "@/components/cart/cart-preview/cart-preview";
-import MainNavigation from "@/components/layout/navigation-menu";
+import MainNavigation from "@/components/layout/navigation/navigation-menu";
 import { Suspense } from "react";
 
 const geistSans = Geist({

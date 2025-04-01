@@ -21,8 +21,8 @@ import { useCart } from "@/context/cart-context";
 import { useState, useEffect } from "react";
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from "next/navigation";
+import 'react-toastify/dist/ReactToastify.css';
 
 // Types
 import { ShippingOptionType, StripeShippingAddressType } from "@/types/stripe-element-types";
@@ -82,15 +82,34 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
   }, [errorMessage]);
 
   useEffect(() => {
+
     const storedAddressInfo = sessionStorage.getItem('userAddressFields');
     const storedEmailInfo = sessionStorage.getItem('userEmailFields');
 
     if (storedAddressInfo) {
       setDefaultShipping(JSON.parse(storedAddressInfo));
-      setDefaultEmail(storedEmailInfo ? JSON.parse(storedEmailInfo) : "");
     } else {
       console.log('No user information found in session storage.');
     }
+
+    if (storedEmailInfo) {
+      setDefaultEmail(storedEmailInfo ? JSON.parse(storedEmailInfo) : "");
+    } else {
+      console.log('No user email found in session storage.');
+    }
+
+    fetch('/api/update-stripe-payment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        payment_intent_id: paymentId || activeStripeSession?.paymentId,
+        shipping_option: cartShippingOption,
+        amount: totalCartPrice * 100,
+      }),
+    });
+
   }, []);
 
   useEffect(() => {
@@ -98,7 +117,6 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
       usePaymentAttemptInfo(
         {
           paymentId,
-          clientSecret,
           cartShippingOption,
           shippingRates,
           idempotencyKey,
@@ -139,7 +157,7 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
     >
       <h1 id="checkout-form-title" className="sr-only">Checkout Form</h1>
       {isVerifying && <PaymentVerifyLoader />}
-      <EmailInput key={changeKey + 'link-elem'} isVerifying={isVerifying} savedEmail={defaultEmail} />
+      <EmailInput key={`${changeKey}-link-elem`} isVerifying={isVerifying} savedEmail={defaultEmail} renderKey={`${changeKey}-link-elem`} />
       {paymentIntentId &&
         <ShippingOptionsWrapper
           key={changeKey + 'ship-wrap'}
