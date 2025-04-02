@@ -22,7 +22,7 @@ export default function CategoryWrapper({
   const search = searchParams.get("search");
 
   return (
-    <div className="flex p-2 w-full" role="main">
+    <div className="flex p-2 gap-6 w-full" role="main">
       <ProductsFilter
         onFilterChange={setSelectedSort}
         selectedSort={selectedSort}
