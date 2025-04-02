@@ -21,7 +21,7 @@ export default async function CategoryPage({
   }
 
   return (
-    <Suspense fallback={<p>Loading category...</p>}>
+    <Suspense fallback={<div className="h-[100vh]"></div>}>
       <section aria-labelledby="category-section">
         <h1 id="category-section" className="sr-only">
           {`Category: ${category}`}

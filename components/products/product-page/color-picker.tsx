@@ -24,9 +24,8 @@ const ColorPicker = ({
           className="group flex items-center justify-center outline-none h-11 p-1 w-11"
         >
           <span
-            className={`relative w-full h-full duration-200 group-focus-visible:outline ${
-              selectedColor?.name === color.name && "ring ring-black ring-2 ring-inset"
-            } rounded-full`}
+            className={`relative w-full h-full duration-200 group-focus-visible:outline ${selectedColor?.name === color.name && "ring ring-black ring-2 ring-inset"
+              } rounded-full`}
           >
             <span
               className="absolute inset-0.5 lg:inset-1 bg-gray-200 rounded-full"
@@ -36,6 +35,7 @@ const ColorPicker = ({
         </button>
       ))}
     </div>
+    
   </section>
 );
 

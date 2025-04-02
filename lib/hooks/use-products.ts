@@ -10,10 +10,11 @@ import { ProductType } from '@/types/product-types';
 type UseProductsParamsType = {
   category: string;
   shouldFetch: boolean;
+  product?: string;
   random?: boolean;
 }
 
-export const useProducts = ({ category, shouldFetch, random }: UseProductsParamsType) => {
+export const useProducts = ({ category, shouldFetch, product, random }: UseProductsParamsType) => {
   let products: ProductType[] = [];
   let isLoading = false;
   let isError = false;
@@ -55,12 +56,14 @@ export const useProducts = ({ category, shouldFetch, random }: UseProductsParams
     products = query.data || [];
 
     if (random && products.length > 0) {
+      const filteredProducts = product ? products.filter(p => p['clothing-name'] !== product) : products;
+
       const selectedIndices = new Set<number>();
-      while (selectedIndices.size < 3 && selectedIndices.size < products.length) {
-        const randomIndex = Math.floor(Math.random() * products.length);
+      while (selectedIndices.size < 3 && selectedIndices.size < filteredProducts.length) {
+        const randomIndex = Math.floor(Math.random() * filteredProducts.length);
         selectedIndices.add(randomIndex);
       }
-      randomProducts = Array.from(selectedIndices).map(index => products[index]);
+      randomProducts = Array.from(selectedIndices).map(index => filteredProducts[index]);
     }
   }
 

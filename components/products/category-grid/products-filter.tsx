@@ -5,6 +5,9 @@ import { cn } from "@/lib/utils/classname-utils";
 // External Libraries
 import { Circle } from 'lucide-react';
 
+// Constants
+import { sortOptions } from "@/constants/product-constants";
+
 interface ProductsFilterProps {
   onFilterChange: (value: string) => void;
   selectedSort: string;
@@ -12,14 +15,8 @@ interface ProductsFilterProps {
 
 const ProductsFilter = ({ onFilterChange, selectedSort }: ProductsFilterProps) => {
 
-  const sortOptions = [
-    { id: 'latest', label: 'Latest Arrivals' },
-    { id: 'price-asc', label: 'Price: Low → High' },
-    { id: 'price-desc', label: 'Price: High → Low' },
-  ];
-
   return (
-    <div className="flex flex-col py-4 small:px-0 pl-6 min-w-[250px] small:ml-[1.675rem] h-fit sticky top-[6rem]">
+    <div className="flex flex-col py-4 small:px-0 pl-6 min-w-[250px] small:ml-[1.675rem] h-fit sticky top-[6rem] hidden md:block">
       <h3 className="font-normal font-sans text-medium text-[#9ca3af] mb-2">Sort by</h3>
       <div className="flex flex-col gap-1">
         {sortOptions.map((option) => (

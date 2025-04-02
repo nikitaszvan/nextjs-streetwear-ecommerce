@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { Truck } from "lucide-react";
 
 // Presentation Layer
-import CartItemRow from './table-item-row';
+import TableItemRow from './table-item-row';
 
 // Types
 import { CartAction, CartProductType } from "@/types/cart-types";
@@ -39,8 +39,11 @@ const Table = ({
           <th scope="col" className={classNames("h-10 px-2 text-left align-middle font-medium text-muted-foreground w-1/6", { "text-lg text-center": editable })}>
             Price
           </th>
-          <th scope="col" className={classNames("h-10 px-2 text-left align-middle font-medium text-muted-foreground w-[10%] min-w-32", { "text-lg text-center": editable })}>
+          <th scope="col" className={classNames("hidden md:table-cell h-10 px-2 text-left align-middle font-medium text-muted-foreground w-[10%] min-w-32", { "text-lg text-center": editable })}>
             Quantity
+          </th>
+          <th scope="col" className={classNames("md:hidden h-10 px-2 align-middle font-medium text-muted-foreground w-[10%] min-w-32", { "text-lg text-center": editable })}>
+            Qty
           </th>
           <th scope="col" className={classNames("h-10 px-2 align-middle font-medium text-muted-foreground w-1/6 min-w-32 text-right", { "text-lg": editable })}>
             Total
@@ -49,7 +52,7 @@ const Table = ({
       </thead>
       <tbody>
         {items.map((item, index) => (
-          <CartItemRow key={index} item={item} editable={editable} dispatch={dispatch} />
+          <TableItemRow key={index} item={item} editable={editable} dispatch={dispatch} />
         ))}
         {!editable && cartShippingOption && (
           <tr className="transition-all hover:bg-muted/50 translate-y-0 opacity-100 h-14 border-t">

@@ -94,7 +94,16 @@ a {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  .cart-quantity-button {
+    @apply inline-flex items-center justify-center whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded-md aspect-square p-0 text-lg md:h-12;
+  }
+
+  .cart-quantity-span {
+    @apply flex items-center justify-center rounded-full bg-neutral-100 pb-0.5 md:font-bold leading-none text-black transition-colors group-hover:bg-neutral-500 group-hover:text-white h-6 w-6 md:h-8 md:w-8;
   }
 }

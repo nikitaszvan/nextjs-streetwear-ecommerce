@@ -36,7 +36,7 @@ const TableItemRow = ({
 
   return (
     <tr className={classNames("border-t transition-colors hover:bg-muted/50 bg-white z-10", { "h-[9rem]": editable })} aria-labelledby={`product-${item['category_pk']}`}>
-      <td className={classNames("p-2 align-middle hidden sm:block")}>
+      <td className="p-2 align-middle hidden sm:block">
         <div className="w-full aspect-square relative">
           <Image
             alt={`${item["clothing-name"]} image`}
@@ -68,34 +68,34 @@ const TableItemRow = ({
           )}
         </Link>
       </td>
-      <td className={classNames("p-2", { "font-lg text-base text-center": editable })}>
+      <td className={classNames("p-2", { "font-lg md:text-base text-center": editable })}>
         {item["clothing-price"]}
       </td>
       <td className="p-2 align-middle">
-        <span className={classNames("flex flex-row items-center text-foreground", { "justify-center": editable })}>
+        <span className="flex flex-row items-center text-foreground justify-center">
           {editable && (
             <button
               onClick={() => handleRemoveFromCart(item)}
-              className={classNames("inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded-md group aspect-square p-0", { "text-lg h-12": editable, "text-xs h-8": !editable })}
+              className="cart-quantity-button group"
               type="button"
               aria-label={`Decrease quantity of ${item["clothing-name"]}`}
             >
-              <span className={classNames("flex items-center justify-center rounded-full bg-neutral-100 pb-0.5 font-bold leading-none text-black transition-colors group-hover:bg-neutral-500 group-hover:text-white", { "h-8 w-8": editable, "h-4 w-4": !editable })}>
+              <span className="cart-quantity-span">
                 –
               </span>
             </button>
           )}
-          <span className={classNames("inline-block min-w-8 px-1 text-center tabular-nums", { "text-base": editable })}>
+          <span className={classNames("inline-block px-1 text-center tabular-nums", { "md:text-base": editable })}>
             {item.quantity}
           </span>
           {editable && (
             <button
               onClick={() => handleAddToCart(item)}
-              className={classNames("inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded-md group aspect-square p-0", { "text-lg h-12": editable, "text-xs h-8": !editable })}
+              className="cart-quantity-button group"
               type="button"
               aria-label={`Increase quantity of ${item["clothing-name"]}`}
             >
-              <span className={classNames("flex items-center justify-center rounded-full bg-neutral-100 pb-0.5 font-bold leading-none text-black transition-colors group-hover:bg-neutral-500 group-hover:text-white", { "h-8 w-8": editable, "h-4 w-4": !editable })}>
+              <span className="cart-quantity-span">
                 +
               </span>
             </button>
@@ -103,12 +103,12 @@ const TableItemRow = ({
         </span>
       </td>
       <td className="p-2 align-middle text-right">
-        <span className={classNames("whitespace-nowrap tabular-nums text-foreground", { "text-base font-semibold": editable })}>
+        <span className={classNames("whitespace-nowrap tabular-nums text-foreground", { "md:text-base font-semibold": editable })}>
           {Number(item["clothing-price"]) * item.quantity}
         </span>
       </td>
     </tr>
-  );
+  );  
 };
 
 export default TableItemRow;

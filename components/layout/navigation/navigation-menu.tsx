@@ -94,7 +94,7 @@ const MainNavigation = ({ className }: MainNavigationProps) => {
   return (
 
     <NavigationMenu className={cn(
-      "max-w-none gap-2 md:gap-6 mx-auto flex w-full !px-[10%] print:hidden",
+      "max-w-none gap-2 md:gap-6 mx-auto flex w-full !px-[10%] print:hidden overflow-x-clip",
       className
     )}>
       <Link href="/" className="relative h-[2.5rem] aspect-video">

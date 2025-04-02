@@ -6,6 +6,12 @@ export const categoriesRef: Record<string, string> = {
     "all-products": "All"
 } as const;
 
+export const featuredCategories: Record<string, string> =  {
+    "New Arrivals": '/all-products',
+    "Best Sellers": '/all-products',
+    "Sale": "/all-products"
+};
+
 export const sizesRef: Record<string, string> = {
     "XS": "Extra Small",
     "S": "Small",
@@ -78,3 +84,10 @@ export const menuCategories: { title: string; href: string; description: string 
             "Urban comfort with bold graphics and loose fits.",
     },
 ];
+
+export const sortOptions = [
+    { id: 'latest', label: 'Latest Arrivals' },
+    { id: 'best-sellers', label: 'Best Sellers' },
+    { id: 'price-asc', label: 'Price: Low → High' },
+    { id: 'price-desc', label: 'Price: High → Low' },
+  ];

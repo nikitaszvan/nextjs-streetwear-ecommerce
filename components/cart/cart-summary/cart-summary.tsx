@@ -13,10 +13,12 @@ import Header from "./header";
 import Table from "./table";
 import Footer from "./footer";
 import { Button } from "@/components/ui/button";
+import CartLoader from "../cart-loader";
 
 const CartSummary = ({ editable = false, className = "" }) => {
     const {
         cart: { items, totalCartPrice, totalItemCount, cartShippingOption },
+        isLoading,
         dispatch,
     } = useCart();
 
@@ -39,7 +41,7 @@ const CartSummary = ({ editable = false, className = "" }) => {
     );
 
     return (
-        <section className={`${classNames} ${classNames({"md:static": !editable})}`} aria-labelledby="cart-summary-section">
+        <section className={`${classNames} ${classNames({ "md:static": !editable })}`} aria-labelledby="cart-summary-section">
             <div className={classNames({ "max-w-5xl mx-auto": editable })}>
                 <Header editable={editable} totalItemCount={totalItemCount} />
                 {!!totalCartPrice ? (
@@ -53,7 +55,11 @@ const CartSummary = ({ editable = false, className = "" }) => {
                         />
                         {editable && <Footer totalCartPrice={totalCartPrice} />}
                     </>
-                ) : emptyCart()}
+                ) : isLoading ?
+                    <div className="w-full flex items-center justify-center pt-14">
+                        <CartLoader />
+                    </div>
+                    : emptyCart()}
             </div>
         </section>
     );

@@ -3,8 +3,6 @@ import { generateConfirmationNumber } from "./string-utils";
 
 // External Libraries
 import { Dispatch, SetStateAction } from "react";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-
 // Types
 import { ShippingOptionType } from "@/types/stripe-element-types";
 import { CartProductType, CartAction } from "@/types/cart-types";
@@ -17,7 +15,6 @@ type StoreOrderDataParams = {
     totalCartPrice: number;
     dispatch: Dispatch<CartAction>;
     setClearData: Dispatch<SetStateAction<boolean>>;
-    router: AppRouterInstance;
 };
 
 export const storePurchaseDetails = ({
@@ -28,7 +25,6 @@ export const storePurchaseDetails = ({
     totalCartPrice,
     dispatch,
     setClearData,
-    router,
 }: StoreOrderDataParams) => {
     if (cartShippingOption !== null) {
         localStorage.setItem(
@@ -42,7 +38,6 @@ export const storePurchaseDetails = ({
                 cartShippingOption: cartShippingOption,
             })
         );
-        router.push(`/payment-success?key=${idempotencyKey}`);
         dispatch({ type: "CLEAR_CART" });
         sessionStorage.removeItem('userAddressFields');
         sessionStorage.removeItem('userEmailFields');
@@ -58,7 +53,6 @@ export const storePurchaseDetails = ({
                 totalCartPrice,
                 dispatch,
                 setClearData,
-                router,
             });
         }, 500);
     }

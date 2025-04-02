@@ -34,7 +34,7 @@ const CartPreview = () => {
   return (
     <div
       onClick={closeCartPreview}
-      className={`fixed top-0 z-overlay w-full h-screen bg-black/25 z-50 flex transition-all duration-200 justify-end ${isCartPreviewVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      className={`fixed top-0 w-full h-screen bg-black/25 z-50 flex transition-all duration-200 justify-end ${isCartPreviewVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       role="dialog"
       aria-modal="true"
       aria-labelledby="cart-preview-background-layer"

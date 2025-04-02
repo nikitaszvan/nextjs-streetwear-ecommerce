@@ -36,7 +36,7 @@ const RootLayout = ({
           <CartProvider>
             <main className="">
               <Suspense>
-                <MainNavigation className="z-50 p-4 sticky top-0 bg-white/90 backdrop-blur-sm nav-border-reveal" />
+                <MainNavigation className="z-40 p-4 sticky top-0 bg-white/90 backdrop-blur-sm nav-border-reveal" />
               </Suspense>
               {children}
               <Footer />

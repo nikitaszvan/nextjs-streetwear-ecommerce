@@ -94,6 +94,7 @@ export default async function usePaymentAttemptInfo({
                             setClearData,
                             router,
                         });
+                    router.push(`/payment-success?key=${idempotencyKey}`)
                 }, 8000);
 
                 return () => clearTimeout(timer);
@@ -107,7 +108,7 @@ export default async function usePaymentAttemptInfo({
             }
         } catch (error) {
             console.error('Error getting payment details:', error);
-    
+
             if (error instanceof Error) {
                 setErrorMessage({ message: `Request failed: ${error.message}` });
             } else {

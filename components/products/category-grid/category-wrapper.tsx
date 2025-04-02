@@ -37,6 +37,7 @@ export default function CategoryWrapper({
           category={category}
           categorySlug={categorySlug}
           sort={selectedSort}
+          onFilterChange={setSelectedSort}
           search={search || undefined}
         />
       </div>

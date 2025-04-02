@@ -8,7 +8,7 @@ export default function CartSummaryPage() {
       role="main"
       aria-label="Cart Summary"
     >
-      <h1 className="sr-only">Cart Summary</h1> {/* Screen reader only heading for context */}
+      <h1 className="sr-only">Cart Summary</h1>
       <CartSummary editable className="col-span-12" />
     </main>
   );

@@ -14,6 +14,7 @@ type ProdRecsWrapperParams = {
 const ProdRecsWrapper = ({ category, product }: ProdRecsWrapperParams) => {
   const { randomProducts } = useProducts({
     category: category,
+    product: product,
     shouldFetch: true,
     random: true,
   });

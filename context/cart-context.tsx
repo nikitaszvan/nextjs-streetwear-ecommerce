@@ -50,20 +50,13 @@ const openDatabase = (): Promise<IDBDatabase> => {
 
 const addToIndexedDB = async (item: CartProductType): Promise<void> => {
   try {
-    console.log('Adding item to IndexedDB:', item); // Debugging log
     if (!item['unique-identifier']) {
       throw new Error('Item is missing unique-identifier');
     }
     const db = await openDatabase();
     const transaction = db.transaction('cart', 'readwrite');
     const store = transaction.objectStore('cart');
-    const request = store.put(item, item['unique-identifier']); // No need to provide a key
-    request.onsuccess = () => {
-      console.log('Item added to IndexedDB:', item);
-    };
-    request.onerror = (event) => {
-      console.error('Error adding item to IndexedDB:', (event.target as IDBRequest).error);
-    };
+    store.put(item, item['unique-identifier']);
   } catch (error) {
     console.error('Error adding item to IndexedDB:', error);
   }
@@ -75,7 +68,6 @@ const removeFromIndexedDB = async (itemId: string): Promise<void> => {
     const transaction = db.transaction('cart', 'readwrite');
     const store = transaction.objectStore('cart');
     store.delete(itemId);
-    console.log('Item removed from IndexedDB:', itemId);
   } catch (error) {
     console.error('Error removing item from IndexedDB:', error);
   }
@@ -87,7 +79,6 @@ const clearIndexedDB = async (): Promise<void> => {
     const transaction = db.transaction(['cart', 'metadata'], 'readwrite');
     transaction.objectStore('cart').clear();
     transaction.objectStore('metadata').clear();
-    console.log('IndexedDB cleared successfully.');
   } catch (error) {
     console.error('Error clearing IndexedDB:', error);
   }
@@ -99,7 +90,6 @@ const updateMetadataInDB = async (key: string, value: any): Promise<void> => {
     const transaction = db.transaction('metadata', 'readwrite');
     const store = transaction.objectStore('metadata');
     store.add(value, key);
-    console.log(`Metadata updated in IndexedDB: ${key} =`, value);
   } catch (error) {
     console.error(`Error updating ${key} in IndexedDB:`, error);
   }
@@ -295,7 +285,6 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     const initializeCart = async () => {
       try {
         const items = await loadCartFromIndexedDB();
-        console.log('Loaded items from IndexedDB:', items);
         items.forEach(item => {
           dispatch({ type: 'ADD_ITEM', payload: item });
         });
@@ -305,21 +294,18 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   
       try {
         const totalItemCount = await getMetadataFromDB('totalItemCount');
-        console.log('Total item count from DB:', totalItemCount);
       } catch (error) {
         console.error('Error getting total item count from DB:', error);
       }
   
       try {
         const totalPrice = await getMetadataFromDB('totalPrice');
-        console.log('Total price from DB:', totalPrice);
       } catch (error) {
         console.error('Error getting total price from DB:', error);
       }
   
       try {
         const shippingOption = await getMetadataFromDB('shippingOption');
-        console.log('Shipping option from DB:', shippingOption);
         if (shippingOption) {
           dispatch({ type: 'ADD_SHIPPING_TO_CART', payload: shippingOption });
         }
@@ -329,7 +315,6 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   
       try {
         const stripeSession = await getMetadataFromDB('stripeSession');
-        console.log('Stripe session from DB:', stripeSession);
         if (stripeSession) {
           dispatch({ type: 'ADD_STRIPE_SESSION', payload: stripeSession });
         }

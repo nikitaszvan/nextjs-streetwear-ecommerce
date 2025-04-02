@@ -1,5 +1,5 @@
 // External Libraries
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, SetStateAction, Dispatch } from "react";
 import { useRouter } from "next/navigation";
 
 // Service Layer
@@ -17,13 +17,15 @@ type CategoryGridParams = {
   categorySlug: string;
   sort: string;
   search?: string;
+  onFilterChange: Dispatch<SetStateAction<string>>
 };
 
 const CategoryGrid = ({
   category,
   categorySlug,
   sort,
-  search
+  search,
+  onFilterChange
 }: CategoryGridParams) => {
   const [shouldFetch, setShouldFetch] = useState(false);
   const router = useRouter();
@@ -61,7 +63,7 @@ const CategoryGrid = ({
 
   return (
     <main>
-      <Header categorySlug={categorySlug} category={category} search={search} />
+      <Header categorySlug={categorySlug} category={category} search={search} onFilterChange={onFilterChange}/>
       {results.length === 0 && !search ? (
         <ProductListLoadingSkeleton />
       ) : results.length > 0 ? (

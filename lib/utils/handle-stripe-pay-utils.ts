@@ -6,7 +6,6 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 // Types
 //
 
-
 type HandlePayParams = {
     e: FormEvent<HTMLFormElement>;
     stripe: Stripe | null;
