@@ -34,7 +34,7 @@ const CheckoutPage = async ({
       aria-label="Checkout Page"
     >
       <div className="gap-4 lg:gap-10 w-full flex flex-col lg:flex-row items-center lg:items-start">
-        <div className="lg:my-8 lg:sticky md:relative lg:top-[5rem] h-fit w-fit flex-1 lg:max-w-2xl lg:min-w-[33rem] max-w-2xl">
+        <div className="lg:my-8 lg:sticky md:relative lg:top-[5rem] w-full flex-1 lg:max-w-2xl lg:min-w-[33rem] max-w-2xl">
           <Link href="/cart-summary" className="flex mb-4 items-center w-fit" aria-label="Edit Cart">
             <ChevronLeftIcon height={20} aria-hidden="true" />
             <span className="hover:underline">Edit Cart</span>
