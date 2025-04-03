@@ -1,4 +1,7 @@
+// External Libraries
 import Link from "next/link";
+
+// Types
 import { ProductType } from "@/types/product-types";
 
 type NoSearchResultsParams = {

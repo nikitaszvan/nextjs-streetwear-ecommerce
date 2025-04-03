@@ -28,7 +28,7 @@ export type StripeSessionType = {
     
 }
 
-export interface CartState {
+export type CartState = {
     items: CartProductType[];
     isCartPreviewVisible: boolean;
     justAddedProduct: boolean;
@@ -49,17 +49,17 @@ export type CartAction =
     | { type: 'ADD_STRIPE_SESSION'; payload: StripeSessionType | null }
 
 
-export type CartContextProps = {
+export type CartContextParams = {
     cart: CartState;
     dispatch: React.Dispatch<CartAction>;
     isLoading: boolean;
 }
 
-export type CartProviderProps = {
+export type CartProviderParams = {
     children: ReactNode;
 }
 
-export type CartContextType = Context<CartContextProps>;
+export type CartContextType = Context<CartContextParams>;
 
 export type PurchaseCartType = {
     confirmation_number: string;

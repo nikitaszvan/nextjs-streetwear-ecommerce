@@ -7,8 +7,8 @@ import { createContext, useContext, useReducer, useEffect, useState } from 'reac
 import {
   CartState,
   CartAction,
-  CartContextProps,
-  CartProviderProps,
+  CartContextParams,
+  CartProviderParams,
   CartContextType,
   CartProductType,
 } from '@/types/cart-types';
@@ -271,13 +271,13 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
   }
 };
 
-export const CartContext: CartContextType = createContext<CartContextProps>({
+export const CartContext: CartContextType = createContext<CartContextParams>({
   cart: initialState,
   dispatch: () => null,
   isLoading: true
 });
 
-export const CartProvider = ({ children }: CartProviderProps) => {
+export const CartProvider = ({ children }: CartProviderParams) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -341,7 +341,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   );
 };
 
-export const useCart = (): CartContextProps => {
+export const useCart = (): CartContextParams => {
   const context = useContext(CartContext);
   if (!context) {
     throw new Error('useCart must be used within a CartProvider');

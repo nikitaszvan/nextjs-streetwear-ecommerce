@@ -3,19 +3,19 @@
 // Presentation Layer
 import CategoryGrid from "@/components/products/category-grid/category-grid";
 import ProductsFilter from "@/components/products/category-grid/products-filter";
+import BreadcrumbLinks from "./breadcrumb-links";
 
 // External Libraries
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import BreadcrumbLinks from "./breadcrumb-links";
 
-export default function CategoryWrapper({
+const CategoryWrapper = ({
   category,
   categorySlug,
 }: {
   category: string;
   categorySlug: string;
-}) {
+}) => {
   const [selectedSort, setSelectedSort] = useState<string>("latest");
 
   const searchParams = useSearchParams();
@@ -43,4 +43,6 @@ export default function CategoryWrapper({
       </div>
     </div>
   );
-}
+};
+
+export default CategoryWrapper;

@@ -1,55 +1,28 @@
 "use client"
 
-// External Libraries
 import { AddressElement } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
-
-// Presentation Layer
 import ShippingOptions from "./shipping-options";
-
-// Types
 import { ShippingOptionType, StripeShippingAddressType } from "@/types/stripe-element-types";
 
-
-const ShippingOptionsWrapper = ({ 
+const ShippingOptionsWrapper = ({
     paymentId,
-    shipping,
     defaultShippingAddress,
     className,
     shippingOptions,
     isVerifying
-}: { 
-    paymentId: { paymentId: string , clientSecret: string },
-    shipping: ShippingOptionType | string | null,
+}: {
+    paymentId: { paymentId: string, clientSecret: string },
     defaultShippingAddress?: StripeShippingAddressType,
     className?: string,
     shippingOptions: ShippingOptionType[] | [],
     isVerifying: boolean
 }) => {
-    const [addressKey, setAddressKey] = useState(0);
-    const [shippingsOptionsKey, setShippingsOptionKey] = useState(0);
-    const [addressDefaultValues, setAddressDefaultValues] = useState<StripeShippingAddressType>(
-        {
-            name: "",
-            phone: "",
-            address: {
-                line1: "",
-                line2: "",
-                city: "",
-                country: "CA",
-                postal_code: "",
-                state: ""
-            }
-        }
-    );
-
-    let passedShipping = shipping;
+    const [addressDefaultValues, setAddressDefaultValues] = useState<StripeShippingAddressType | undefined>(defaultShippingAddress);
 
     const handlePostalCheck = (code: string) => {
-
         if (code) {
             const validCheck = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/.test(code);
-
             if (validCheck) return true;
         }
         return false;
@@ -57,67 +30,51 @@ const ShippingOptionsWrapper = ({
 
     const saveAddressToSession = (addressDefaultValues: StripeShippingAddressType) => {
         const userAddressFields = JSON.stringify(addressDefaultValues);
-
         sessionStorage.setItem('userAddressFields', userAddressFields);
-    }
+    };
 
     useEffect(() => {
-        if (defaultShippingAddress) {
-            setAddressDefaultValues({
-                name: defaultShippingAddress.name || "",
-                phone: defaultShippingAddress.phone || "",
-                address: defaultShippingAddress.address || {
-                    line1: "",
-                    line2: "",
-                    city: "",
-                    country: "",
-                    postal_code: "",
-                    state: ""
-                }
-            })
-            setAddressKey(prevKey => prevKey + 1);
+        if (defaultShippingAddress && JSON.stringify(defaultShippingAddress) !== JSON.stringify(addressDefaultValues)) {
+            setAddressDefaultValues(defaultShippingAddress);
         }
-    }, [defaultShippingAddress]);
+    }, [defaultShippingAddress, addressDefaultValues]);
 
     return (
         <>
             <AddressElement
-                key={addressKey}
                 options={{
                     mode: "shipping",
                     fields: { phone: "always" },
                     validation: { phone: { required: "auto" } },
                     defaultValues: addressDefaultValues
                 }}
-
                 onChange={(e) => {
-                    setAddressDefaultValues(() => {
+                    const activeValues = {
+                        name: e.value.name,
+                        phone: e.value.phone ?? "",
+                        address: {
+                            city: e.value.address.city,
+                            country: e.value.address.country,
+                            line1: e.value.address.line1,
+                            line2: e.value.address.line2 ?? "",
+                            postal_code: e.value.address.postal_code,
+                            state: e.value.address.state ?? "",
+                        }
+                    };
 
-                        const activeValues = {
-                            name: e.value.name,
-                            phone: e.value.phone ?? "",
-
-                            address: {
-                                city: e.value.address.city,
-                                country: e.value.address.country,
-                                line1: e.value.address.line1,
-                                line2: e.value.address.line2 ?? "",
-                                postal_code: e.value.address.postal_code,
-                                state: e.value.address.state ?? "",
-                            }
-                        };
-
-                        saveAddressToSession(activeValues);
-
-                        return activeValues;
-                    });
+                    saveAddressToSession(activeValues);
+                    setAddressDefaultValues(activeValues);
                 }}
-
                 className={`z-10 bg-white ${className}`}
             />
-            <ShippingOptions key={shippingsOptionsKey + 'ship-key'} shippingOptions={shippingOptions} show={handlePostalCheck(addressDefaultValues.address.postal_code)} paymentId={paymentId} defaultShipping={passedShipping} isVerifying={isVerifying}/>
+            <ShippingOptions
+                shippingOptions={shippingOptions}
+                show={addressDefaultValues ? handlePostalCheck(addressDefaultValues.address.postal_code) : false}
+                paymentId={paymentId}
+                isVerifying={isVerifying}
+            />
         </>
-    )
+    );
 }
 
-export default ShippingOptionsWrapper
+export default ShippingOptionsWrapper;

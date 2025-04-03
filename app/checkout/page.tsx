@@ -6,26 +6,25 @@ import StripeElementsWrapper from "@/components/checkout/stripe-elements-wrapper
 import { ChevronLeftIcon } from "lucide-react";
 import Link from "next/link";
 
-export default async function CheckoutPage({
+const CheckoutPage = async ({
   searchParams,
 }: {
-  searchParams?: Promise<Record<string, string | undefined>>;
-}) {
-  let paymentId;
-  let clientSecret;
-  let idempotencyKey;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
+}) => {
+  let paymentId = (await searchParams)?.payment_intent;
+  let clientSecret = (await searchParams)?.payment_intent_client_secret;
+  let idempotencyKey = (await searchParams)?.idempotency_key;
 
-  if (searchParams) {
-    try {
-      const { idempotency_key, payment_intent, payment_intent_client_secret } = await searchParams;
-      paymentId = payment_intent;
-      clientSecret = payment_intent_client_secret;
-      idempotencyKey = idempotency_key;
-    } catch (error) {
-      console.error("Error resolving searchParams:", error);
-    }
-  } else {
-    console.log("No searchParams provided.");
+  if (Array.isArray(paymentId)) {
+    paymentId = paymentId[0];
+  }
+
+  if (Array.isArray(clientSecret)) {
+    clientSecret = clientSecret[0];
+  }
+
+  if (Array.isArray(idempotencyKey)) {
+    idempotencyKey = idempotencyKey[0];
   }
 
   return (
@@ -35,7 +34,7 @@ export default async function CheckoutPage({
       aria-label="Checkout Page"
     >
       <div className="gap-4 lg:gap-10 w-full flex flex-col lg:flex-row items-center lg:items-start">
-        <div className="lg:my-8 lg:sticky md:relative lg:top-[4rem] h-fit w-fit flex-1 lg:max-w-2xl lg:min-w-[33rem] max-w-2xl">
+        <div className="lg:my-8 lg:sticky md:relative lg:top-[5rem] h-fit w-fit flex-1 lg:max-w-2xl lg:min-w-[33rem] max-w-2xl">
           <Link href="/cart-summary" className="flex mb-4 items-center w-fit" aria-label="Edit Cart">
             <ChevronLeftIcon height={20} aria-hidden="true" />
             <span className="hover:underline">Edit Cart</span>
@@ -51,4 +50,6 @@ export default async function CheckoutPage({
       <h2 className="text-lg font-semibold leading-none tracking-tight sr-only">Checkout</h2>
     </main>
   );
-}
+};
+
+export default CheckoutPage;

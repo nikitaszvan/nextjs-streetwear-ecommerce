@@ -1,8 +1,12 @@
 // External Libraries
 import { LinkAuthenticationElement } from '@stripe/react-stripe-js';
-import { useState } from 'react';
 
-const EmailInput = ({ savedEmail, isVerifying, renderKey }: { savedEmail: string, isVerifying: boolean, renderKey: string }) => {
+type EmailInputParams = {
+  savedEmail: string;
+  isVerifying: boolean;
+}
+
+const EmailInput = ({ savedEmail, isVerifying }: EmailInputParams) => {
 
   const saveEmailToSession = (email: string) => {
     const userEmailField = JSON.stringify(email);
@@ -13,7 +17,6 @@ const EmailInput = ({ savedEmail, isVerifying, renderKey }: { savedEmail: string
     <div aria-live="polite" aria-busy={isVerifying} className={`${isVerifying && "pointer-events-none"}`}>
       <label htmlFor="email-input" className="sr-only">Email Address</label>
       <LinkAuthenticationElement
-        key={ renderKey }
         id="email-input"
         options={{
           defaultValues: {

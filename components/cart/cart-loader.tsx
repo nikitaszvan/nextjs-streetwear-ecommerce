@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 // Presentation Layer
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function CartLoader() {
+const CartLoader = () => {
 
     return (
         <Card className="flex flex-col items-center justify-center border-none">
@@ -18,4 +18,6 @@ export default function CartLoader() {
             </CardContent>
         </Card>
     )
-}
+};
+
+export default CartLoader;

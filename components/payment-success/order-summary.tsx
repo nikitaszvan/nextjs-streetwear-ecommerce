@@ -49,12 +49,12 @@ const OrderSummary = ({ orderDetails }: { orderDetails: PurchaseCartType }) => {
                     </div>
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">Shipping: {orderDetails?.cartShippingOption.display_name} ({orderDetails?.cartShippingOption.delivery_estimate.minimum.value}{(orderDetails?.cartShippingOption.delivery_estimate.minimum.value !== orderDetails?.cartShippingOption.delivery_estimate.maximum.value) && `-${orderDetails?.cartShippingOption.delivery_estimate.maximum.value}`} business day{orderDetails?.cartShippingOption.delivery_estimate.maximum.value > 1 && 's'})</span>
-                        <span>{orderDetails?.cartShippingOption.fixed_amount.amount! / 100} CAD</span>
+                        <span>{orderDetails?.cartShippingOption.fixed_amount.amount / 100} CAD</span>
                     </div>
                     <Separator className="my-2" />
                     <div className="flex justify-between font-medium">
                         <span>Total</span>
-                        <span>{orderDetails?.subTotal! + orderDetails?.cartShippingOption.fixed_amount.amount! / 100} CAD</span>
+                        <span>{orderDetails?.subTotal + orderDetails?.cartShippingOption.fixed_amount.amount / 100} CAD</span>
                     </div>
                 </div>
             </div>

@@ -18,31 +18,39 @@ import { storePurchaseDetails } from "@/lib/utils/store-purchase-details-utils";
 import { useCart } from "@/context/cart-context";
 
 // External Libraries
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { ToastContainer, toast } from 'react-toastify';
 import { useRouter } from "next/navigation";
 import 'react-toastify/dist/ReactToastify.css';
 
 // Types
-import { ShippingOptionType, StripeShippingAddressType } from "@/types/stripe-element-types";
+import { BillingOptionType, StripeShippingAddressType } from "@/types/stripe-element-types";
 
-export default function CheckoutForm({ amount, paymentId, clientSecret, idempotencyKey }: { amount: number, paymentId: string | undefined, clientSecret: string | undefined, idempotencyKey: string | undefined }) {
-  // Context and Hooks
+type CheckoutFormParams = {
+  amount: number;
+  paymentId: string | undefined;
+  clientSecret: string | undefined;
+  idempotencyKey: string | undefined;
+}
+
+const CheckoutForm = ({
+  amount,
+  paymentId,
+  clientSecret,
+  idempotencyKey
+}: CheckoutFormParams) => {
   const {
     cart: { items, activeStripeSession, cartShippingOption, totalCartPrice },
     dispatch,
     isLoading
   } = useCart();
 
-  // State Hooks
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
-  const [shippingId, setShippingId] = useState<ShippingOptionType | string | null>(null);
-  const [changeKey, setChangeKey] = useState<number>(0);
   const [clearData, setClearData] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<{ message: string | undefined }>({ message: undefined });
-  const [defaultBillingValues, setDefaultBillingValues] = useState({
+  const [errorMessage, setErrorMessage] = useState<{ message?: string | undefined }>({ message: undefined });
+  const [defaultBillingValues, setDefaultBillingValues] = useState<BillingOptionType>({
     billingDetails: {
       name: '',
       email: '',
@@ -55,8 +63,11 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
   });
   const [defaultEmail, setDefaultEmail] = useState<string>("");
   const [defaultShipping, setDefaultShipping] = useState<StripeShippingAddressType | undefined>(undefined);
+  console.log(defaultShipping);
 
-  // Custom Hooks
+  const memoizedBillingValues = useMemo(() => defaultBillingValues, [defaultBillingValues]);
+  const memoizedShipping = useMemo(() => defaultShipping, [defaultShipping]);
+
   const paymentIntentId = usePaymentSession({
     amount,
     paymentId,
@@ -70,7 +81,6 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
   });
   const shippingRates = useFetchShippingRates();
 
-  // External Libraries
   const stripe = useStripe();
   const router = useRouter();
   const elements = useElements();
@@ -110,33 +120,26 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
       }),
     });
 
-  }, []);
+  }, [paymentId, activeStripeSession?.paymentId, cartShippingOption, totalCartPrice]);
 
-  useEffect(() => {
-    if (paymentId && clientSecret)
-      usePaymentAttemptInfo(
-        {
-          paymentId,
-          cartShippingOption,
-          shippingRates,
-          idempotencyKey,
-          items,
-          totalCartPrice,
-          setClearData,
-          setIsVerifying,
-          setDefaultEmail,
-          setDefaultShipping,
-          setDefaultBillingValues,
-          setShippingId,
-          setChangeKey,
-          setErrorMessage,
-          clearData,
-          storePurchaseDetails,
-          dispatch,
-          router
-        }
-      );
-  }, [paymentId, clientSecret, cartShippingOption]);
+  usePaymentAttemptInfo({
+    paymentId,
+    cartShippingOption,
+    shippingRates,
+    idempotencyKey,
+    items,
+    totalCartPrice,
+    setClearData,
+    setIsVerifying,
+    setDefaultEmail,
+    setDefaultShipping,
+    setDefaultBillingValues,
+    setErrorMessage,
+    clearData,
+    storePurchaseDetails,
+    dispatch,
+    router
+  });
 
   return (
     <Form
@@ -156,23 +159,20 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
       aria-labelledby="checkout-form-title"
     >
       <h1 id="checkout-form-title" className="sr-only">Checkout Form</h1>
-      {isVerifying && <PaymentVerifyLoader />}
-      <EmailInput key={`${changeKey}-link-elem`} isVerifying={isVerifying} savedEmail={defaultEmail} renderKey={`${changeKey}-link-elem`} />
+      {(isVerifying && !isLoading) && <PaymentVerifyLoader />}
+      <EmailInput isVerifying={isVerifying} savedEmail={defaultEmail} />
       {paymentIntentId &&
         <ShippingOptionsWrapper
-          key={changeKey + 'ship-wrap'}
           paymentId={paymentIntentId}
-          shipping={shippingId || cartShippingOption}
-          defaultShippingAddress={defaultShipping}
+          defaultShippingAddress={memoizedShipping}
           className={`${isVerifying && "pointer-events-none"}`}
           shippingOptions={shippingRates}
           isVerifying={isVerifying}
         />}
       {paymentIntentId &&
         <PaymentElement
-          key={changeKey + 'pay-elem'}
           options={{
-            defaultValues: defaultBillingValues,
+            defaultValues: memoizedBillingValues
           }}
           className={`${isVerifying && "pointer-events-none"}`}
         />}
@@ -186,4 +186,8 @@ export default function CheckoutForm({ amount, paymentId, clientSecret, idempote
       <ToastContainer />
     </Form>
   );
-}
+};
+
+export default CheckoutForm;
+
+

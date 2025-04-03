@@ -15,7 +15,15 @@ import Footer from "./footer";
 import { Button } from "@/components/ui/button";
 import CartLoader from "../cart-loader";
 
-const CartSummary = ({ editable = false, className = "" }) => {
+type CartSummaryParams = {
+    editable?: boolean;
+    className?: string;
+}
+
+const CartSummary = ({
+    editable = false,
+    className
+}: CartSummaryParams) => {
     const {
         cart: { items, totalCartPrice, totalItemCount, cartShippingOption },
         isLoading,
@@ -29,7 +37,7 @@ const CartSummary = ({ editable = false, className = "" }) => {
             </div>
             <h2 className="text-2xl font-bold tracking-tight mb-2">Your cart is empty</h2>
             <p className="text-muted-foreground mb-6 max-w-md text-center">
-                Looks like you haven't added anything to your cart yet.
+                Looks like you haven&apos;t added anything to your cart yet.
             </p>
             <Button asChild size="lg" className="gap-2 mt-8">
                 <Link href="/all-products">
@@ -41,7 +49,7 @@ const CartSummary = ({ editable = false, className = "" }) => {
     );
 
     return (
-        <section className={`${classNames} ${classNames({ "md:static": !editable })}`} aria-labelledby="cart-summary-section">
+        <section className={`${className} ${classNames({ "md:static": !editable })}`} aria-labelledby="cart-summary-section">
             <div className={classNames({ "max-w-5xl mx-auto": editable })}>
                 <Header editable={editable} totalItemCount={totalItemCount} />
                 {!!totalCartPrice ? (

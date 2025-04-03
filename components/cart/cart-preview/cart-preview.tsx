@@ -13,7 +13,7 @@ import { useScrollLock } from '@/lib/hooks/use-scroll-lock';
 import Header from './header';
 import CartItem from './cart-item';
 import Footer from './footer';
-import { ShoppingBasketIcon, ShoppingCartIcon } from "lucide-react";
+import { ShoppingBasketIcon } from "lucide-react";
 
 const CartPreview = () => {
   const { dispatch, cart: { items, isCartPreviewVisible, totalCartPrice, justAddedProduct } } = useCart();
@@ -30,6 +30,18 @@ const CartPreview = () => {
   };
 
   useScrollLock(isCartPreviewVisible);
+
+  const emptyCart = () => (
+    <div className="flex flex-col items-center justify-center px-6 h-full !my-0">
+      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted mb-3">
+        <ShoppingBasketIcon className="h-6 w-6 text-muted-foreground" />
+      </div>
+      <h2 className="text-lg font-bold tracking-tight mb-2">Your cart is empty</h2>
+      <p className="text-sm text-muted-foreground mb-6 max-w-md text-center">
+        Looks like you haven&apos;t added anything to your cart yet.
+      </p>
+    </div>
+  );
 
   return (
     <div
@@ -51,15 +63,7 @@ const CartPreview = () => {
               <CartItem key={index} item={item} dispatch={dispatch} className={index === 0 ? "border-none" : ""} />
             )
             :
-            <div className="flex flex-col items-center justify-center px-6 h-full !my-0">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted mb-3">
-                <ShoppingBasketIcon className="h-6 w-6 text-muted-foreground" />
-              </div>
-              <h2 className="text-lg font-bold tracking-tight mb-2">Your cart is empty</h2>
-              <p className="text-sm text-muted-foreground mb-6 max-w-md text-center">
-                Looks like you haven't added anything to your cart yet.
-              </p>
-            </div>
+            emptyCart()
           }
         </div>
         <Footer totalCartPrice={totalCartPrice} dispatch={dispatch} />

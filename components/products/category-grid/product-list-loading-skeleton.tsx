@@ -1,3 +1,4 @@
+// Presentation Layer
 import { Skeleton } from "@/components/ui/skeleton";
 
 const ProductListLoadingSkeleton = () => {

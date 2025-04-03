@@ -1,19 +1,28 @@
 "use client"
 
-// Presentation Layer
-import CheckoutForm from "@/components/checkout/checkout-form";
-
-// Context
+import { useMemo } from "react";
 import { useCart } from "@/context/cart-context";
-
-// External Libraries
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import CheckoutForm from "./checkout-form";
 
-const StripeElementsWrapper = ({ paymentId, clientSecret, idempotencyKey }: { paymentId: string | undefined, clientSecret: string | undefined, idempotencyKey: string | undefined}) => {
+type StripeElementsWrapperParams = {
+    paymentId: string | undefined;
+    clientSecret: string | undefined;
+    idempotencyKey: string | undefined;
+}
+
+const StripeElementsWrapper = ({ paymentId, clientSecret, idempotencyKey }: StripeElementsWrapperParams) => {
     const { cart: { totalCartPrice } } = useCart();
 
     const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
+    const memoizedProps = useMemo(() => ({
+        paymentId,
+        clientSecret,
+        idempotencyKey
+    }), [paymentId, clientSecret, idempotencyKey]);
+
 
     return (
         <div className="my-8 max-w-2xl lg:max-w-md lg:flex-1 w-full">
@@ -30,11 +39,16 @@ const StripeElementsWrapper = ({ paymentId, clientSecret, idempotencyKey }: { pa
                         currency: "cad"
                     }}
                 >
-                    <CheckoutForm amount={totalCartPrice} paymentId={ paymentId } clientSecret={ clientSecret } idempotencyKey={ idempotencyKey }/>
+                    <CheckoutForm
+                        amount={totalCartPrice}
+                        paymentId={memoizedProps.paymentId}
+                        clientSecret={memoizedProps.clientSecret}
+                        idempotencyKey={memoizedProps.idempotencyKey}
+                    />
                 </Elements>
             }
         </div>
     );
-}
+};
 
 export default StripeElementsWrapper;

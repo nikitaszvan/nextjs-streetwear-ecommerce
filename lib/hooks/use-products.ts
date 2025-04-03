@@ -2,7 +2,6 @@
 import { useGetProductsByCategoryQuery } from '@/lib/api/products-api';
 
 // Constants
-import { categories } from '@/constants/product-constants';
 
 // Types
 import { ProductType } from '@/types/product-types';
@@ -15,56 +14,43 @@ type UseProductsParamsType = {
 }
 
 export const useProducts = ({ category, shouldFetch, product, random }: UseProductsParamsType) => {
-  let products: ProductType[] = [];
-  let isLoading = false;
-  let isError = false;
-  let error = null;
-  let refetch = () => { };
-  let randomProducts: any[] = [];
+  const products: ProductType[] = [];
 
-  if (category === "all-products") {
-    const queries = categories.map(cat =>
-      useGetProductsByCategoryQuery(cat, {
-        skip: !shouldFetch,
-        refetchOnReconnect: true,
-      })
-    );
+  const queries = {
+    category1: useGetProductsByCategoryQuery("shirts-top-men", { skip: !shouldFetch || (category !== "all-products" && category !== "shirts-top-men"), refetchOnReconnect: true }),
+    category2: useGetProductsByCategoryQuery("outerwear-top-men", { skip: !shouldFetch || (category !== "all-products" && category !== "outerwear-top-men"), refetchOnReconnect: true }),
+    category3: useGetProductsByCategoryQuery("pants-bottom-men", { skip: !shouldFetch || (category !== "all-products" && category !== "pants-bottom-men"), refetchOnReconnect: true }),
+    category4: useGetProductsByCategoryQuery("shoes-men", { skip: !shouldFetch || (category !== "all-products" && category !== "shoes-men"), refetchOnReconnect: true }),
+  };
 
-    isLoading = queries.some(query => query.isLoading);
-    isError = queries.some(query => query.isError);
-    error = queries.find(query => query.error)?.error || null;
+  const queriesArray = Object.values(queries);
 
-    queries.forEach(query => {
-      if (query.data) {
-        products.push(...query.data);
-      }
-    });
+  const isLoading = queriesArray.some(query => query.isLoading);
+  const isError = queriesArray.some(query => query.isError);
+  const error = queriesArray.find(query => query.error)?.error || null;
 
-    refetch = () => {
-      queries.forEach(query => query.refetch());
-    };
-  } else {
-    const query = useGetProductsByCategoryQuery(category, {
-      skip: !shouldFetch,
-      refetchOnReconnect: true,
-    });
-
-    isLoading = query.isLoading;
-    isError = query.isError;
-    error = query.error;
-    refetch = query.refetch;
-    products = query.data || [];
-
-    if (random && products.length > 0) {
-      const filteredProducts = product ? products.filter(p => p['clothing-name'] !== product) : products;
-
-      const selectedIndices = new Set<number>();
-      while (selectedIndices.size < 3 && selectedIndices.size < filteredProducts.length) {
-        const randomIndex = Math.floor(Math.random() * filteredProducts.length);
-        selectedIndices.add(randomIndex);
-      }
-      randomProducts = Array.from(selectedIndices).map(index => filteredProducts[index]);
+  queriesArray.forEach(query => {
+    if (query.data) {
+      products.push(...query.data);
     }
+  });
+
+  const refetch = () => {
+    queriesArray.forEach(query => query.refetch());
+  };
+
+  let randomProducts: ProductType[] = [];
+
+  if (random && products.length > 0) {
+    const filteredProducts = product ? products.filter(p => p['clothing-name'] !== product) : products;
+    const selectedIndices = new Set<number>();
+    
+    while (selectedIndices.size < 3 && selectedIndices.size < filteredProducts.length) {
+      const randomIndex = Math.floor(Math.random() * filteredProducts.length);
+      selectedIndices.add(randomIndex);
+    }
+
+    randomProducts = Array.from(selectedIndices).map(index => filteredProducts[index]);
   }
 
   return {

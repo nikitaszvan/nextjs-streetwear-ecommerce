@@ -16,18 +16,13 @@ import { ShoppingBag } from 'lucide-react';
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import HamburgerMenu from "./hamburger-menu";
 import MobileSearchInput from "./mobile-search-input";
+
 // Service Layer
 import { cn } from "@/lib/utils/classname-utils";
-
-// Data Access Layer
-//
 
 // External Libraries
 import { useState, forwardRef, useEffect, ChangeEvent } from "react";
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-
-// Types
-//
 
 // Constants
 import { menuCategories } from "@/constants/product-constants";
@@ -63,11 +58,11 @@ const ListItem = forwardRef<
 
 ListItem.displayName = "ListItem";
 
-interface MainNavigationProps {
+type MainNavigationParams = {
   className?: string;
 }
 
-const MainNavigation = ({ className }: MainNavigationProps) => {
+const MainNavigation = ({ className }: MainNavigationParams) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isLoading, cart: { totalItemCount }, dispatch } = useCart();
@@ -94,10 +89,10 @@ const MainNavigation = ({ className }: MainNavigationProps) => {
   return (
 
     <NavigationMenu className={cn(
-      "max-w-none gap-2 md:gap-6 mx-auto flex w-full !px-[10%] print:hidden overflow-x-clip",
+      "max-w-none gap-2 md:gap-6 mx-auto flex w-full sm:!px-[5%] md:!px-[7%] xl:!px-[10%] print:hidden overflow-x-clip",
       className
     )}>
-      <Link href="/" className="relative h-[2.5rem] aspect-video">
+      <Link href="/" className="relative h-[2.5rem] aspect-video ml-2 sm:ml-0">
         <Image src="/assets/svgs/streetwear-logo.svg" alt="streetwear logo" fill />
       </Link>
       <NavigationMenuList className="mr-auto !bg-transparent !backdrop-blur-none hidden md:flex">

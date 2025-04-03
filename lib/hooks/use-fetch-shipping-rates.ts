@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 // Types
 import { ShippingOptionType } from "@/types/stripe-element-types";
 
-export default function useFetchShippingRates() {
+const useFetchShippingRates = () => {
   const [shippingRates, setShippingRates] = useState<ShippingOptionType[] | []>([]);
 
   useEffect(() => {
@@ -25,4 +25,6 @@ export default function useFetchShippingRates() {
   }, []);
 
   return shippingRates;
-}
+};
+
+export default useFetchShippingRates;

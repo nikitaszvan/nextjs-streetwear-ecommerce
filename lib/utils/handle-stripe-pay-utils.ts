@@ -4,14 +4,15 @@ import { Stripe, StripeElements } from "@stripe/stripe-js";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 // Types
-//
+import { ShippingOptionType } from "@/types/stripe-element-types";
 
-type HandlePayParams = {
+
+type HandleStripePayParams = {
     e: FormEvent<HTMLFormElement>;
     stripe: Stripe | null;
     elements: StripeElements | null;
     paymentIntentId: { clientSecret: string; idempotencyKey: string } | null;
-    cartShippingOption: any;
+    cartShippingOption: ShippingOptionType | null;
     setLoading: (loading: boolean) => void;
     setErrorMessage: (error: { message: string | undefined }) => void;
     router: AppRouterInstance
@@ -26,7 +27,7 @@ export const handleStripePay = async ({
     setLoading,
     setErrorMessage,
     router
-}: HandlePayParams) => {
+}: HandleStripePayParams) => {
     e.preventDefault();
     if (!cartShippingOption) {
         setErrorMessage({ message: "Shipping option must be selected" });
@@ -73,6 +74,7 @@ export const handleStripePay = async ({
         }
     } catch (err) {
         setErrorMessage({ message: 'An unexpected error occurred. Please try again.' });
+        throw err;
     }
 
     setLoading(false);

@@ -13,7 +13,7 @@ import PaymentSuccessShippingAddress from "./shipping-address";
 // Types
 import { PurchaseCartType } from "@/types/cart-types";
 
-export default function PaymentSuccess({ keyId }: { keyId: string | undefined }) {
+const PaymentSuccess = ({ keyId }: { keyId: string | undefined }) => {
   const [orderDetails, setOrderDetails] = useState<PurchaseCartType | null>(null);
 
   useEffect(() => {
@@ -36,4 +36,6 @@ export default function PaymentSuccess({ keyId }: { keyId: string | undefined })
     </div>
     : null
   );
-}
+};
+
+export default PaymentSuccess;

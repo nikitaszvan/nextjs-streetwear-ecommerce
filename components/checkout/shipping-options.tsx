@@ -1,7 +1,7 @@
 "use client";
 
 // External Libraries
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // Presentation Layer
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -12,24 +12,26 @@ import { useCart } from '@/context/cart-context';
 // Types
 import { ShippingOptionType } from '@/types/stripe-element-types';
 
-const ShippingOptions = ({ 
+const ShippingOptions = ({
     show,
     paymentId,
-    defaultShipping,
     shippingOptions,
     isVerifying,
-}: { 
+}: {
     show: boolean,
     paymentId: { paymentId: string, clientSecret: string },
-    defaultShipping: ShippingOptionType | string | null,
     shippingOptions: ShippingOptionType[] | [],
     className?: string,
     isVerifying: boolean
 }) => {
 
-    const [selectedRate, setSelectedRate] = useState<ShippingOptionType | string | null>(defaultShipping);
+    const { dispatch, cart: { totalCartPrice, cartShippingOption } } = useCart();
+    const [selectedRate, setSelectedRate] = useState<ShippingOptionType | string | null>(null);
 
-    const { dispatch, cart: { totalCartPrice } } = useCart();
+    useEffect(() => {
+        if (!selectedRate) setSelectedRate(cartShippingOption);
+    }, [cartShippingOption, selectedRate])
+
 
     const saveShippingOptionToSession = (option: ShippingOptionType) => {
         sessionStorage.setItem('userShippingOptionFields', JSON.stringify(option));

@@ -7,11 +7,11 @@ import CategoryWrapper from "@/components/products/category-grid/category-wrappe
 // Constants
 import { categoriesRef } from "@/constants/product-constants";
 
-export default async function CategoryPage({
+const CategoryPage = async ({
   params,
 }: {
   params: Promise<{ category: string }>
-}) {
+}) => {
   const { category } = await params;
   
   const categoryData = categoriesRef[category];
@@ -30,4 +30,6 @@ export default async function CategoryPage({
       </section>
     </Suspense>
   );
-}
+};
+
+export default CategoryPage;

@@ -14,5 +14,5 @@ export const useWindowWidth = (onCheckSize: Dispatch<SetStateAction<boolean>>) =
       return () => {
         window.removeEventListener("resize", handleResize);
       };
-    }, []);
+    }, [onCheckSize]);
   };

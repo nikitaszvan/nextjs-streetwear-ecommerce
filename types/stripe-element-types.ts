@@ -2,12 +2,12 @@ export type StripeShippingAddressType = {
     name: string,
     phone: string,
     address: {
-    city: string,
-    country: string,
-    line1: string,
-    line2: string,
-    postal_code: string,
-    state: string
+        city: string,
+        country: string,
+        line1: string,
+        line2: string,
+        postal_code: string,
+        state: string
     }
 };
 
@@ -37,3 +37,15 @@ export type ShippingOptionType = {
     tax_code: string | null;
     type: string;
 };
+
+export type BillingOptionType = {
+    billingDetails: {
+        name: string;
+        email: string;
+        phone: string;
+        address: {
+            postal_code: string;
+            country: string;
+        }
+    }
+}

@@ -1,5 +1,8 @@
-import { ProductType } from "@/types/product-types";
+// Presentation Layer
 import ProductItem from "./product-item";
+
+// Types
+import { ProductType } from "@/types/product-types";
 
 const ProductList = ({ products }: { products: ProductType[] }) => {
   return (

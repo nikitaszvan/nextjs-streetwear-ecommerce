@@ -16,12 +16,12 @@ import { ProductType } from "@/types/product-types";
 // Constants
 import { categoriesRef } from "@/constants/product-constants";
 
-interface PreviewCategoriesProps {
+type PreviewCategoriesParams = {
   category: string;
   shouldFetch: boolean;
 }
 
-const PreviewCategories = ({ category, shouldFetch }: PreviewCategoriesProps) => {
+const PreviewCategories = ({ category, shouldFetch }: PreviewCategoriesParams) => {
   const { products, isLoading: loading, isError: error } = useProducts({
     category: category,
     shouldFetch: shouldFetch,

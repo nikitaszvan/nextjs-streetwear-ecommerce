@@ -113,7 +113,7 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import { Menu, MenuIcon, Search, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollLock } from '@/lib/hooks/use-scroll-lock';
 import { cn } from "@/lib/utils/classname-utils";

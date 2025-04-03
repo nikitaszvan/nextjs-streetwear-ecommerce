@@ -8,12 +8,12 @@ import { Circle } from 'lucide-react';
 // Constants
 import { sortOptions } from "@/constants/product-constants";
 
-interface ProductsFilterProps {
+type ProductsFilterParams = {
   onFilterChange: (value: string) => void;
   selectedSort: string;
 }
 
-const ProductsFilter = ({ onFilterChange, selectedSort }: ProductsFilterProps) => {
+const ProductsFilter = ({ onFilterChange, selectedSort }: ProductsFilterParams) => {
 
   return (
     <div className="flex flex-col py-4 small:px-0 pl-6 ml-6 h-fit w-fit sticky top-[8rem] hidden md:block">

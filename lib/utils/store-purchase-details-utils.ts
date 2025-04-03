@@ -7,10 +7,10 @@ import { Dispatch, SetStateAction } from "react";
 import { ShippingOptionType } from "@/types/stripe-element-types";
 import { CartProductType, CartAction } from "@/types/cart-types";
 
-type StoreOrderDataParams = {
-    response: any;
+export type StoreOrderDataParams = {
+    response: {shipping: unknown};
     cartShippingOption: ShippingOptionType | null;
-    idempotencyKey: string;
+    idempotencyKey: string | undefined;
     items: CartProductType[];
     totalCartPrice: number;
     dispatch: Dispatch<CartAction>;
@@ -26,7 +26,7 @@ export const storePurchaseDetails = ({
     dispatch,
     setClearData,
 }: StoreOrderDataParams) => {
-    if (cartShippingOption !== null) {
+    if (cartShippingOption !== null && idempotencyKey !== undefined) {
         localStorage.setItem(
             idempotencyKey,
             JSON.stringify({

@@ -17,7 +17,7 @@ type PaymentSessionParams = {
     isLoading: boolean;
 }
 
-export default function usePaymentSession({
+const usePaymentSession = ({
     amount,
     paymentId,
     clientSecret,
@@ -27,7 +27,7 @@ export default function usePaymentSession({
     totalCartPrice,
     dispatch,
     isLoading
-}: PaymentSessionParams) {
+}: PaymentSessionParams) => {
   const [paymentIntentId, setPaymentIntentId] = useState<StripeSessionType | null>(
     paymentId && clientSecret && idempotencyKey ? { paymentId, clientSecret, idempotencyKey } : null
   );
@@ -69,7 +69,9 @@ export default function usePaymentSession({
 
     if (paymentIntentId) updateStripeAmount(paymentIntentId);
 
-  }, [isLoading]);
+  }, [isLoading, paymentIntentId, cartShippingOption, totalCartPrice, activeStripeSession, paymentId, clientSecret, idempotencyKey, amount, dispatch]);
 
   return paymentIntentId;
-}
+};
+
+export default usePaymentSession;
