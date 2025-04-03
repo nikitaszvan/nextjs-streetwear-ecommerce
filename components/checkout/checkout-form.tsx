@@ -63,7 +63,6 @@ const CheckoutForm = ({
   });
   const [defaultEmail, setDefaultEmail] = useState<string>("");
   const [defaultShipping, setDefaultShipping] = useState<StripeShippingAddressType | undefined>(undefined);
-  console.log(defaultShipping);
 
   const memoizedBillingValues = useMemo(() => defaultBillingValues, [defaultBillingValues]);
   const memoizedShipping = useMemo(() => defaultShipping, [defaultShipping]);
