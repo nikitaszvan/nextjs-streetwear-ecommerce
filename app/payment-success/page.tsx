@@ -1,3 +1,4 @@
+
 // External Libraries
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
@@ -6,32 +7,28 @@ import { notFound } from 'next/navigation';
 import PaymentSuccess from "@/components/payment-success/payment-success";
 
 // Service Layers
-import getRedisClient from "@/lib/utils/redis-client-utils";
-
-const verifyPayment = async (key: string) => {
-  const redis = await getRedisClient();
-  const isValid = await redis.get(key);
-  return !!isValid;
-}
+import { redis } from '@/lib/config/upstash-config';
 
 const PaymentSuccessPage = async ({
   searchParams,
 }: {
-  searchParams: Promise<Record<string, string | undefined>>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) => {
-  const { key } = await searchParams;
+  let key = (await searchParams)?.key;
 
-  const validUser = key ? await verifyPayment(key) : false;
-
-  if (!validUser) {
-    return notFound();
+  if (Array.isArray(key)) {
+    key = key[0];
   }
+
+  const storedSessionId: string | null = await redis.get(`order:${key}`);
+
+  if (!storedSessionId) notFound();
 
   return (
     <main role="main" aria-label="Payment Success Page">
-      <Suspense fallback={<p>Verifying payment...</p>}>
+      <Suspense fallback={<div className="h-[100vh]"></div>}>
         <h1 className="sr-only">Payment Success</h1>
-        <PaymentSuccess keyId={key} />
+        <PaymentSuccess keyId={key} storedId={storedSessionId}/>
       </Suspense>
     </main>
   );

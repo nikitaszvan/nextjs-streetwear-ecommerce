@@ -2,6 +2,7 @@
 
 // External Libraries
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 // Presentation Layer
 import PaymentSuccessAlert from "./success-alert";
@@ -13,8 +14,18 @@ import PaymentSuccessShippingAddress from "./shipping-address";
 // Types
 import { PurchaseCartType } from "@/types/cart-types";
 
-const PaymentSuccess = ({ keyId }: { keyId: string | undefined }) => {
+
+
+const PaymentSuccess = ({ keyId, storedId }: { keyId: string | undefined, storedId: string | null}) => {
   const [orderDetails, setOrderDetails] = useState<PurchaseCartType | null>(null);
+
+  const router = useRouter();
+
+  const verifyUser = () => (storedId === localStorage.getItem("userSessionId")) ? true : false;
+
+  if (!verifyUser) {
+    router.push("/404");
+  }
 
   useEffect(() => {
     if (keyId) {

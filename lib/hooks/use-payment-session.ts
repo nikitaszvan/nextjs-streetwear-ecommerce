@@ -4,6 +4,7 @@ import { useEffect, useState, Dispatch } from "react";
 // Types
 import { StripeSessionType, CartAction } from "@/types/cart-types";
 import { ShippingOptionType } from "@/types/stripe-element-types";
+import { getUserSessionId } from "../utils/get-user-session-id";
 
 type PaymentSessionParams = {
     amount: number;
@@ -56,13 +57,14 @@ const usePaymentSession = ({
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ amount: amount * 100 }),
+          body: JSON.stringify({ amount: amount * 100, sessionId: getUserSessionId()}),
         })
           .then((res) => res.json())
           .then((json) => {
             const sessionInfo = { paymentId: json.paymentIntentId, clientSecret: json.clientSecret, idempotencyKey: json.idempotencyKey };
             dispatch({ type: "ADD_STRIPE_SESSION", payload: sessionInfo });
             setPaymentIntentId(sessionInfo);
+
           });
       }
     }

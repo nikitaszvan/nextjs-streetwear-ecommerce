@@ -17,8 +17,6 @@ const StripeElementsWrapper = ({ paymentId, clientSecret, idempotencyKey }: Stri
 
     const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-    console.log(stripePromise, process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
     const memoizedProps = useMemo(() => ({
         paymentId,
         clientSecret,

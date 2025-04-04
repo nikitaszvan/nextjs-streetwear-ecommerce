@@ -2,9 +2,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import Stripe from 'stripe';
-
 // Service Layer
-import getRedisClient from '@/lib/utils/redis-client-utils';
+import { redis } from '@/lib/config/upstash-config';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-02-24.acacia',
@@ -12,7 +11,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(req: NextRequest) {
   try {
-    const { amount } = await req.json();
+    const { amount, sessionId } = await req.json();
 
     const idempotencyKey = uuidv4(); 
 
@@ -22,10 +21,10 @@ export async function POST(req: NextRequest) {
       automatic_payment_methods: { enabled: true },
     });
 
-    const redis = await getRedisClient();
-
   try {
-    await redis.set(idempotencyKey, paymentIntent.id, {'EX': 24 * 3600 * 1000}); // Store for 24 hours
+    await redis.set(`order:${idempotencyKey}`, sessionId, {
+      ex: 24 * 3600,
+    });
   } catch (error) {
     console.error("Redis error:", error);
   }
@@ -33,7 +32,7 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ 
     clientSecret: paymentIntent.client_secret, 
     paymentIntentId: paymentIntent.id,
-    idempotencyKey: idempotencyKey
+    idempotencyKey
   });
 
   } catch (error) {
