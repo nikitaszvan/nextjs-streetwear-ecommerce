@@ -44,7 +44,7 @@ const ProductPageComponent = ({
   if (!prod) return <div>Product not found</div>;
 
   return (
-    <div className="flex flex-col gap-6 justify-center mx-auto w-full max-w-7xl flex-1 pt-4 px-6 lg:px-8">
+    <div className="flex flex-col gap-6 justify-center mx-auto w-full max-w-7xl flex-1 pt-4 px-12">
       <BreadcrumbLinks category={category} product={product} />
       <div className="flex flex-wrap gap-4">
         <ProductImage imageUrl={prod["image-url"]} altText={`Product Image for ${product}`}/>

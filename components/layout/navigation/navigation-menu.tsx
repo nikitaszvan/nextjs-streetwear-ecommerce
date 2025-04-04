@@ -97,7 +97,7 @@ const MainNavigation = ({ className }: MainNavigationParams) => {
       </Link>
       <NavigationMenuList className="mr-auto !bg-transparent !backdrop-blur-none hidden md:flex">
         <NavigationMenuItem>
-          <button className="py-2 px-4 font-medium">
+          <button className="py-2 px-4 font-medium text-sm md:text-base">
             <Link href="/all-products">
               New Arrivals
             </Link>
