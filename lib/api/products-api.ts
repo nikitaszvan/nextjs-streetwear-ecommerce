@@ -8,7 +8,7 @@ export const productsApi = createApi({
   endpoints: (builder) => ({
     getProductsByCategory: builder.query({
       query: (category) => ({
-        url: '/get-products-dynamodb',
+        url: '/get-products-upstash',
         params: { category }
       }),
       providesTags: ['Products']
